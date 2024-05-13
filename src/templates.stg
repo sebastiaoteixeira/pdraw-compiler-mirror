@@ -1,0 +1,69 @@
+// Main structure of Python code
+main(statements) ::= <<
+from time import split
+from turtle import Turtle
+
+class Pen(Turtle):
+    def __init__(self, name, options):
+        super().__init__()
+        self.name = name
+        setupTurtle(self, options)
+
+    def setupTurtle(self, options):
+        self._thickness = 1
+        self._pressure = 1
+        for key, value in options.items():
+            if key == "color":
+                self.color(value)
+            elif key == "position":
+                self.position(value)
+            elif key == "orientation":
+                self.setheading(value)
+            elif key == "thickness":
+                thickness = value
+            elif key == "pressure":
+                pressure = value
+        
+        if pressure == -1:
+            self.penup()
+        else:
+            self.pendown()
+            self.pensize((thickness-1) * pressure + 1)
+
+
+def main():
+    // Main code logic goes here
+    <statements;separator="\n">
+    turtle.done()
+
+if __name__ == "__main__":
+    main()
+>>
+
+// PenType
+pentype(pentypeName, properties) ::= <<
+<pentypeName> = {
+    <properties; separator="\n">
+}
+>>
+
+// A single property
+property(key, value) ::= << "<key>": <value> >>
+
+// Template for each pen instance
+pen(name) ::= <<
+<name> = Pen()
+>>
+
+//TO DO, define canvas
+
+//TO DO, declarar varias variaveis
+
+//TO DO, Pause
+
+//TO DO, STdout chamr print
+
+//TO DO, criar template para operações binárias
+
+
+//TO DO, criar class points 
