@@ -36,9 +36,43 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		String property = ctx.Property().getText();
+		Type exprType = visit(ctx.expr());
+
+		switch (property) {
+			case "color":
+				// TODO: check if rightType is a valid color
+				break;
+			case "pressure":
+				if (!isNumericType(exprType)) {
+					System.err.println("Error: Pressure value must be a real or integer value.");
+					System.exit(1);
+				}
+				break;
+			case "thickness":
+				if (exprType != Type.INTEGER) {
+					System.err.println("Error: Thickness value must be a integer value.");
+					System.exit(1);
+				}
+				break;	
+			case "orientation":
+				if (!isNumericType(exprType)) {
+					System.err.println("Error: Orientation value must be a real or integer value.");
+					System.exit(1);
+				}
+				break;
+			case "position":
+				if (exprType != Type.POINT) {
+					System.err.println("Error: Position value must be a point value.");
+					System.exit(1);
+				}
+				break;
+		
+			default:
+				System.err.println("Error: Invalid property " + property);
+				break;
+		}
+		return exprType;
 	}
 
 	@Override
@@ -160,7 +194,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	@Override
 	public Type visitExprToReal(pdrawParser.ExprToRealContext ctx) {
 		Type exprType = visit(ctx.expr());
-		if (!isConvertibleToNumeric(exprType) {
+		if (!isConvertibleToNumeric(exprType)) {
 			System.err.println("Error: Conversion to real can only be applied to real or integer values.");
 			System.exit(1);
 		}
