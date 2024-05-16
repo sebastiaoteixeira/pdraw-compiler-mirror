@@ -12,3 +12,4 @@ __pycache__
 .VSCode*
 venv/
 *.pyc
+.bin/
