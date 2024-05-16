@@ -32,6 +32,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		}
 		Symbol pen = new Symbol(id, Type.PEN);
 		symbolTable.addSymbol(pen);
+		return Type.PENTYPE;
 	}
 
 	@Override
@@ -117,11 +118,6 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		symbolTable.addSymbol(variable);
 		
 		return type;
-	}
-
-	@Override
-	public Type visitExpression(pdrawParser.ExpressionContext ctx) {
-		return visitChildren(ctx);
 	}
 
 	@Override
@@ -235,7 +231,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
-		Type lefType = visit(ctx.expression(0));
+		Type leftType = visit(ctx.expression(0));
 		Type rightType = visit(ctx.expression(1));
 
 		if (leftType != Type.PEN) {
@@ -280,8 +276,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 				System.err.println("Error: Invalid property " + property);
 				break;
 
-			return Type.PEN;
 		}
+		return null;
 	}
 
 	@Override public Type visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
@@ -355,12 +351,15 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprId(pdrawParser.ExprIdContext ctx) {
-		return symbolTable.get(ctx.ID().getText());
+		return symbolTable.getSymbol(ctx.ID().getText()).getType();
 	}
 
 	@Override
 	public Type visitPoint(pdrawParser.PointContext ctx) {
-		visitChildren(ctx);
+		if (visit(ctx.expression(0)) != Type.INTEGER || visit(ctx.expression(1)) != Type.INTEGER) {
+			System.err.println("Error: Point values must be integer values.");
+			System.exit(1);
+		}
 		return Type.POINT;
 	}
 
