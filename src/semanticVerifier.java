@@ -198,9 +198,50 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type lefType = visit(ctx.expr(0));
+		Type rightType = visit(ctx.expr(1));
+
+		if (leftType != Type.PEN) {
+			System.err.println("Error: Property assignment can only be applied to pen values.");
+			System.exit(1);
+		}
+
+		String property = ctx.Property().getText();
+		switch (property) {
+			case "color":
+				// TODO: check if rightType is a valid color
+				break;
+			case "pressure":
+				if (!isNumericType(rightType)) {
+					System.err.println("Error: Pressure value must be a real or integer value.");
+					System.exit(1);
+				}
+				break;
+			case "thickness":
+				if (rightType != Type.INTEGER) {
+					System.err.println("Error: Thickness value must be a integer value.");
+					System.exit(1);
+				}
+				break;	
+			case "orientation":
+				if (!isNumericType(rightType)) {
+					System.err.println("Error: Orientation value must be a real or integer value.");
+					System.exit(1);
+				}
+				break;
+			case "position":
+				if (rightType != Type.POINT) {
+					System.err.println("Error: Position value must be a point value.");
+					System.exit(1);
+				}
+				break;
+		
+			default:
+				System.err.println("Error: Invalid property " + property);
+				break;
+
+			return Type.PEN;
+		}
 	}
 
 	@Override public Type visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
