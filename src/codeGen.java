@@ -63,10 +63,9 @@ public class codeGen extends pdrawBaseVisitor<String> {
    }
 
    @Override public String visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //TO DO
-      //return res;
+      ST declaration = templates.getInstanceOf("declarationContext");
+      declaration.add("var", ctx.ID.getText());
+      return declaration.render();
    }
 
    @Override public String visitExpression(pdrawParser.ExpressionContext ctx) {

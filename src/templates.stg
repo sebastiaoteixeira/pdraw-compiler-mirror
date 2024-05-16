@@ -67,6 +67,9 @@ conv_rad(op) ::= <<radians(<op>)>>
 // Template for visitPoint
 visitPoint(op1,op2) ::= <<(<op1>,<op2>)>>
 
+// Template for DeclarationContext
+declarationContext(var) ::= <<<var> = None>>
+
 //TO DO, define canvas
 
 //TO DO, declarar varias variaveis
