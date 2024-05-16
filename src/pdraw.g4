@@ -10,51 +10,48 @@ statement: (define | expression | declaration | stdout | pause | execution) ';';
 define: 'define' (penDefinition | canvasDefinition);
 
 penDefinition: 'pen' ID '{' propertyDefinition* '}';
-propertyDefinition: Property '=' expr ';';
+propertyDefinition: Property '=' expression ';';
 
 canvasDefinition: 'canvas' ID String point;
 
-
 declaration: type=('pen'|'real'|'int'|'string'|'point') ID;
 
-expression: expr;
+execution: 'execute' expression;
 
-execution: 'execute' expr;
+pause: 'pause' expression;
 
-pause: 'pause' expr;
-
-stdout: expr '->' 'stdout';
+stdout: expression '->' 'stdout';
 
 
 // Expressions
-expr : 
+expression : 
     // pen instance
-    'new' expr? #ExprNew
+    'new' expression? #ExprNew
 
     // Math
-    | op=('+'|'-') expr #ExprUnary
-    | expr op='º' #ExprConvToRad
-    | expr op=('*'|'/'|'//'|'%') expr #ExprMultDivMod
-    | expr op=('+'|'-') expr #ExprAddSub
+    | op=('+'|'-') expression #ExprUnary
+    | expression op='º' #ExprConvToRad
+    | expression op=('*'|'/'|'//'|'%') expression #ExprMultDivMod
+    | expression op=('+'|'-') expression #ExprAddSub
 
     // Concatenation
-    | String expr #ExprStringConcat
+    | String expression #ExprStringConcat
 
     // Type conversion
-    | 'int' '(' expr ')' #ExprToInt
-    | 'real' '(' expr ')' #ExprToReal
-    | 'string' '(' expr ')' #ExprToString
+    | 'int' '(' expression ')' #ExprToInt
+    | 'real' '(' expression ')' #ExprToReal
+    | 'string' '(' expression ')' #ExprToString
 
     // Pen instructions (the pen itself should be returned to allow operations chain)
-    | expr op=('down'|'up') #ExprPenUnary
-    | expr op=('forward'|'left'|'right') expr #ExprPenOperator
-    | expr op='<-' Property expr #ExprSetProperty
+    | expression op=('down'|'up') #ExprPenUnary
+    | expression op=('forward'|'left'|'right') expression #ExprPenOperator
+    | expression op='<-' Property expression #ExprSetProperty
 
     // stdin
     | 'stdin' String #ExprStdin
 
     // Assign
-    | ID op='=' expr #ExprAssign
+    | ID op='=' expression #ExprAssign
 
     // Identifier
     | ID #ExprId
@@ -66,18 +63,18 @@ expr :
     | point #ExprPoint
 
     // Parentized expression
-    | '(' expr ')' #ExprParent
+    | '(' expression ')' #ExprParent
 ;
 
 
 // Types
-point: '(' x=expr ',' y=expr ')';
+point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
 Color: ('red'|'green'|'blue'|'black'|'white'|'yellow'|'cyan'|'magenta');
 
 String: '"' (EscapeSequence | ~['"\\])* '"';
-EscapeSequence: '\\' . ;
+fragment EscapeSequence: '\\' . ;
 
 Integer: [0-9]+;
 Real: [0-9]+ '.' [0-9]+;
@@ -87,7 +84,7 @@ Real: [0-9]+ '.' [0-9]+;
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 
 // Comments '%'
-COMMENT: '%' ~[\r\n]* -> skip;
+COMMENT: '%' ~[\n]* -> skip;
 
 
 // Whitespace
