@@ -71,8 +71,12 @@ visitPoint(op1,op2) ::= <<(<op1>,<op2>)>>
 
 //TO DO, declarar varias variaveis
 
-//TO DO, Pause
+//Template for pause
+pause(time) ::= <<sleep(<time>)>>
 
 //TO DO, STdout chamr print
 
 //TO DO, criar class points 
+
+// Template fot ExprToString
+toString(op) ::= <<str(<op>)>>

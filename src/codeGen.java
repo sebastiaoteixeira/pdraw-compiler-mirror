@@ -1,8 +1,5 @@
-import org.stringtemplate.v4.*;
 
-import .antlr.pdrawParser;
 
-import .antlr.pdrawParser;
 
 @SuppressWarnings("CheckReturnValue")
 public class codeGen extends pdrawBaseVisitor<String> {
@@ -84,10 +81,9 @@ public class codeGen extends pdrawBaseVisitor<String> {
    }
 
    @Override public String visitPause(pdrawParser.PauseContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //TO DO, chamar função split
-      //return res;
+      ST pause = templates.getInstanceOf("pause");
+      pause.add("time", ctx.expr().getText());
+      return pause.render();
    }
 
    @Override public String visitStdout(pdrawParser.StdoutContext ctx) {
@@ -99,9 +95,9 @@ public class codeGen extends pdrawBaseVisitor<String> {
 
    //TO DO
    @Override public String visitExprToString(pdrawParser.ExprToStringContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toString = templates.getInstanceOf("toString");
+      toString.add("op", visit(ctx.expr()));
+      return toString.render();
    }
 
    @Override public String visitExprString(pdrawParser.ExprStringContext ctx) {
