@@ -37,7 +37,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	@Override
 	public Type visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {
 		String property = ctx.Property().getText();
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 
 		switch (property) {
 			case "color":
@@ -126,12 +126,12 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExecution(pdrawParser.ExecutionContext ctx) {
-		return visit(ctx.expr());
+		return visit(ctx.expression());
 	}
 
 	@Override
 	public Type visitPause(pdrawParser.PauseContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (exprType != Type.INTEGER) {
 			System.err.println("Error: Pause time must be an integer value.");
 			System.exit(1);
@@ -141,7 +141,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitStdout(pdrawParser.StdoutContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (exprType != Type.STRING) {
 			System.err.println("Error: stdout can only output string values.");
 			System.exit(1);
@@ -151,7 +151,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprToString(pdrawParser.ExprToStringContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (!isConvertibleToString(exprType)) {
 			System.err.println("Error: Conversion to string can only be applied to integer, real, or string values.");
 			System.exit(1);
@@ -176,7 +176,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override public Type visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
       Type stringType = visit(ctx.String());
-      Type exprType = visit(ctx.expr());
+      Type exprType = visit(ctx.expression());
       if (stringType != Type.STRING || (exprType != Type.STRING && !isConvertibleToString(exprType))) {
          System.err.println("Concatenation requires at least one operand to be a string or convertible to string.");
          System.exit(1);
@@ -186,7 +186,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprToInt(pdrawParser.ExprToIntContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (!isConvertibleToNumeric(exprType)) {
 			System.err.println("Error: Conversion to integer can only be applied to real or integer values.");
 			System.exit(1);
@@ -196,7 +196,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprToReal(pdrawParser.ExprToRealContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (!isConvertibleToNumeric(exprType)) {
 			System.err.println("Error: Conversion to real can only be applied to real or integer values.");
 			System.exit(1);
@@ -206,8 +206,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
-		Type exprType = visit(ctx.expr(0));
-		Type valueType = visit(ctx.expr(1));
+		Type exprType = visit(ctx.expression(0));
+		Type valueType = visit(ctx.expression(1));
 		if (exprType != Type.PEN) {
 			System.err.println("Error: Pen operator can only be applied to pen values.");
 			System.exit(1);
@@ -220,8 +220,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
-      Type leftType = visit(ctx.expr(0));
-      Type rightType = visit(ctx.expr(1));
+      Type leftType = visit(ctx.expression(0));
+      Type rightType = visit(ctx.expression(1));
       if (!isNumericType(leftType) || !isNumericType(rightType)) {
           System.err.println("Operands of '*', '/', '//', or '%' must be numeric.");
           System.exit(1);}
@@ -235,8 +235,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
-		Type lefType = visit(ctx.expr(0));
-		Type rightType = visit(ctx.expr(1));
+		Type lefType = visit(ctx.expression(0));
+		Type rightType = visit(ctx.expression(1));
 
 		if (leftType != Type.PEN) {
 			System.err.println("Error: Property assignment can only be applied to pen values.");
@@ -285,8 +285,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
-		Type leftType = visit(ctx.expr(0));
-		Type rightType = visit(ctx.expr(1));
+		Type leftType = visit(ctx.expression(0));
+		Type rightType = visit(ctx.expression(1));
 		if (!isNumericType(leftType) || !isNumericType(rightType)) {
 			System.err.println("Operands of '+' or '-' must be numeric.");
 			System.exit(1);   
@@ -295,7 +295,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
   }
 
   	@Override public Type visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (exprType != Type.INTEGER && exprType != Type.REAL) {
 			System.err.println("Error: Conversion to radian can only be applied to real or integer values.");
 			System.exit(1);
@@ -305,7 +305,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (exprType != Type.PEN) {
 			System.err.println("Error: Pen Unary operator can only be applied to pen values.");
 			System.exit(1);
@@ -314,7 +314,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (!isNumericType(exprType)) {
 			System.err.println("Error: Unary operator can only be applied to real or integer values.");
 			System.exit(1);
@@ -335,7 +335,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	@Override
 	public Type visitExprAssign(pdrawParser.ExprAssignContext ctx) {
 		String id = ctx.ID().getText();
-		Type exprType = visit(ctx.expr());
+		Type exprType = visit(ctx.expression());
 		if (symbolTable.getSymbol(id).getType() != exprType) {
 			System.err.println(""); // TODO: accumulate errors
 			System.exit(1);
@@ -361,7 +361,7 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	@Override
 	public Type visitPoint(pdrawParser.PointContext ctx) {
 		visitChildren(ctx);
-		return null;
+		return Type.POINT;
 	}
 
 	// private function to see if expr is INTEGER or REAL
