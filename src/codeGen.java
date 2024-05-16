@@ -1,6 +1,4 @@
 
-
-
 @SuppressWarnings("CheckReturnValue")
 public class codeGen extends pdrawBaseVisitor<String> {
 
@@ -51,7 +49,7 @@ public class codeGen extends pdrawBaseVisitor<String> {
 
       String propriedade = ctx.Property.getText();
       property.add("key", propriedade);
-      property.add("value",visit(ctx.expr()).render());
+      property.add("value",visit(ctx.expression()).render());
       return property;
    }
 
@@ -81,7 +79,7 @@ public class codeGen extends pdrawBaseVisitor<String> {
 
    @Override public String visitPause(pdrawParser.PauseContext ctx) {
       ST pause = templates.getInstanceOf("pause");
-      pause.add("time", ctx.expr().getText());
+      pause.add("time", ctx.expression().getText());
       return pause.render();
    }
 
@@ -95,7 +93,7 @@ public class codeGen extends pdrawBaseVisitor<String> {
    //TO DO
    @Override public String visitExprToString(pdrawParser.ExprToStringContext ctx) {
       ST toString = templates.getInstanceOf("toString");
-      toString.add("op", visit(ctx.expr()));
+      toString.add("op", visit(ctx.expression()));
       return toString.render();
    }
 
@@ -144,8 +142,8 @@ public class codeGen extends pdrawBaseVisitor<String> {
    @Override public String visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
       ST binary = templates.getInstanceOf("binary_operations");
       
-      binary.add("op1", visit(ctx.expr(0)));
-      binary.add("op2", visit(ctx.expr(1)));
+      binary.add("op1", visit(ctx.expression(0)));
+      binary.add("op2", visit(ctx.expression(1)));
       binary.add("operator", ctx.op.getText());
 
       return binary.render(); 
@@ -160,8 +158,8 @@ public class codeGen extends pdrawBaseVisitor<String> {
    @Override public String visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
       ST binary = templates.getInstanceOf("binary_operations");
       
-      binary.add("op1", visit(ctx.expr(0)));
-      binary.add("op2", visit(ctx.expr(1)));
+      binary.add("op1", visit(ctx.expression(0)));
+      binary.add("op2", visit(ctx.expression(1)));
       binary.add("operator", ctx.op.getText());
 
       return binary.render(); 
@@ -169,7 +167,7 @@ public class codeGen extends pdrawBaseVisitor<String> {
 
    @Override public String visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
       ST conv_rad = templates.getInstanceOf("conv_rad");
-      conv_rad.add("op", visit(ctx.expr()));
+      conv_rad.add("op", visit(ctx.expression()));
       return conv_rad.render();
    }
 
@@ -181,7 +179,7 @@ public class codeGen extends pdrawBaseVisitor<String> {
 
    @Override public String visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
       ST unary = templates.getInstanceOf("unary_operations");
-      unary.add("op", visit(ctx.expr()));
+      unary.add("op", visit(ctx.expression()));
       unary.add("operator", ctx.op.getText());
       return unary.render();
    }
