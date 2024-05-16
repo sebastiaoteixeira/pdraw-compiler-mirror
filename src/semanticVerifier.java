@@ -376,6 +376,6 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	// types that can be converted to numeric
 	private boolean isConvertibleToNumeric(Type type) {
-		return type == Type.INTEGER || type == Type.REAL;
+		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
 	}
 }
