@@ -118,14 +118,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_program; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterProgram(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitProgram(this);
-		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -188,14 +180,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_statement; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterStatement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitStatement(this);
-		}
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -271,14 +255,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_define; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterDefine(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitDefine(this);
-		}
 	}
 
 	public final DefineContext define() throws RecognitionException {
@@ -333,14 +309,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_penDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterPenDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitPenDefinition(this);
-		}
 	}
 
 	public final PenDefinitionContext penDefinition() throws RecognitionException {
@@ -395,14 +363,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_propertyDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterPropertyDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitPropertyDefinition(this);
-		}
 	}
 
 	public final PropertyDefinitionContext propertyDefinition() throws RecognitionException {
@@ -443,14 +403,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_canvasDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterCanvasDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitCanvasDefinition(this);
-		}
 	}
 
 	public final CanvasDefinitionContext canvasDefinition() throws RecognitionException {
@@ -488,14 +440,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_declaration; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterDeclaration(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitDeclaration(this);
-		}
 	}
 
 	public final DeclarationContext declaration() throws RecognitionException {
@@ -540,14 +484,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExpression(this);
-		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -580,14 +516,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_execution; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExecution(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExecution(this);
-		}
 	}
 
 	public final ExecutionContext execution() throws RecognitionException {
@@ -622,14 +550,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pause; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterPause(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitPause(this);
-		}
 	}
 
 	public final PauseContext pause() throws RecognitionException {
@@ -664,14 +584,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stdout; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterStdout(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitStdout(this);
-		}
 	}
 
 	public final StdoutContext stdout() throws RecognitionException {
@@ -717,27 +629,11 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprToStringContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprToString(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprToString(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprStringContext extends ExprContext {
 		public TerminalNode String() { return getToken(pdrawParser.String, 0); }
 		public ExprStringContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprString(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprString(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprParentContext extends ExprContext {
@@ -745,14 +641,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprParentContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprParent(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprParent(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprPointContext extends ExprContext {
@@ -760,14 +648,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(PointContext.class,0);
 		}
 		public ExprPointContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprPoint(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprPoint(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprStringConcatContext extends ExprContext {
@@ -776,14 +656,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprStringConcatContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprStringConcat(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprStringConcat(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprToIntContext extends ExprContext {
@@ -791,14 +663,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprToIntContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprToInt(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprToInt(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprToRealContext extends ExprContext {
@@ -806,14 +670,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprToRealContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprToReal(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprToReal(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprPenOperatorContext extends ExprContext {
@@ -825,14 +681,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public ExprPenOperatorContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprPenOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprPenOperator(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprMultDivModContext extends ExprContext {
@@ -844,14 +692,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public ExprMultDivModContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprMultDivMod(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprMultDivMod(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprAddSubContext extends ExprContext {
@@ -863,14 +703,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public ExprAddSubContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprAddSub(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprAddSub(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprSetPropertyContext extends ExprContext {
@@ -883,14 +715,6 @@ public class pdrawParser extends Parser {
 		}
 		public TerminalNode Property() { return getToken(pdrawParser.Property, 0); }
 		public ExprSetPropertyContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprSetProperty(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprSetProperty(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprConvToRadContext extends ExprContext {
@@ -899,14 +723,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprConvToRadContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprConvToRad(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprConvToRad(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprPenUnaryContext extends ExprContext {
@@ -915,14 +731,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprPenUnaryContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprPenUnary(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprPenUnary(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprUnaryContext extends ExprContext {
@@ -931,14 +739,6 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprUnaryContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprUnary(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprUnary(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprNewContext extends ExprContext {
@@ -946,27 +746,11 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprNewContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprNew(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprNew(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprStdinContext extends ExprContext {
 		public TerminalNode String() { return getToken(pdrawParser.String, 0); }
 		public ExprStdinContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprStdin(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprStdin(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprAssignContext extends ExprContext {
@@ -976,53 +760,21 @@ public class pdrawParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprAssignContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprAssign(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprAssign(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprRealContext extends ExprContext {
 		public TerminalNode Real() { return getToken(pdrawParser.Real, 0); }
 		public ExprRealContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprReal(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprReal(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprIntegerContext extends ExprContext {
 		public TerminalNode Integer() { return getToken(pdrawParser.Integer, 0); }
 		public ExprIntegerContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprInteger(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprInteger(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprIdContext extends ExprContext {
 		public TerminalNode ID() { return getToken(pdrawParser.ID, 0); }
 		public ExprIdContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterExprId(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitExprId(this);
-		}
 	}
 
 	public final ExprContext expr() throws RecognitionException {
@@ -1363,6 +1115,8 @@ public class pdrawParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class PointContext extends ParserRuleContext {
+		public ExprContext x;
+		public ExprContext y;
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -1373,14 +1127,6 @@ public class pdrawParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_point; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).enterPoint(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof pdrawListener ) ((pdrawListener)listener).exitPoint(this);
-		}
 	}
 
 	public final PointContext point() throws RecognitionException {
@@ -1392,11 +1138,11 @@ public class pdrawParser extends Parser {
 			setState(147);
 			match(T__23);
 			setState(148);
-			expr(0);
+			((PointContext)_localctx).x = expr(0);
 			setState(149);
 			match(T__32);
 			setState(150);
-			expr(0);
+			((PointContext)_localctx).y = expr(0);
 			setState(151);
 			match(T__24);
 			}

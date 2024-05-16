@@ -64,6 +64,9 @@ binary_operations(op1, op2, operator) ::= <<<op1> <operator> <op2>>>
 // Template for conv_rad
 conv_rad(op) ::= <<radians(<op>)>>
 
+// Template for visitPoint
+visitPoint(op1,op2) ::= <<(<op1>,<op2>)>>
+
 //TO DO, define canvas
 
 //TO DO, declarar varias variaveis

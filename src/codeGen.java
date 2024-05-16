@@ -228,8 +228,9 @@ public class codeGen extends pdrawBaseVisitor<String> {
    }
 
    @Override public String visitPoint(pdrawParser.PointContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST point = templates.getInstanceOf("unary_operations");
+      point.add("op1", visit(ctx.x));
+      point.add("op2", visit(ctx.y));
+      return point.render();
    }
 }

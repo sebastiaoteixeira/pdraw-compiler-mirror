@@ -71,7 +71,7 @@ expr :
 
 
 // Types
-point: '(' expr ',' expr ')';
+point: '(' x=expr ',' y=expr ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
 
