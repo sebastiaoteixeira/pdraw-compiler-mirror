@@ -14,9 +14,11 @@ propertyDefinition: Property '=' expression ';';
 
 canvasDefinition: 'canvas' ID String point;
 
-declaration: type=('pen'|'real'|'int'|'string'|'point') ID;
+declaration: type=('pen'|'real'|'int'|'string'|'point') ID ('=' expression)?;
 
-execution: 'execute' expression;
+
+
+execution: ID '<-' 'execute' expression;
 
 pause: 'pause' expression;
 
@@ -60,6 +62,7 @@ expression :
     | Integer #ExprInteger
     | Real #ExprReal
     | String #ExprString
+    | Color #ExprColor
     | point #ExprPoint
 
     // Parentized expression

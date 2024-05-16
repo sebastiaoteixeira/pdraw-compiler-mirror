@@ -24,6 +24,7 @@ public class pdrawMain {
             semanticVerifier visitor0 = new semanticVerifier();
             codeGen visitor1 = new codeGen();
             visitor0.visit(tree);
+            ErrorHandler.execute();
             visitor1.visit(tree);
          }
       }

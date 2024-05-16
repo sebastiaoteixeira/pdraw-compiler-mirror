@@ -1,7 +1,11 @@
+import org.antlr.v4.runtime.ParserRuleContext;
+
+import javax.swing.text.html.HTMLEditorKit.Parser;
 
 import symbols.Symbol;
 import symbols.SymbolTable;
 import symbols.Type;
+
 
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<Type> {
@@ -43,37 +47,38 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		switch (property) {
 			case "color":
 				if (exprType != Type.COLOR) {
-					System.err.println("Error: Color value must be a color value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 			case "pressure":
 				if (!isNumericType(exprType)) {
-					System.err.println("Error: Pressure value must be a real or integer value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Pressure value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 			case "thickness":
 				if (exprType != Type.INTEGER) {
-					System.err.println("Error: Thickness value must be a integer value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Thickness value must be a integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;	
 			case "orientation":
 				if (!isNumericType(exprType)) {
-					System.err.println("Error: Orientation value must be a real or integer value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Orientation value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 			case "position":
 				if (exprType != Type.POINT) {
-					System.err.println("Error: Position value must be a point value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Position value must be a point value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 		
 			default:
-				System.err.println("Error: Invalid property " + property);
+				ErrorHandler.error(getFileName(ctx), "Invalid property " + property,
+					ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				break;
 		}
 		return exprType;
@@ -104,14 +109,14 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 				type = Type.POINT;
 				break;
 			default:
-				System.err.println("Error: Invalid type " + ctx.type.getText());
-				System.exit(1);
+				ErrorHandler.error(getFileName(ctx), "Invalid type " + ctx.type.getText(),
+					ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 
 		String id = ctx.ID().getText();
 		if (symbolTable.getSymbol(id) != null) {
-			System.err.println("Error: Variable with id " + id + " already exists.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " already exists.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 
 		Symbol variable = new Symbol(id, type);
@@ -129,8 +134,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitPause(pdrawParser.PauseContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (exprType != Type.INTEGER) {
-			System.err.println("Error: Pause time must be an integer value.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Pause time must be an integer value.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return exprType;
 	}
@@ -139,8 +144,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitStdout(pdrawParser.StdoutContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (exprType != Type.STRING) {
-			System.err.println("Error: stdout can only output string values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Stdout value must be a string value.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return null;
 	}
@@ -149,8 +154,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitExprToString(pdrawParser.ExprToStringContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (!isConvertibleToString(exprType)) {
-			System.err.println("Error: Conversion to string can only be applied to integer, real, or string values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Conversion to string can only be applied to real, integer, or string values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.STRING;
 	}
@@ -174,8 +179,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
       Type stringType = visit(ctx.String());
       Type exprType = visit(ctx.expression());
       if (stringType != Type.STRING || (exprType != Type.STRING && !isConvertibleToString(exprType))) {
-         System.err.println("Concatenation requires at least one operand to be a string or convertible to string.");
-         System.exit(1);
+         ErrorHandler.error(getFileName(ctx), "Operands of '+' must be string values.",
+			ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
       return Type.STRING;
   }
@@ -184,8 +189,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitExprToInt(pdrawParser.ExprToIntContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (!isConvertibleToNumeric(exprType)) {
-			System.err.println("Error: Conversion to integer can only be applied to real or integer values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Conversion to integer can only be applied to real, integer, or string values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.INTEGER;
 	}
@@ -194,8 +199,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitExprToReal(pdrawParser.ExprToRealContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (!isConvertibleToNumeric(exprType)) {
-			System.err.println("Error: Conversion to real can only be applied to real or integer values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Conversion to real can only be applied to real, integer, or string values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.REAL;
 	}
@@ -205,12 +210,12 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		Type exprType = visit(ctx.expression(0));
 		Type valueType = visit(ctx.expression(1));
 		if (exprType != Type.PEN) {
-			System.err.println("Error: Pen operator can only be applied to pen values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Pen operator can only be applied to pen values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		if (!isNumericType(valueType)) {
-			System.err.println("Error: Pen operator value must be a real or integer value.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Pen operator value must be a real or integer value.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.PEN;
 	}
@@ -219,8 +224,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
       Type leftType = visit(ctx.expression(0));
       Type rightType = visit(ctx.expression(1));
       if (!isNumericType(leftType) || !isNumericType(rightType)) {
-          System.err.println("Operands of '*', '/', '//', or '%' must be numeric.");
-          System.exit(1);}
+          ErrorHandler.error(getFileName(ctx), "Operands of '*' or '/' must be numeric.",
+			ctx.start.getLine(), ctx.start.getCharPositionInLine());}
       if (ctx.op.getText().equals("//")) {
           return Type.INTEGER;
       } else if (leftType == Type.REAL || rightType == Type.REAL) {
@@ -235,45 +240,46 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		Type rightType = visit(ctx.expression(1));
 
 		if (leftType != Type.PEN) {
-			System.err.println("Error: Property assignment can only be applied to pen values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Set property operator can only be applied to pen values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 
 		String property = ctx.Property().getText();
 		switch (property) {
 			case "color":
 				if (rightType != Type.COLOR) {
-					System.err.println("Error: Color value must be a color value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 			case "pressure":
 				if (!isNumericType(rightType)) {
-					System.err.println("Error: Pressure value must be a real or integer value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Pressure value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 			case "thickness":
 				if (rightType != Type.INTEGER) {
-					System.err.println("Error: Thickness value must be a integer value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Thickness value must be a integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;	
 			case "orientation":
 				if (!isNumericType(rightType)) {
-					System.err.println("Error: Orientation value must be a real or integer value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Orientation value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 			case "position":
 				if (rightType != Type.POINT) {
-					System.err.println("Error: Position value must be a point value.");
-					System.exit(1);
+					ErrorHandler.error(getFileName(ctx), "Position value must be a point value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
 		
 			default:
-				System.err.println("Error: Invalid property " + property);
+				ErrorHandler.error(getFileName(ctx), "Invalid property " + property,
+					ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				break;
 
 		}
@@ -284,8 +290,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		Type leftType = visit(ctx.expression(0));
 		Type rightType = visit(ctx.expression(1));
 		if (!isNumericType(leftType) || !isNumericType(rightType)) {
-			System.err.println("Operands of '+' or '-' must be numeric.");
-			System.exit(1);   
+			ErrorHandler.error(getFileName(ctx), "Operands of '+' or '-' must be numeric.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine()); 
 		}
       	return (leftType == Type.REAL || rightType == Type.REAL) ? Type.REAL : Type.INTEGER;
   }
@@ -293,8 +299,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
   	@Override public Type visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (exprType != Type.INTEGER && exprType != Type.REAL) {
-			System.err.println("Error: Conversion to radian can only be applied to real or integer values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Conversion to radian can only be applied to real or integer values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.REAL;
 	}
@@ -303,8 +309,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (exprType != Type.PEN) {
-			System.err.println("Error: Pen Unary operator can only be applied to pen values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Pen unary operator can only be applied to pen values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.PEN;
 	}
@@ -312,8 +318,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	@Override public Type visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
 		Type exprType = visit(ctx.expression());
 		if (!isNumericType(exprType)) {
-			System.err.println("Error: Unary operator can only be applied to real or integer values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Unary operator can only be applied to numeric values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return exprType;
    }
@@ -332,9 +338,17 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	public Type visitExprAssign(pdrawParser.ExprAssignContext ctx) {
 		String id = ctx.ID().getText();
 		Type exprType = visit(ctx.expression());
-		if (symbolTable.getSymbol(id).getType() != exprType) {
-			System.err.println(""); // TODO: accumulate errors
-			System.exit(1);
+		if (symbolTable.getSymbol(id) == null) {
+			// Implicit declaration
+			Symbol variable = new Symbol(id, exprType);
+			symbolTable.addSymbol(variable);
+
+			ErrorHandler.warning(getFileName(ctx), "Implicit declaration of variable " + id,
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				
+		} else if (symbolTable.getSymbol(id).getType() != exprType) {
+			ErrorHandler.error(getFileName(ctx), "Type mismatch in assignment.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return null;
 	}
@@ -357,8 +371,8 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	@Override
 	public Type visitPoint(pdrawParser.PointContext ctx) {
 		if (visit(ctx.expression(0)) != Type.INTEGER || visit(ctx.expression(1)) != Type.INTEGER) {
-			System.err.println("Error: Point values must be integer values.");
-			System.exit(1);
+			ErrorHandler.error(getFileName(ctx), "Point values must be integer values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return Type.POINT;
 	}
@@ -376,5 +390,9 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	// types that can be converted to numeric
 	private boolean isConvertibleToNumeric(Type type) {
 		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
+	}
+
+	private String getFileName(ParserRuleContext ctx) {
+		return ctx.getStart().getInputStream().getSourceName();
 	}
 }
