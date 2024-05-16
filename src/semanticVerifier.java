@@ -41,7 +41,10 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 		switch (property) {
 			case "color":
-				// TODO: check if rightType is a valid color
+				if (exprType != Type.COLOR) {
+					System.err.println("Error: Color value must be a color value.");
+					System.exit(1);
+				}
 				break;
 			case "pressure":
 				if (!isNumericType(exprType)) {
@@ -243,7 +246,10 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		String property = ctx.Property().getText();
 		switch (property) {
 			case "color":
-				// TODO: check if rightType is a valid color
+				if (rightType != Type.COLOR) {
+					System.err.println("Error: Color value must be a color value.");
+					System.exit(1);
+				}
 				break;
 			case "pressure":
 				if (!isNumericType(rightType)) {

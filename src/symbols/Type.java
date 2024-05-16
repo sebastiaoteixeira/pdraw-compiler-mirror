@@ -7,5 +7,6 @@ public enum Type {
     STRING,
     REAL,
     POINT,
-    BOOLEAN
+    BOOLEAN,
+    COLOR
 }
