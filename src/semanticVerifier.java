@@ -1,7 +1,7 @@
 
-import symbols.Type;
-import symbols.SymbolTable;
 import symbols.Symbol;
+import symbols.SymbolTable;
+import symbols.Type;
 
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<Type> {
@@ -10,30 +10,28 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitProgram(pdrawParser.ProgramContext ctx) {
-		Type res = null;
 		return visitChildren(ctx);
-		// return res;
 	}
 
 	@Override
 	public Type visitStatement(pdrawParser.StatementContext ctx) {
-		Type res = null;
 		return visitChildren(ctx);
-		// return res;
 	}
 
 	@Override
 	public Type visitDefine(pdrawParser.DefineContext ctx) {
-		Type res = null;
 		return visitChildren(ctx);
-		// return res;
 	}
 
 	@Override
 	public Type visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		String id = ctx.ID().getText();
+		if (symbolTable.getSymbol(id) != null) {
+			System.err.println("Error: Pen with id " + id + " already exists.");
+			System.exit(1);
+		}
+		Symbol pen = new Symbol(id, Type.PEN);
+		symbolTable.addSymbol(pen);
 	}
 
 	@Override
@@ -45,51 +43,83 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
-		Type res = null;
 		return visitChildren(ctx);
-		// return res;
 	}
 
 	@Override
 	public Type visitDeclaration(pdrawParser.DeclarationContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type type = null;
+		switch (ctx.type.getText()) {
+			case "pen":
+				type = Type.PEN;
+				break;
+			case "real":
+				type = Type.REAL;
+				break;
+			case "int":
+				type = Type.INTEGER;
+				break;
+			case "string":
+				type = Type.STRING;
+				break;
+			case "point":
+				type = Type.POINT;
+				break;
+			default:
+				System.err.println("Error: Invalid type " + ctx.type.getText());
+				System.exit(1);
+		}
+
+		String id = ctx.ID().getText();
+		if (symbolTable.getSymbol(id) != null) {
+			System.err.println("Error: Variable with id " + id + " already exists.");
+			System.exit(1);
+		}
+
+		Symbol variable = new Symbol(id, type);
+		symbolTable.addSymbol(variable);
+		
+		return type;
 	}
 
 	@Override
 	public Type visitExpression(pdrawParser.ExpressionContext ctx) {
-		Type res = null;
 		return visitChildren(ctx);
-		// return res;
 	}
 
 	@Override
 	public Type visitExecution(pdrawParser.ExecutionContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		return visit(ctx.expr());
 	}
 
 	@Override
 	public Type visitPause(pdrawParser.PauseContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr());
+		if (exprType != Type.INTEGER) {
+			System.err.println("Error: Pause time must be an integer value.");
+			System.exit(1);
+		}
+		return exprType;
 	}
 
 	@Override
 	public Type visitStdout(pdrawParser.StdoutContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr());
+		if (exprType != Type.STRING) {
+			System.err.println("Error: stdout can only output string values.");
+			System.exit(1);
+		}
+		return null;
 	}
 
 	@Override
 	public Type visitExprToString(pdrawParser.ExprToStringContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr());
+		if (!isConvertibleToString(exprType)) {
+			System.err.println("Error: Conversion to string can only be applied to integer, real, or string values.");
+			System.exit(1);
+		}
+		return Type.STRING;
 	}
 
 	@Override
@@ -119,23 +149,37 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
 	@Override
 	public Type visitExprToInt(pdrawParser.ExprToIntContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr());
+		if (!isConvertibleToNumeric(exprType)) {
+			System.err.println("Error: Conversion to integer can only be applied to real or integer values.");
+			System.exit(1);
+		}
+		return Type.INTEGER;
 	}
 
 	@Override
 	public Type visitExprToReal(pdrawParser.ExprToRealContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr());
+		if (!isConvertibleToNumeric(exprType) {
+			System.err.println("Error: Conversion to real can only be applied to real or integer values.");
+			System.exit(1);
+		}
+		return Type.REAL;
 	}
 
 	@Override
 	public Type visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr(0));
+		Type valueType = visit(ctx.expr(1));
+		if (exprType != Type.PEN) {
+			System.err.println("Error: Pen operator can only be applied to pen values.");
+			System.exit(1);
+		}
+		if (!isNumericType(valueType)) {
+			System.err.println("Error: Pen operator value must be a real or integer value.");
+			System.exit(1);
+		}
+		return Type.PEN;
 	}
 
 	@Override public Type visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
@@ -160,38 +204,41 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
-      Type leftType = visit(ctx.expr(0));
-      Type rightType = visit(ctx.expr(1));
-      if (!isNumericType(leftType) || !isNumericType(rightType)) {
-            System.err.println("Operands of '+' or '-' must be numeric.");
-            System.exit(1);   
-      }
-      return (leftType == Type.REAL || rightType == Type.REAL) ? Type.REAL : Type.INTEGER;
+		Type leftType = visit(ctx.expr(0));
+		Type rightType = visit(ctx.expr(1));
+		if (!isNumericType(leftType) || !isNumericType(rightType)) {
+			System.err.println("Operands of '+' or '-' must be numeric.");
+			System.exit(1);   
+		}
+      	return (leftType == Type.REAL || rightType == Type.REAL) ? Type.REAL : Type.INTEGER;
   }
 
-  @Override public Type visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
-   Type exprType = visit(ctx.expr());
-   if (exprType != Type.INTEGER && exprType != Type.REAL) {
-      System.err.println("Error: Conversion to radian can only be applied to real or integer values.");
-      System.exit(1);
-   }
-   return Type.REAL;
-}
+  	@Override public Type visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
+		Type exprType = visit(ctx.expr());
+		if (exprType != Type.INTEGER && exprType != Type.REAL) {
+			System.err.println("Error: Conversion to radian can only be applied to real or integer values.");
+			System.exit(1);
+		}
+		return Type.REAL;
+	}
 
 	@Override
 	public Type visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-		Type res = null;
-		return visitChildren(ctx);
-		// return res;
+		Type exprType = visit(ctx.expr());
+		if (exprType != Type.PEN) {
+			System.err.println("Error: Pen Unary operator can only be applied to pen values.");
+			System.exit(1);
+		}
+		return Type.PEN;
 	}
 
 	@Override public Type visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      Type exprType = visit(ctx.expr());
-      if (exprType != Type.REAL && exprType != Type.INTEGER) {
-         System.err.println("Error: Unary operator can only be applied to real or integer values.");
-         System.exit(1);
-      }
-      return exprType;
+		Type exprType = visit(ctx.expr());
+		if (!isNumericType(exprType)) {
+			System.err.println("Error: Unary operator can only be applied to real or integer values.");
+			System.exit(1);
+		}
+		return exprType;
    }
 
 	@Override
@@ -236,13 +283,18 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 		return null;
 	}
 
-   //private function to see if expr is INTEGER or REAL
-   private boolean isNumericType(Type type) {
-      return type == Type.INTEGER || type == Type.REAL;
-  }
+	// private function to see if expr is INTEGER or REAL
+	private boolean isNumericType(Type type) {
+		return type == Type.INTEGER || type == Type.REAL;
+	}
   
-  //types that can be converted besides string
-  private boolean isConvertibleToString(Type type) {
-      return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
-  }
+	// types that can be converted besides string
+	private boolean isConvertibleToString(Type type) {
+		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
+	}
+
+	// types that can be converted to numeric
+	private boolean isConvertibleToNumeric(Type type) {
+		return type == Type.INTEGER || type == Type.REAL;
+	}
 }
