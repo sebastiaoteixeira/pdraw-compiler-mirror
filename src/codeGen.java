@@ -147,9 +147,13 @@ public class codeGen extends pdrawBaseVisitor<String> {
    }
 
    @Override public String visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST binary = templates.getInstanceOf("binary_operations");
+      
+      binary.add("op1", visit(ctx.expr(0)));
+      binary.add("op2", visit(ctx.expr(1)));
+      binary.add("operator", ctx.op.getText());
+
+      return binary.render(); 
    }
 
    @Override public String visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
@@ -159,15 +163,19 @@ public class codeGen extends pdrawBaseVisitor<String> {
    }
 
    @Override public String visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST binary = templates.getInstanceOf("binary_operations");
+      
+      binary.add("op1", visit(ctx.expr(0)));
+      binary.add("op2", visit(ctx.expr(1)));
+      binary.add("operator", ctx.op.getText());
+
+      return binary.render(); 
    }
 
    @Override public String visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST conv_rad = templates.getInstanceOf("conv_rad");
+      conv_rad.add("op", visit(ctx.expr()));
+      return conv_rad.render();
    }
 
    @Override public String visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
@@ -177,9 +185,10 @@ public class codeGen extends pdrawBaseVisitor<String> {
    }
 
    @Override public String visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST unary = templates.getInstanceOf("unary_operations");
+      unary.add("op", visit(ctx.expr()));
+      unary.add("operator", ctx.op.getText());
+      return unary.render();
    }
 
    @Override public String visitExprNew(pdrawParser.ExprNewContext ctx) {

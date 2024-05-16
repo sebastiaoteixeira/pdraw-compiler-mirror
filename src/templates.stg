@@ -55,6 +55,15 @@ pen(name) ::= <<
 <name> = Pen()
 >>
 
+// Template for unary_operations
+unary_operations(operator, op) ::= <<<operator> <op>>>
+
+// Template for binary_operations
+binary_operations(op1, op2, operator) ::= <<<op1> <operator> <op2>>>
+
+// Template for conv_rad
+conv_rad(op) ::= <<radians(<op>)>>
+
 //TO DO, define canvas
 
 //TO DO, declarar varias variaveis
@@ -62,8 +71,5 @@ pen(name) ::= <<
 //TO DO, Pause
 
 //TO DO, STdout chamr print
-
-//TO DO, criar template para operações binárias
-
 
 //TO DO, criar class points 
