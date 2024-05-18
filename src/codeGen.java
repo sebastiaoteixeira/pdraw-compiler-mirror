@@ -1,4 +1,3 @@
-import org.stringtemplate.v4.*;
 
 @SuppressWarnings("CheckReturnValue")
 public class codeGen extends pdrawBaseVisitor<ST> {
@@ -112,21 +111,22 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST concat = templates.getInstanceOf("concat");
+      concat.add("op1", visit(ctx.expression(0)));
+      concat.add("op2", visit(ctx.expression(1)));
+      return concat;
    }
 
    @Override public ST visitExprToInt(pdrawParser.ExprToIntContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toInt = templates.getInstanceOf("toInt");
+      toInt.add("op", visit(ctx.expression()));
+      return toInt;
    }
 
    @Override public ST visitExprToReal(pdrawParser.ExprToRealContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toReal = templates.getInstanceOf("toReal");
+      toReal.add("op", visit(ctx.expression()));
+      return toReal;
    }
 
    @Override public ST visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {

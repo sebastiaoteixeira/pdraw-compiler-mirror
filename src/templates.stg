@@ -83,3 +83,12 @@ pause(time) ::= <<sleep(<time>)>>
 
 // Template fot ExprToString
 toString(op) ::= <<str(<op>)>>
+
+// Template for ExprToInt
+toInt(op) ::= <<int(<op>)>>
+
+// Template for ExprToReal
+toReal(op) ::= <<float(<op>)>>
+
+// Template for ExprStringConcat
+concat(op1,op2) ::= <<str(<op1>) + str(<op2>)>>
