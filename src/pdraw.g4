@@ -67,6 +67,10 @@ expression :
 
     // Parentized expression
     | '(' expression ')' #ExprParent
+
+    // Boolean expressions
+    | boolean #ExprBool
+    | expression op=('and'|'or') expression #ExprToBool
 ;
 
 
@@ -81,6 +85,8 @@ fragment EscapeSequence: '\\' . ;
 
 Integer: [0-9]+;
 Real: [0-9]+ '.' [0-9]+;
+
+boolean: 'true' | 'false';
 
 
 // Identifiers
