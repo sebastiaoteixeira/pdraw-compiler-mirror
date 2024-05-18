@@ -4,8 +4,7 @@ import symbols.SymbolTable;
 import symbols.Type;
 
 
-
-
+// This class is responsible for verifying the semantic rules of the language.
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<Type> {
 
@@ -175,14 +174,14 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
-      Type stringType = visit(ctx.String());
-      Type exprType = visit(ctx.expression());
-      if (stringType != Type.STRING || (exprType != Type.STRING && !isConvertibleToString(exprType))) {
-         ErrorHandler.error(getFileName(ctx), "Operands of '+' must be string values.",
-			ctx.start.getLine(), ctx.start.getCharPositionInLine());
-      }
-      return Type.STRING;
-  }
+		Type stringType = visit(ctx.String());
+		Type exprType = visit(ctx.expression());
+		if (stringType != Type.STRING || (exprType != Type.STRING && !isConvertibleToString(exprType))) {
+			ErrorHandler.error(getFileName(ctx), "Operands of '+' must be string values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+		return Type.STRING;
+ 	}
 
 	@Override
 	public Type visitExprToInt(pdrawParser.ExprToIntContext ctx) {
@@ -220,18 +219,18 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
-      Type leftType = visit(ctx.expression(0));
-      Type rightType = visit(ctx.expression(1));
-      if (!isNumericType(leftType) || !isNumericType(rightType)) {
-          ErrorHandler.error(getFileName(ctx), "Operands of '*' or '/' must be numeric.",
-			ctx.start.getLine(), ctx.start.getCharPositionInLine());}
-      if (ctx.op.getText().equals("//")) {
-          return Type.INTEGER;
-      } else if (leftType == Type.REAL || rightType == Type.REAL) {
-          return Type.REAL;
-      }
-      return Type.INTEGER;
-  }
+		Type leftType = visit(ctx.expression(0));
+		Type rightType = visit(ctx.expression(1));
+		if (!isNumericType(leftType) || !isNumericType(rightType)) {
+			ErrorHandler.error(getFileName(ctx), "Operands of '*' or '/' must be numeric.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());}
+		if (ctx.op.getText().equals("//")) {
+			return Type.INTEGER;
+		} else if (leftType == Type.REAL || rightType == Type.REAL) {
+			return Type.REAL;
+		}
+		return Type.INTEGER;
+  	}
 
 	@Override
 	public Type visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
