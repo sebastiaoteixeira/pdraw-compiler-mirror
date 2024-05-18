@@ -77,6 +77,9 @@ declarationContext(var) ::= <<<var> = None>>
 //Template for pause
 pause(time) ::= <<sleep(<time>)>>
 
+// Template for ExprStdin
+stdin() ::= <<input()>>
+
 //TO DO, STdout chamr print
 
 //TO DO, criar class points 
@@ -92,3 +95,6 @@ toReal(op) ::= <<float(<op>)>>
 
 // Template for ExprStringConcat
 concat(op1,op2) ::= <<str(<op1>) + str(<op2>)>>
+
+// Template for ExprAssign
+assign(var, value) ::= << <var> = <value> >>

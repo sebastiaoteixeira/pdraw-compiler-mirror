@@ -175,9 +175,10 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST unary = templates.getInstanceOf("unary_operations");
+      unary.add("op", visit(ctx.expression()));
+      unary.add("operator", ctx.op.getText());
+      return unary;
    }
 
    @Override public ST visitExprNew(pdrawParser.ExprNewContext ctx) {
@@ -187,15 +188,15 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprStdin(pdrawParser.ExprStdinContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST stdin = templates.getInstanceOf("stdin");
+      return stdin;
    }
 
    @Override public ST visitExprAssign(pdrawParser.ExprAssignContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST assign = templates.getInstanceOf("assign");
+      assign.add("var", ctx.ID().getText());
+      assign.add("value", visit(ctx.expression()));
+      return assign;
    }
 
    @Override public ST visitExprReal(pdrawParser.ExprRealContext ctx) {
