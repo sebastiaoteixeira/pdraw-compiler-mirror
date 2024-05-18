@@ -13,4 +13,3 @@ __pycache__
 venv/
 *.pyc
 bin/
-src/.antlr/
