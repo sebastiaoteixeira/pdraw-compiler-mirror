@@ -1,0 +1,88 @@
+// Template para definição do canvas
+canvasDefinition(title, width, height) ::= <<
+canvas = Canvas("<title>", <width>, <height>)
+>>
+
+// Template para definição da caneta
+penDefinition(name, position, color, orientation, thickness, pressure) ::= <<
+<name> = Pen(canvas, PenType(position=<position>, color="<color>", orientation=<orientation>, thickness=<thickness>, pressure=<pressure>))
+>>
+
+// Templates para comandos da caneta
+penForward(name, distance) ::= <<
+<name>.forward(<distance>)
+>>
+
+penBackward(name, distance) ::= <<
+<name>.backward(<distance>)
+>>
+
+penRight(name, angle) ::= <<
+<name>.right(<angle>)
+>>
+
+penLeft(name, angle) ::= <<
+<name>.left(<angle>)
+>>
+
+penDown(name) ::= <<
+<name>.down()
+>>
+
+penUp(name) ::= <<
+<name>.up()
+>>
+
+penSetColor(name, color) ::= <<
+<name>.set_color("<color>")
+>>
+
+penSetThickness(name, thickness) ::= <<
+<name>.set_thickness(<thickness>)
+>>
+
+penSetPosition(name, position) ::= <<
+<name>.set_position(<position>)
+>>
+
+penSetOrientation(name, orientation) ::= <<
+<name>.set_orientation(<orientation>)
+>>
+
+penSetPressure(name, pressure) ::= <<
+<name>.set_pressure(<pressure>)
+>>
+
+// Templates para instruções de controle
+ifStatement(condition, trueBlock) ::= <<
+if <condition>:
+    <trueBlock>
+>>
+
+ifElseStatement(condition, trueBlock, falseBlock) ::= <<
+if <condition>:
+    <trueBlock>
+else:
+    <falseBlock>
+>>
+
+whileLoop(condition, body) ::= <<
+while <condition>:
+    <body>
+>>
+
+forLoop(initialization, condition, increment, body) ::= <<
+for <initialization>; <condition>; <increment>:
+    <body>
+>>
+
+// Template para a função principal
+mainFunction(body) ::= <<
+def main():
+    <body>
+    canvas.win.getMouse()
+    canvas.win.close()
+
+if __name__ == "__main__":
+    main()
+>>
