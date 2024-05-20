@@ -70,7 +70,12 @@ visitPoint(op1,op2) ::= <<(<op1>,<op2>)>>
 // Template for DeclarationContext
 declarationContext(var) ::= <<<var> = None>>
 
-//TO DO, define canvas
+// Template for CanvasDefinition
+//
+
+// Template for Execution
+// pode estar errado..
+execution(id, fileName) ::= <<exec(open("<fileName>").read())>>
 
 //TO DO, declarar varias variaveis
 
@@ -80,7 +85,8 @@ pause(time) ::= <<sleep(<time>)>>
 // Template for ExprStdin
 stdin() ::= <<input()>>
 
-//TO DO, STdout chamr print
+// Template for ExprStdout
+stdout(op) ::= <<print(<op>)>>
 
 //TO DO, criar class points 
 

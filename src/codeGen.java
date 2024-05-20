@@ -1,4 +1,3 @@
-import org.stringtemplate.v4.*;
 
 @SuppressWarnings("CheckReturnValue")
 public class codeGen extends pdrawBaseVisitor<ST> {
@@ -57,10 +56,17 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
-      String res = null;
-      return visitChildren(ctx);
-      //TO DO
-      //return res;
+      // define canvas Canvas1 "Example p2" (width,height);
+      ST canvasTemplate = templates.getInstanceOf("canvasDefinition");
+      String id = ctx.ID().getText();
+      String title = ctx.String().getText();
+      String measurements = visitPoint(ctx.point()).render();
+
+      canvasTemplate.add("canvasName",id);
+      canvasTemplate.add("title",title);
+      canvasTemplate.add("measurements",measurements);
+
+      return canvasTemplate;
    }
 
    @Override public ST visitDeclaration(pdrawParser.DeclarationContext ctx) {
@@ -70,9 +76,10 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExecution(pdrawParser.ExecutionContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST execution = templates.getInstanceOf("execution");
+      execution.add("id", ctx.ID().getText());
+      execution.add("fileName", visit(ctx.expression()));
+      return execution;
    }
 
    @Override public ST visitPause(pdrawParser.PauseContext ctx) {
@@ -82,9 +89,9 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitStdout(pdrawParser.StdoutContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST stdout = templates.getInstanceOf("stdout");
+      stdout.add("op", visit(ctx.expression()));
+      return stdout;
    }
 
    @Override public ST visitExprToString(pdrawParser.ExprToStringContext ctx) {
