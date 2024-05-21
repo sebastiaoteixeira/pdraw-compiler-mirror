@@ -1,40 +1,37 @@
+import compiler.symbols.*;
+
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
-   @Override public GenericType visitProgram(pdrawParser.ProgramContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
+   private SymbolTable symbolTable = new SymbolTable();
+
+   @Override
+	public GenericType visitProgram(pdrawParser.ProgramContext ctx) {
+		return visitChildren(ctx);
+	}
 
    @Override public GenericType visitStatement(pdrawParser.StatementContext ctx) {
-      GenericType res = null;
       return visitChildren(ctx);
-      //return res;
    }
 
    @Override public GenericType visitCompound(pdrawParser.CompoundContext ctx) {
-      GenericType res = null;
       return visitChildren(ctx);
-      //return res;
    }
 
    @Override public GenericType visitBlock(pdrawParser.BlockContext ctx) {
-      GenericType res = null;
       return visitChildren(ctx);
-      //return res;
    }
 
    @Override public GenericType visitDefine(pdrawParser.DefineContext ctx) {
-      GenericType res = null;
       return visitChildren(ctx);
-      //return res;
    }
 
    @Override public GenericType visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      String id = ctx.ID().getText();
+      GenericType type = new PenType();
+		Symbol penType = new Symbol(id, type);
+		symbolTable.addSymbol(penType);
+		return type;
    }
 
    @Override public GenericType visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 class ScopeLevel {
     private int level;
-    public Map<String, Symbol> symbols = new HashMap<String, Symbol>();
+    public Map<StringType, Symbol> symbols = new HashMap<StringType, Symbol>();
 
     ScopeLevel(int level) {
         this.level = level;
@@ -15,7 +15,7 @@ class ScopeLevel {
         symbols.put(symbol.getIdentifier(), symbol);
     }
 
-    public Symbol getSymbol(String identifier) {
+    public Symbol getSymbol(StringType identifier) {
         return symbols.get(identifier);
     }
 
@@ -46,7 +46,7 @@ public class SymbolTable {
         stack.peek().addSymbol(symbol);
     }
 
-    public Symbol getSymbol(String identifier) {
+    public Symbol getSymbol(StringType identifier) {
         for (int i = stack.size() - 1; i >= 0; i--) {
             Symbol symbol = stack.get(i).getSymbol(identifier);
             if (symbol != null) {
