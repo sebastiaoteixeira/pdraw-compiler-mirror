@@ -174,9 +174,9 @@ public class semanticVerifier extends pdrawBaseVisitor<Type> {
 	}
 
 	@Override public Type visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
-		Type stringType = visit(ctx.String());
-		Type exprType = visit(ctx.expression());
-		if (stringType != Type.STRING || (exprType != Type.STRING && !isConvertibleToString(exprType))) {
+		Type exprType1 = visit(ctx.expression(0));
+		Type exprType2 = visit(ctx.expression(1));
+		if (exprType1 != Type.STRING && exprType2 != Type.STRING) {
 			ErrorHandler.error(getFileName(ctx), "Operands of '+' must be string values.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}

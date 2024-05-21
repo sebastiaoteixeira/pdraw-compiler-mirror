@@ -3,8 +3,11 @@ grammar pdraw;
 // Define the grammar for the parser
 program: statement* EOF;
 
-statement: (define | expression | declaration | stdout | pause | execution) ';';
+statement: (define | expression | declaration | stdout | pause | execution | if | for | until | while | block) ';';
 
+coumpound: statement*;
+
+block: '{' coumpound '}';
 
 // Statements and expressions
 define: 'define' (penDefinition | canvasDefinition);
@@ -16,7 +19,13 @@ canvasDefinition: 'canvas' ID String point;
 
 declaration: type=('pen'|'real'|'int'|'string'|'point') ID ('=' expression)?;
 
+while: 'while' '(' expression ')' statement;
 
+until: 'until' '(' expression ')' statement;
+
+for: 'for' '(' declaration ';' expression ';' expression ')' statement; 
+
+if: 'if' '(' expression ')' statement ('else'  statement )?;
 
 execution: ID '<-' 'execute' expression;
 
@@ -33,16 +42,17 @@ expression :
     // Math
     | op=('+'|'-') expression #ExprUnary
     | expression op='º' #ExprConvToRad
-    | expression op=('*'|'/'|'//'|'%') expression #ExprMultDivMod
+    | expression op=('*'|'/'|'//'|'\\\\') expression #ExprMultDivMod
     | expression op=('+'|'-') expression #ExprAddSub
 
     // Concatenation
-    | String expression #ExprStringConcat
+    | expression expression #ExprStringConcat
 
     // Type conversion
     | 'int' '(' expression ')' #ExprToInt
     | 'real' '(' expression ')' #ExprToReal
     | 'string' '(' expression ')' #ExprToString
+    | 'bool' '(' expression ')' #ExprToBool
 
     // Pen instructions (the pen itself should be returned to allow operations chain)
     | expression op=('down'|'up') #ExprPenUnary
@@ -51,6 +61,12 @@ expression :
 
     // stdin
     | 'stdin' String #ExprStdin
+
+    // Comparison
+    | expression op=('=='|'!='|'<'|'<='|'>'|'>=') expression #ExprComp
+
+    // Boolean expressions
+    | expression op=('and'|'or') expression #ExprBoolOp
 
     // Assign
     | ID op='=' expression #ExprAssign
@@ -64,13 +80,10 @@ expression :
     | String #ExprString
     | Color #ExprColor
     | point #ExprPoint
+    | boolean #ExprBool
 
     // Parentized expression
     | '(' expression ')' #ExprParent
-
-    // Boolean expressions
-    | boolean #ExprBool
-    | expression op=('and'|'or') expression #ExprToBool
 ;
 
 
@@ -78,7 +91,7 @@ expression :
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
-Color: ('red'|'green'|'blue'|'black'|'white'|'yellow'|'cyan'|'magenta');
+Color: ('white'|'black'|'green'|'red'|'blue'|'yellow');
 
 String: '"' (EscapeSequence | ~['"\\])* '"';
 fragment EscapeSequence: '\\' . ;
