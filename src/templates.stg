@@ -85,8 +85,14 @@ pause(time) ::= <<sleep(<time>)>>
 // Template for ExprStdin
 stdin() ::= <<input()>>
 
+<<<<<<< HEAD
 // Template for ExprStdout
 stdout(op) ::= <<print(<op>)>>
+=======
+// Template StdoutPrint
+stdout() ::== <<print()>>
+
+>>>>>>> aa88f42 (stdin)
 
 //TO DO, criar class points 
 
