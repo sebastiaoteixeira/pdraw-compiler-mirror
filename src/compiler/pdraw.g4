@@ -3,7 +3,9 @@ grammar pdraw;
 // Define the grammar for the parser
 program: statement* EOF;
 
-statement: (define | expression | declaration | stdout | pause | execution | if | for | until | while | block) ';';
+function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' block;
+
+statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function) ';';
 
 coumpound: statement*;
 
@@ -13,11 +15,18 @@ block: '{' coumpound '}';
 define: 'define' (penDefinition | canvasDefinition);
 
 penDefinition: 'pen' ID '{' propertyDefinition* '}';
+
 propertyDefinition: Property '=' expression ';';
 
 canvasDefinition: 'canvas' ID String point;
 
-declaration: type=('pen'|'real'|'int'|'string'|'point') ID ('=' expression)?;
+parameter_list: parameter (',' declaration)* ;
+
+parameter: type=('pen'|'real'|'int'|'string'|'point') ID;
+
+declaration_element returns [String identifier] : (ID | assign);
+
+declaration: type=('pen'|'real'|'int'|'string'|'point') declaration_element (',' declaration_element)*;
 
 while: 'while' '(' expression ')' statement;
 
@@ -36,8 +45,11 @@ stdout: expression '->' 'stdout';
 
 // Expressions
 expression : 
+    // Function Call
+    ID '(' expression (',' expression)* ')' #ExprFunctionCall
+
     // pen instance
-    'new' expression? #ExprNew
+    |'new' expression? #ExprNew
 
     // Math
     | op=('+'|'-') expression #ExprUnary
@@ -69,7 +81,7 @@ expression :
     | expression op=('and'|'or') expression #ExprBoolOp
 
     // Assign
-    | ID op='=' expression #ExprAssign
+    | assign #ExprAssign
 
     // Identifier
     | ID #ExprId
@@ -84,8 +96,13 @@ expression :
 
     // Parentized expression
     | '(' expression ')' #ExprParent
+
+    // Pen backward
+    | expression op=('down'|'up'|'forward'|'left'|'right'|'backward') expression #ExprPenOperator
 ;
 
+// Assign 
+assign returns [String identifier]: ID op='=' expression;
 
 // Types
 point: '(' x=expression ',' y=expression ')';
