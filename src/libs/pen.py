@@ -1,10 +1,40 @@
 from canvas import Canvas
 import math
 
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __sum__(self, other) -> Point:
+        return Point(self.x + other.x, self.y + other.y)
+    
+    def __sub__(self, other) -> Point:
+        return Point(self.x - other.x, self.y - other.y)
+    
+    def __str__(self) -> str:
+        return f"({self.x},{self.y})"
+    
+    def __getitem__(self, index):
+        if index == 0:
+            return self.x
+        elif index == 1:
+            return self.y
+        else:
+            raise IndexError("Index out of range")
+        
+    def __setitem__(self, index, value):
+        if index == 0:
+            self.x = value
+        elif index == 1:
+            self.y = value
+        else:
+            raise IndexError("Index out of range")
+
 class Pen:
     def __init__(self, canvas: Canvas, penType: dict):
         self.__canvas = canvas
-        self.__position = penType.get("position", (0, 0))
+        self.__position = penType.get("position", Point(0, 0))
         self.__color = penType.get("color", "black")
         self.__pressure = penType.get("pressure", 1)
         self.__orientation = penType.get("orientation", 0)
@@ -14,23 +44,19 @@ class Pen:
     def __str__(self) -> str:
         return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness}, is_down={self.is_down})"
 
-    def backward(self, distance):
+    def forward(self, distance):
         rad_orientation = math.radians(self.__orientation)
-        new_x = self.__position[0] - distance * math.cos(rad_orientation)
-        new_y = self.__position[1] - distance * math.sin(rad_orientation)
-        new_position = (new_x, new_y)
+        new_position = self.__position + Point(distance * math.cos(rad_orientation), distance * math.sin(rad_orientation))
 
         if self.is_down:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
         self.position = new_position
         return self
-
-    def forward(self, distance):
+    
+    def backward(self, distance):
         rad_orientation = math.radians(self.__orientation)
-        new_x = self.__position[0] + distance * math.cos(rad_orientation)
-        new_y = self.__position[1] + distance * math.sin(rad_orientation)
-        new_position = (new_x, new_y)
+        new_position = self.__position - Point(distance * math.cos(rad_orientation), distance * math.sin(rad_orientation))
 
         if self.is_down:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
