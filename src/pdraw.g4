@@ -33,7 +33,7 @@ expression :
     // Math
     | op=('+'|'-') expression #ExprUnary
     | expression op='º' #ExprConvToRad
-    | expression op=('*'|'/'|'//'|'') expression #ExprMultDivMod
+    | expression op=('*'|'/'|'//'|'\\\\') expression #ExprMultDivMod
     | expression op=('+'|'-') expression #ExprAddSub
 
     // Concatenation
