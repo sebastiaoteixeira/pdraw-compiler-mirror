@@ -1,4 +1,4 @@
-package symbols;
+package compiler.symbols;
 
 import java.util.List;
 

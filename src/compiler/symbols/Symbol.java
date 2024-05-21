@@ -1,4 +1,4 @@
-package symbols;
+package compiler.symbols;
 
 public class Symbol {
     private String identifier;

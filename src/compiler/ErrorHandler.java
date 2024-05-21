@@ -1,3 +1,4 @@
+package compiler;
 
 public class ErrorHandler {
 	public static boolean success = true;

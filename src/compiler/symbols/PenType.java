@@ -1,4 +1,4 @@
-package symbols;
+package compiler.symbols;
 
 public class PenType extends GenericType {
     public PenType() {

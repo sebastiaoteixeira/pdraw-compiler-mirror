@@ -1,4 +1,4 @@
-package symbols;
+package compiler.symbols;
 import java.util.Stack;
 import java.util.HashMap;
 import java.util.Map;
