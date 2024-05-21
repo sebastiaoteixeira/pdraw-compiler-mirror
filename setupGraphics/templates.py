@@ -15,42 +15,50 @@ class Canvas:
         line.draw(self.win)
         return line
 
-class PenType:
-    def __init__(self, position=(0, 0), color="black", pressure=1, orientation=0, thickness=1) -> None:
-        self.position = position
-        self.color = color
-        self.pressure = pressure
-        self.orientation = orientation 
-        self.thickness = thickness
 
 class Pen:
-    def __init__(self, canvas: Canvas, penType: PenType):
-        self.canvas = canvas
-        self.position = penType.position
-        self.color = penType.color
-        self.pressure = penType.pressure
-        self.orientation = penType.orientation
-        self.thickness = penType.thickness
+    def __init__(self, canvas: Canvas, penType: dict):
+        self.__canvas = canvas
+        self.__position = penType.get("position", (0, 0))
+        self.__color = penType.get("color", "black")
+        self.__pressure = penType.get("pressure", 1)
+        self.__orientation = penType.get("orientation", 0)
+        self.__thickness = penType.get("thickness", 1)
         self.is_down = True 
 
-    def forward(self, distance):
-        rad_orientation = math.radians(self.orientation)
-        new_x = self.position[0] + distance * math.cos(rad_orientation)
-        new_y = self.position[1] + distance * math.sin(rad_orientation)
+    def __str__(self) -> str:
+        return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness}, is_down={self.is_down})"
+
+    def backward(self, distance):
+        rad_orientation = math.radians(self.__orientation)
+        new_x = self.__position[0] - distance * math.cos(rad_orientation)
+        new_y = self.__position[1] - distance * math.sin(rad_orientation)
         new_position = (new_x, new_y)
 
         if self.is_down:
-            self.canvas.drawLine(self.position, new_position, self.color, self.thickness * self.pressure)
+            self.__canvas.drawLine(self.__position, new_position, self.__color, self.__thickness * self.__pressure)
+
+        self.position = new_position
+        return self
+
+    def forward(self, distance):
+        rad_orientation = math.radians(self.__orientation)
+        new_x = self.__position[0] + distance * math.cos(rad_orientation)
+        new_y = self.__position[1] + distance * math.sin(rad_orientation)
+        new_position = (new_x, new_y)
+
+        if self.is_down:
+            self.__canvas.drawLine(self.__position, new_position, self.__color, self.__thickness * self.__pressure)
 
         self.position = new_position
         return self
 
     def right(self, angle):
-        self.orientation -= angle
+        self.__orientation -= angle
         return self
 
     def left(self, angle):
-        self.orientation += angle
+        self.__orientation += angle
         return self
 
     def down(self):
@@ -61,36 +69,38 @@ class Pen:
         self.is_down = False
         return self
 
-    def set_color(self, color=None):
+    def color(self, color=None):
         if color is not None:
-            self.color = color
-        return self.color
+            self.__color = color
+        return self.__color
 
-    def set_thickness(self, thickness=None):
+    def thickness(self, thickness=None):
         if thickness is not None:
-            self.thickness = thickness
-        return self.thickness
+            self.__thickness = thickness
+        return self.__thickness
 
-    def set_position(self, position=None):
+    def position(self, position=None):
         if position is not None:
-            self.position = position
-        return self.position
+            self.__position = position
+        return self.__position
 
-    def set_orientation(self, orientation=None):
+    def orientation(self, orientation=None):
         if orientation is not None:
-            self.orientation = orientation
-        return self.orientation
+            self.__orientation = orientation
+        return self.__orientation
 
-    def set_pressure(self, pressure=None):
+    def pressure(self, pressure=None):
         if pressure is not None:
-            self.pressure = pressure
-        return self.pressure
+            self.__pressure = pressure
+        return self.__pressure
 
 def main():
     canvas = Canvas("Drawing Canvas", 400, 400)
     
-    penType1 = PenType(position=(200, 200), color="green", orientation=45, thickness=10, pressure=1)
-    pen = Pen(canvas, penType1)
+    penType = {"position":(200, 200), "color":"green", "orientation":45, "thickness":10, "pressure":1}
+    pen = Pen(canvas, penType)
+
+    print(str(pen))
 
     pen.down().forward(50).left(90).forward(50).left(90).forward(50).left(90).forward(50)
     

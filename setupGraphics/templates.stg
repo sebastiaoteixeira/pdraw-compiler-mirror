@@ -4,8 +4,19 @@ canvas = Canvas("<title>", <width>, <height>)
 >>
 
 // Template para definição da caneta
-penDefinition(name, position, color, orientation, thickness, pressure) ::= <<
-<name> = Pen(canvas, PenType(position=<position>, color="<color>", orientation=<orientation>, thickness=<thickness>, pressure=<pressure>))
+penDefinition(name, properties) ::= <<
+<name> = {
+    <properties; separator="\n,">
+}
+>>
+
+property(key, value) ::= << 
+"<key>": <value> 
+>>
+
+//Template para criar a caneta
+penCreation(canvas, name) ::= <<
+<name> = Pen(<canvas>, <pentype>)
 >>
 
 // Templates para comandos da caneta
@@ -25,64 +36,65 @@ penLeft(name, angle) ::= <<
 <name>.left(<angle>)
 >>
 
-penDown(name) ::= <<
-<name>.down()
+ExprPenUnary(name,op) ::= <<
+<name>.<op>()
 >>
 
-penUp(name) ::= <<
-<name>.up()
+ExprPen(name,op,value) ::= <<
+<pen>.<func>(<paramenters>)
+>>//no code gen verificar se color passa entre aspas
+
+//Templates para comandos
+ExprUnary(operator, op) ::= <<
+<operator> <op>
 >>
 
-penSetColor(name, color) ::= <<
-<name>.set_color("<color>")
+ExprBinary(op1, op2, operator) ::= <<
+<op1> <operator> <op2>
 >>
 
-penSetThickness(name, thickness) ::= <<
-<name>.set_thickness(<thickness>)
+
+
+convToRad(op) ::= <<
+radians(<op>)
 >>
 
-penSetPosition(name, position) ::= <<
-<name>.set_position(<position>)
+visitPoint(op1,op2) ::= <<
+(<op1>,<op2>)
 >>
 
-penSetOrientation(name, orientation) ::= <<
-<name>.set_orientation(<orientation>)
+declarationContext(var) ::= <<
+<var> = None
 >>
 
-penSetPressure(name, pressure) ::= <<
-<name>.set_pressure(<pressure>)
+pause(time) ::= <<
+sleep(<time>)
 >>
 
-// Templates para instruções de controle
-ifStatement(condition, trueBlock) ::= <<
-if <condition>:
-    <trueBlock>
+stdin() ::= <<
+input()
 >>
 
-ifElseStatement(condition, trueBlock, falseBlock) ::= <<
-if <condition>:
-    <trueBlock>
-else:
-    <falseBlock>
+stdout(op) ::= <<
+print(str(<op>))
 >>
 
-whileLoop(condition, body) ::= <<
-while <condition>:
-    <body>
+toString(op) ::= <<
+str(<op>)
 >>
 
-forLoop(initialization, condition, increment, body) ::= <<
-for <initialization>; <condition>; <increment>:
-    <body>
+toInt(op) ::= <<
+int(<op>)
 >>
 
-// Template para a função principal
-mainFunction(body) ::= <<
-def main():
-    <body>
-    canvas.win.getMouse()
-    canvas.win.close()
+toReal(op) ::= <<
+float(<op>)
+>>
 
-if __name__ == "__main__":
-    main()
+concat(op1,op2) ::= <<
+str(<op1>) + str(<op2>)
+>>
+
+assign(var, value) ::= <<
+<var> = <value>
 >>
