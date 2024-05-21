@@ -237,9 +237,11 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST penOperator = templates.getInstanceOf("ExprPen");
+      penOperator.add("name", ctx.expression(0).getText());
+      penOperator.add("op", ctx.op.getText());
+      penOperator.add("value", visit(ctx.expression(1)));
+      return penOperator;
    }
 
    @Override public ST visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
@@ -250,22 +252,22 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
       ST unary = templates.getInstanceOf("unary_operations");
-      unary.add("op", visit(ctx.expression()));
-      unary.add("operator", ctx.op.getText());
+      unary.add("penName", visit(ctx.expression()));
+      unary.add("op", ctx.op.getText());
       return unary;
    }
 
    @Override public ST visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
       ST unary = templates.getInstanceOf("unary_operations");
-      unary.add("op", visit(ctx.expression()));
-      unary.add("operator", ctx.op.getText());
+      unary.add("operator", visit(ctx.expression()));
+      unary.add("op", ctx.op.getText());
       return unary;
    }
 
    @Override public ST visitExprNew(pdrawParser.ExprNewContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST penCreation = templates.getInstanceOf("penCreation");
+      penCreation.add("penType", ctx.expression().getText());
+      return penCreation;
    }
 
    @Override public ST visitExprBoolOp(pdrawParser.ExprBoolOpContext ctx) {

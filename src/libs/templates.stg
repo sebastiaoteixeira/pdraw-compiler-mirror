@@ -15,33 +15,20 @@ property(key, value) ::= <<
 >>
 
 //Template para criar a caneta
-penCreation(canvas, name) ::= <<
-<name> = Pen(<canvas>, <pentype>)
+penCreation(penType) ::= <<
+canvas = Canvas("", 500, 500)
+<name> = Pen(canvas, <pentype>)
 >>
 
 // Templates para comandos da caneta
-penForward(name, distance) ::= <<
-<name>.forward(<distance>)
->>
 
-penBackward(name, distance) ::= <<
-<name>.backward(<distance>)
->>
 
-penRight(name, angle) ::= <<
-<name>.right(<angle>)
->>
-
-penLeft(name, angle) ::= <<
-<name>.left(<angle>)
->>
-
-ExprPenUnary(name,op) ::= <<
-<name>.<op>()
+ExprPenUnary(penName,op) ::= <<
+<penName>.<op>()
 >>
 
 ExprPen(name,op,value) ::= <<
-<pen>.<func>(<paramenters>)
+<name>.<op>(<value>)
 >>//no code gen verificar se color passa entre aspas
 
 //Templates para comandos

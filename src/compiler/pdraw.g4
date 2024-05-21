@@ -51,7 +51,7 @@ expression :
     ID '(' expression (',' expression)* ')' #ExprFunctionCall
 
     // pen instance
-    |'new' expression? #ExprNew
+    |'new' expression #ExprNew
 
     // Math
     | op=('+'|'-') expression #ExprUnary
