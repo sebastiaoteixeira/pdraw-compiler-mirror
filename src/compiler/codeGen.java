@@ -282,7 +282,7 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprStdin(pdrawParser.ExprStdinContext ctx) {
       ST stdin = templates.getInstanceOf("stdin");
-      stdin.add("message", ctx.String().getText());
+      stdin.add("message", visit(ctx.expression()).render());
       return stdin;
    }
 

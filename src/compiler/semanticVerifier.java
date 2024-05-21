@@ -134,7 +134,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitWhile(pdrawParser.WhileContext ctx) {
-      if (visit(ctx.expression(0)).getType() != Type.BOOLEAN) {
+      if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "While condition must be a boolean value.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
@@ -142,7 +142,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitUntil(pdrawParser.UntilContext ctx) {
-      if (visit(ctx.expression(0)).getType() != Type.BOOLEAN) {
+      if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "Until condition must be a boolean value.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
@@ -151,7 +151,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
    @Override public GenericType visitFor(pdrawParser.ForContext ctx) {
       // check if the loop range is an integer
-      if (visit(ctx.expression(1)).getType() != Type.BOOLEAN) {
+      if (visit(ctx.expression(0)).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "Loop range must be a boolean value.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
