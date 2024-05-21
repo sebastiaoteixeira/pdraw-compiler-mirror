@@ -82,7 +82,7 @@ expression :
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
-Color: ('white'|'black'|'green'|'red'|'blue'|'yellow')
+Color: ('white'|'black'|'green'|'red'|'blue'|'yellow');
 
 String: '"' (EscapeSequence | ~['"\\])* '"';
 fragment EscapeSequence: '\\' . ;
