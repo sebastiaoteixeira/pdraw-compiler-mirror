@@ -396,7 +396,19 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitAssign(pdrawParser.AssignContext ctx) {
-      
+      String id = ctx.ID().getText();
+      ctx.identifier = id;
+      Symbol symbol = symbolTable.getSymbol(id);
+      if (symbol == null) {
+         ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " does not exist.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      GenericType exprType = visit(ctx.expression());
+      if (symbol.getType() != exprType.getType()) {
+         ErrorHandler.error(getFileName(ctx), "Type mismatch in assignment.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return exprType;
    }
 
    @Override public GenericType visitExprReal(pdrawParser.ExprRealContext ctx) {
