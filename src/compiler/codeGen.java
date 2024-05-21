@@ -136,7 +136,7 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitPause(pdrawParser.PauseContext ctx) {
       ST pause = templates.getInstanceOf("pause");
-      pause.add("time", ctx.expression().getText());
+      pause.add("time", visit(ctx.expression()).render());
       return pause;
    }
 

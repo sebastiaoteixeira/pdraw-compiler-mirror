@@ -76,9 +76,9 @@ execution(penId, fileName) ::= <<
 exec(\"<fileName>\", <penId>)
 >>
 
-//Template for pause
+// Template for pause (time in microseconds)
 pause(time) ::= <<
-sleep(<time>/1_000_000) // time in microseconds
+sleep(<time>/1_000_000)
 >>
 
 // Template for ExprStringConcat
