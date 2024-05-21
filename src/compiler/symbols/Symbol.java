@@ -3,10 +3,10 @@ package compiler.symbols;
 import java.util.List;
 
 public class Symbol {
-    private StringType identifier;
+    private String identifier;
     private GenericType type;
 
-    public Symbol(StringType identifier, GenericType type) {
+    public Symbol(String identifier, GenericType type) {
         this.identifier = identifier;
         this.type = type;
     }
@@ -31,7 +31,7 @@ public class Symbol {
         return null;
     }
 
-    public StringType getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 }

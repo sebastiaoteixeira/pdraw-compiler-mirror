@@ -1,5 +1,5 @@
 import compiler.symbols.*;
-import compiler.symbols.Integer;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
@@ -95,7 +95,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 				type = new Real();
 				break;
 			case "int":
-				type = new Integer();
+				type = new IntegerType();
 				break;
 			case "string":
 				type = new StringType();
@@ -108,7 +108,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 					ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 
-		StringType id = ctx.ID().getText();
+      String id = ctx.ID().getText();
 		if (symbolTable.getSymbol(id) != null) {
 			ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " already exists.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -118,6 +118,18 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		symbolTable.addSymbol(variable);
 		
 		return type;
+   }
+
+   @Override public GenericType visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
+      if (ctx.ID() != null) {
+         String id = ctx.ID().getText();
+         ctx.identifier = id;
+      }
+      else if (ctx.assign() != null) {
+         String id = ctx.assign().identifier();
+         ctx.identifier = id;
+      }
+      return null;
    }
 
    @Override public GenericType visitWhile(pdrawParser.WhileContext ctx) {
@@ -189,7 +201,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 			ErrorHandler.error(getFileName(ctx), "Conversion to integer can only be applied to real, integer, or string values.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
-		return new Integer();
+		return new IntegerType();
    }
 
    @Override public GenericType visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
@@ -199,11 +211,11 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 			ErrorHandler.error(getFileName(ctx), "Operands of '*' or '/' must be numeric.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());}
 		if (ctx.op.getText().equals("//")) {
-			return new Integer();
-		} else if (leftType == Type.REAL || rightType.getType == Type.REAL) {
+			return new IntegerType();
+		} else if (leftType == Type.REAL || rightType == Type.REAL) {
 			return new Real();
 		}
-		return new Integer();
+		return new IntegerType();
    }
 
    @Override public GenericType visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
@@ -213,7 +225,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 			ErrorHandler.error(getFileName(ctx), "Operands of '+' or '-' must be numeric.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine()); 
 		}
-      return (leftType == Type.REAL || rightType == Type.REAL) ? new Integer() : new Real();
+      return (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real();
    }
 
    @Override public GenericType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
@@ -268,7 +280,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprInteger(pdrawParser.ExprIntegerContext ctx) {
-      return new Integer();
+      return new IntegerType();
    }
 
    @Override public GenericType visitExprId(pdrawParser.ExprIdContext ctx) {
@@ -347,8 +359,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      Type exprType = visit(ctx.expression()).getType();
-      if (!isNumericType(exprType)) {
+      GenericType exprType = visit(ctx.expression());
+      if (!isNumericType(exprType.getType())) {
          ErrorHandler.error(getFileName(ctx), "Unary operator can only be applied to numeric values.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
@@ -383,12 +395,16 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return visit(ctx.assign());
    }
 
+   @Override public GenericType visitAssign(pdrawParser.AssignContext ctx) {
+      
+   }
+
    @Override public GenericType visitExprReal(pdrawParser.ExprRealContext ctx) {
       return new Real();
    }
 
    @Override public GenericType visitExprBool(pdrawParser.ExprBoolContext ctx) {
-      return new Boolean();
+      return new BooleanType();
    }
 
    @Override public GenericType visitPoint(pdrawParser.PointContext ctx) {
@@ -402,7 +418,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitBoolean(pdrawParser.BooleanContext ctx) {
-      return new Boolean();
+      return new BooleanType();
    }
 
    // private function to see if expr is INTEGER or REAL

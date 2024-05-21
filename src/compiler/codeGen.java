@@ -83,22 +83,26 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      ST declaration = templates.getInstanceOf("declarationContext");
-      declaration.add("var", ctx.ID().getText());
-      return declaration;
+      return visitChildren(ctx);
+   }
+
+   @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
+      ST declaration_element = templates.getInstanceOf("declaration_element");
+      declaration_element.add("identifier", ctx.ID().getText());
+      return declaration_element;
    }
 
    @Override public ST visitWhile(pdrawParser.WhileContext ctx) {
       ST whileTemplate = templates.getInstanceOf("while");
       whileTemplate.add("condition", visit(ctx.expression()));
-      whileTemplate.add("statements", visit(ctx.block()));
+      whileTemplate.add("statements", visit(ctx.statement()));
       return whileTemplate;
    }
 
    @Override public ST visitUntil(pdrawParser.UntilContext ctx) {
       ST untilTemplate = templates.getInstanceOf("until");
       untilTemplate.add("condition", visit(ctx.expression()));
-      untilTemplate.add("statements", visit(ctx.block()));
+      untilTemplate.add("statements", visit(ctx.statement()));
       return untilTemplate;
    }
 
@@ -107,20 +111,20 @@ import org.stringtemplate.v4.*;
       forTemplate.add("init", visit(ctx.expression(0)));
       forTemplate.add("condition", visit(ctx.expression(1)));
       forTemplate.add("expression", visit(ctx.expression(2)));
-      forTemplate.add("statements", visit(ctx.block()));
+      forTemplate.add("statements", visit(ctx.statement()));
       return forTemplate;
    }
 
    @Override public ST visitIf(pdrawParser.IfContext ctx) {
       ST ifTemplate = templates.getInstanceOf("if");
       ifTemplate.add("condition", visit(ctx.expression()));
-      ifTemplate.add("statements", visit(ctx.block()));
+      ifTemplate.add("statements", visit(ctx.statement()));
       return ifTemplate;
    }
 
    @Override public ST visitExecution(pdrawParser.ExecutionContext ctx) {
       ST execution = templates.getInstanceOf("execution");
-      execution.add("id", ctx.ID().getText());
+      execution.add("penId", ctx.ID().getText());
       execution.add("fileName", visit(ctx.expression()));
       return execution;
    }
@@ -133,7 +137,7 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitStdout(pdrawParser.StdoutContext ctx) {
       ST stdout = templates.getInstanceOf("stdout");
-      stdout.add("op", visit(ctx.expression()));
+      stdout.add("message", visit(ctx.expression()));
       return stdout;
    }
 
@@ -157,11 +161,9 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
       ST binary = templates.getInstanceOf("binary_operations");
-      
       binary.add("op1", visit(ctx.expression(0)));
       binary.add("op2", visit(ctx.expression(1)));
       binary.add("operator", ctx.op.getText());
-
       return binary;
    }
 
@@ -251,7 +253,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-      ST unary = templates.getInstanceOf("unary_operations");
+      ST unary = templates.getInstanceOf("pen_unary_operations");
       unary.add("penName", visit(ctx.expression()));
       unary.add("op", ctx.op.getText());
       return unary;
@@ -278,10 +280,15 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprStdin(pdrawParser.ExprStdinContext ctx) {
       ST stdin = templates.getInstanceOf("stdin");
+      stdin.add("message", ctx.String().getText());
       return stdin;
    }
 
    @Override public ST visitExprAssign(pdrawParser.ExprAssignContext ctx) {
+      return visit(ctx.assign());
+   }
+
+   @Override public ST visitAssign(pdrawParser.AssignContext ctx) {
       ST assign = templates.getInstanceOf("assign");
       assign.add("var", ctx.ID().getText());
       assign.add("value", visit(ctx.expression()));
