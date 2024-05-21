@@ -33,7 +33,7 @@ expression :
     // Math
     | op=('+'|'-') expression #ExprUnary
     | expression op='º' #ExprConvToRad
-    | expression op=('*'|'/'|'//'|'%') expression #ExprMultDivMod
+    | expression op=('*'|'/'|'//'|'') expression #ExprMultDivMod
     | expression op=('+'|'-') expression #ExprAddSub
 
     // Concatenation
@@ -43,6 +43,7 @@ expression :
     | 'int' '(' expression ')' #ExprToInt
     | 'real' '(' expression ')' #ExprToReal
     | 'string' '(' expression ')' #ExprToString
+    | 'bool' '(' expression ')' #ExprToBool
 
     // Pen instructions (the pen itself should be returned to allow operations chain)
     | expression op=('down'|'up') #ExprPenUnary
@@ -51,6 +52,12 @@ expression :
 
     // stdin
     | 'stdin' String #ExprStdin
+
+    // Comparison
+    | expression op=('=='|'!='|'<'|'<='|'>'|'>=') expression #ExprComp
+
+    // Boolean expressions
+    | expression op=('and'|'or') expression #ExprBoolOp
 
     // Assign
     | ID op='=' expression #ExprAssign
@@ -64,13 +71,10 @@ expression :
     | String #ExprString
     | Color #ExprColor
     | point #ExprPoint
+    | boolean #ExprBool
 
     // Parentized expression
     | '(' expression ')' #ExprParent
-
-    // Boolean expressions
-    | boolean #ExprBool
-    | expression op=('and'|'or') expression #ExprToBool
 ;
 
 
@@ -78,7 +82,7 @@ expression :
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
-Color: ('red'|'green'|'blue'|'black'|'white'|'yellow'|'cyan'|'magenta');
+Color: ('white'|'black'|'green'|'red'|'blue'|'yellow')
 
 String: '"' (EscapeSequence | ~['"\\])* '"';
 fragment EscapeSequence: '\\' . ;
