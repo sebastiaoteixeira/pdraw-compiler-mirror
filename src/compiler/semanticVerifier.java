@@ -1,4 +1,5 @@
 import compiler.symbols.*;
+import compiler.symbols.Integer;
 
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
@@ -35,10 +36,48 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
+      String property = ctx.Property().getText();
+		GenericType exprType = visit(ctx.expression());
+
+		switch (property) {
+			case "color":
+				if (exprType.getType() != Type.COLOR) {
+					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+			case "pressure":
+				if (!isNumericType(exprType.getType())) {
+					ErrorHandler.error(getFileName(ctx), "Pressure value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+			case "thickness":
+				if (exprType.getType() != Type.INTEGER) {
+					ErrorHandler.error(getFileName(ctx), "Thickness value must be a integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;	
+			case "orientation":
+				if (!isNumericType(exprType.getType())) {
+					ErrorHandler.error(getFileName(ctx), "Orientation value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+			case "position":
+				if (exprType.getType() != Type.POINT) {
+					ErrorHandler.error(getFileName(ctx), "Position value must be a point value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+		
+			default:
+				ErrorHandler.error(getFileName(ctx), "Invalid property " + property,
+					ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				break;
+		}
+		return exprType;
+	}
 
    @Override public GenericType visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
       GenericType res = null;
@@ -47,9 +86,38 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      GenericType type = null;
+		switch (ctx.type.getText()) {
+			case "pen":
+				type = new Pen();
+				break;
+			case "real":
+				type = new Real();
+				break;
+			case "int":
+				type = new Integer();
+				break;
+			case "string":
+				type = new StringType();
+				break;
+			case "point":
+				type = new Point();
+				break;
+			default:
+				ErrorHandler.error(getFileName(ctx), "Invalid type " + ctx.type.getText(),
+					ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+
+		StringType id = ctx.ID().getText();
+		if (symbolTable.getSymbol(id) != null) {
+			ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " already exists.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+
+		Symbol variable = new Symbol(id, type);
+		symbolTable.addSymbol(variable);
+		
+		return type;
    }
 
    @Override public GenericType visitWhile(pdrawParser.WhileContext ctx) {
@@ -83,15 +151,21 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitPause(pdrawParser.PauseContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      GenericType exprType = visit(ctx.expression());
+		if (exprType.getType() != Type.INTEGER) {
+			ErrorHandler.error(getFileName(ctx), "Pause time must be an integer value.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+		return exprType;
    }
 
    @Override public GenericType visitStdout(pdrawParser.StdoutContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      GenericType exprType = visit(ctx.expression());
+		if (exprType.getType() != Type.STRING) {
+			ErrorHandler.error(getFileName(ctx), "Stdout value must be a string value.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+		return null;
    }
 
    @Override public GenericType visitExprToString(pdrawParser.ExprToStringContext ctx) {
@@ -255,4 +329,23 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return visitChildren(ctx);
       //return res;
    }
+
+   // private function to see if expr is INTEGER or REAL
+	private boolean isNumericType(Type type) {
+		return type == Type.INTEGER || type == Type.REAL;
+	}
+  
+	// types that can be converted besides string
+	private boolean isConvertibleToString(Type type) {
+		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
+	}
+
+	// types that can be converted to numeric
+	private boolean isConvertibleToNumeric(Type type) {
+		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
+	}
+
+	private String getFileName(ParserRuleContext ctx) {
+		return ctx.getStart().getInputStream().getSourceName();
+	}
 }
