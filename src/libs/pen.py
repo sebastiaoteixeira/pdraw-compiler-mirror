@@ -1,20 +1,5 @@
-from graphics import *
+from canvas import Canvas
 import math
-
-class Canvas:
-    def __init__(self, title, width, height) -> None:
-        self.title = title
-        self.width = width
-        self.height = height
-        self.win = GraphWin(title, width, height)
-
-    def drawLine(self, point1, point2, color, thickness):
-        line = Line(Point(*point1), Point(*point2))
-        line.setFill(color)
-        line.setWidth(thickness)
-        line.draw(self.win)
-        return line
-
 
 class Pen:
     def __init__(self, canvas: Canvas, penType: dict):
@@ -104,13 +89,7 @@ def main():
 
     pen.down().forward(50).left(90).forward(50).left(90).forward(50).left(90).forward(50)
     
-    canvas.win.getMouse()
-    canvas.win.close()
+    canvas.waitUntilClose()
 
 if __name__ == "__main__":
     main()
-
-
-        
-    
-        
