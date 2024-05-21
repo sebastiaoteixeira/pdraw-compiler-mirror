@@ -1,0 +1,7 @@
+b = bool(0) % False
+
+b = bool(1) % True
+b = bool(8.8) % True
+
+b = bool('') % False
+b = bool('pdraw') % True
