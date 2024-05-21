@@ -1,15 +1,15 @@
 grammar pdraw;
 
 // Define the grammar for the parser
-program: statement* EOF;
+program: compound EOF;
 
 function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' block;
 
 statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function) ';';
 
-coumpound: statement*;
+compound: statement*;
 
-block: '{' coumpound '}';
+block: '{' compound '}';
 
 // Statements and expressions
 define: 'define' (penDefinition | canvasDefinition);

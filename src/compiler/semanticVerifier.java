@@ -13,7 +13,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       //return res;
    }
 
-   @Override public GenericType visitCoumpound(pdrawParser.CoumpoundContext ctx) {
+   @Override public GenericType visitCompound(pdrawParser.CompoundContext ctx) {
       GenericType res = null;
       return visitChildren(ctx);
       //return res;

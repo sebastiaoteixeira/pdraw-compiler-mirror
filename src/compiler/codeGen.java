@@ -27,7 +27,7 @@ import org.stringtemplate.v4.*;
       //return res;
    }
 
-   @Override public ST visitCoumpound(pdrawParser.CoumpoundContext ctx) {
+   @Override public ST visitCompound(pdrawParser.CompoundContext ctx) {
       ST res = null;
       return visitChildren(ctx);
       //return res;
