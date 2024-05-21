@@ -1,10 +1,24 @@
+import org.stringtemplate.v4.*;
+
 @SuppressWarnings("CheckReturnValue")
-public class codeGen extends pdrawBaseVisitor<ST> {
+   public class codeGen extends pdrawBaseVisitor<ST> {
+
+   private STGroup templates = new STGroupFile("templates.stg");
 
    @Override public ST visitProgram(pdrawParser.ProgramContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST mainTemplate = templates.getInstanceOf("main");
+
+      // Visit all the children of the program
+      for (pdrawParser.StatementContext statement : ctx.statement()) {
+         ST code = visit(statement);
+         if (code != null) {
+            mainTemplate.add("statements", code.render());
+         }
+      }
+
+      System.out.println(mainTemplate.render());
+      
+      return mainTemplate;
    }
 
    @Override public ST visitStatement(pdrawParser.StatementContext ctx) {
@@ -32,27 +46,46 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST penTemplate = templates.getInstanceOf("pentype");
+      //passar o pentypename(id), dentro de loop ver todas as properties e adicionar ao penTemplate
+      String id = ctx.ID().getText();
+      penTemplate.add("pentypeName",id); 
+
+      ST propertyDefinition;
+      for(pdrawParser.PropertyDefinitionContext context : ctx.propertyDefinition()){
+         propertyDefinition = visit(context);
+         penTemplate.add("properties",propertyDefinition.render());
+      }      
+      return penTemplate;
    }
 
    @Override public ST visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST property = templates.getInstanceOf("property");
+
+      String propriedade = ctx.Property().getText();
+      property.add("key", propriedade);
+      property.add("value",visit(ctx.expression()).render());
+      return property;
    }
 
    @Override public ST visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      // define canvas Canvas1 "Example p2" (width,height);
+      ST canvasTemplate = templates.getInstanceOf("canvasDefinition");
+      String id = ctx.ID().getText();
+      String title = ctx.String().getText();
+      String measurements = visitPoint(ctx.point()).render();
+
+      canvasTemplate.add("canvasName",id);
+      canvasTemplate.add("title",title);
+      canvasTemplate.add("measurements",measurements);
+
+      return canvasTemplate;
    }
 
    @Override public ST visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST declaration = templates.getInstanceOf("declarationContext");
+      declaration.add("var", ctx.ID().getText());
+      return declaration;
    }
 
    @Override public ST visitWhile(pdrawParser.WhileContext ctx) {
@@ -80,27 +113,28 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExecution(pdrawParser.ExecutionContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST execution = templates.getInstanceOf("execution");
+      execution.add("id", ctx.ID().getText());
+      execution.add("fileName", visit(ctx.expression()));
+      return execution;
    }
 
    @Override public ST visitPause(pdrawParser.PauseContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST pause = templates.getInstanceOf("pause");
+      pause.add("time", ctx.expression().getText());
+      return pause;
    }
 
    @Override public ST visitStdout(pdrawParser.StdoutContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST stdout = templates.getInstanceOf("stdout");
+      stdout.add("op", visit(ctx.expression()));
+      return stdout;
    }
 
    @Override public ST visitExprToString(pdrawParser.ExprToStringContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toString = templates.getInstanceOf("toString");
+      toString.add("op", visit(ctx.expression()));
+      return toString;
    }
 
    @Override public ST visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
@@ -110,21 +144,29 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprToInt(pdrawParser.ExprToIntContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toInt = templates.getInstanceOf("toInt");
+      toInt.add("op", visit(ctx.expression()));
+      return toInt;
    }
 
    @Override public ST visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST binary = templates.getInstanceOf("binary_operations");
+      
+      binary.add("op1", visit(ctx.expression(0)));
+      binary.add("op2", visit(ctx.expression(1)));
+      binary.add("operator", ctx.op.getText());
+
+      return binary;
    }
 
    @Override public ST visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST binary = templates.getInstanceOf("binary_operations");
+      
+      binary.add("op1", visit(ctx.expression(0)));
+      binary.add("op2", visit(ctx.expression(1)));
+      binary.add("operator", ctx.op.getText());
+
+      return binary; 
    }
 
    @Override public ST visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
@@ -170,9 +212,10 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST concat = templates.getInstanceOf("concat");
+      concat.add("op1", visit(ctx.expression(0)));
+      concat.add("op2", visit(ctx.expression(1)));
+      return concat;
    }
 
    @Override public ST visitExprColor(pdrawParser.ExprColorContext ctx) {
@@ -182,9 +225,9 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprToReal(pdrawParser.ExprToRealContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toReal = templates.getInstanceOf("toReal");
+      toReal.add("op", visit(ctx.expression()));
+      return toReal;
    }
 
    @Override public ST visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
@@ -194,21 +237,23 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST conv_rad = templates.getInstanceOf("conv_rad");
+      conv_rad.add("op", visit(ctx.expression()));
+      return conv_rad;
    }
 
    @Override public ST visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST unary = templates.getInstanceOf("unary_operations");
+      unary.add("op", visit(ctx.expression()));
+      unary.add("operator", ctx.op.getText());
+      return unary;
    }
 
    @Override public ST visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST unary = templates.getInstanceOf("unary_operations");
+      unary.add("op", visit(ctx.expression()));
+      unary.add("operator", ctx.op.getText());
+      return unary;
    }
 
    @Override public ST visitExprNew(pdrawParser.ExprNewContext ctx) {
@@ -224,15 +269,15 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitExprStdin(pdrawParser.ExprStdinContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST stdin = templates.getInstanceOf("stdin");
+      return stdin;
    }
 
    @Override public ST visitExprAssign(pdrawParser.ExprAssignContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST assign = templates.getInstanceOf("assign");
+      assign.add("var", ctx.ID().getText());
+      assign.add("value", visit(ctx.expression()));
+      return assign;
    }
 
    @Override public ST visitExprReal(pdrawParser.ExprRealContext ctx) {
@@ -248,9 +293,10 @@ public class codeGen extends pdrawBaseVisitor<ST> {
    }
 
    @Override public ST visitPoint(pdrawParser.PointContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST point = templates.getInstanceOf("unary_operations");
+      point.add("op1", visit(ctx.x));
+      point.add("op2", visit(ctx.y));
+      return point;
    }
 
    @Override public ST visitBoolean(pdrawParser.BooleanContext ctx) {
