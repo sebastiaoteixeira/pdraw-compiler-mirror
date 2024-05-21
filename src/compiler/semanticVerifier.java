@@ -126,7 +126,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
          ctx.identifier = id;
       }
       else if (ctx.assign() != null) {
-         String id = ctx.assign().identifier();
+         String id = ctx.assign().identifier;
          ctx.identifier = id;
       }
       return null;

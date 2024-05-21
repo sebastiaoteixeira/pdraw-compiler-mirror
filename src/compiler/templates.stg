@@ -1,3 +1,18 @@
+// Main template
+program(compound) ::= <<
+def main():
+    <compound>
+
+if __name__ == "__main__":
+    main()
+>>
+
+// Template for CompoundContext
+compoundContext(statement) ::= <<
+<statement; separator="\n">
+>>
+
+
 // Template for canvas definition
 canvasDefinition(title, width, height) ::= <<
 canvas = Canvas("<title>", <width>, <height>)
@@ -113,27 +128,27 @@ bool(<op>)
 
 // boolean/loops expressions templates
 // Template for if 
-if(condition, statement) ::= <<
+if(condition, compound) ::= <<
 if <condition>: 
-    <statement>
+    <compound>
 >>
 
 // Template for forLoop
-for(init, condition, expression, statements) ::= <<
+for(init, condition, expression, compound) ::= <<
 <init>
 while <condition>:
-    <statements> 
+    <compound> 
     <expression>
 >>
 
 // Template for while
-while(condition, statements) ::= <<
+while(condition, compound) ::= <<
 while <condition>:
-    <statements>
+    <compound>
 >>
 
 // Template for until
-until(condition, statements) ::= <<
+until(condition, compound) ::= <<
 while not <condition>:
-    <statements>
+    <compound>
 >>

@@ -8,13 +8,7 @@ import org.stringtemplate.v4.*;
    @Override public ST visitProgram(pdrawParser.ProgramContext ctx) {
       ST mainTemplate = templates.getInstanceOf("main");
 
-      // Visit all the children of the program
-      for (pdrawParser.StatementContext statement : ctx.statement()) {
-         ST code = visit(statement);
-         if (code != null) {
-            mainTemplate.add("statements", code.render());
-         }
-      }
+      mainTemplate.add("compound", visit(ctx.compound()));
 
       System.out.println(mainTemplate.render());
       
@@ -28,9 +22,17 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitCompound(pdrawParser.CompoundContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST mainTemplate = templates.getInstanceOf("compoundContext");
+
+      // Visit all the children of the program
+      for (pdrawParser.StatementContext statement : ctx.statement()) {
+         ST code = visit(statement);
+         if (code != null) {
+            mainTemplate.add("statement", code.render());
+         }
+      }
+
+      return mainTemplate;
    }
 
    @Override public ST visitBlock(pdrawParser.BlockContext ctx) {
@@ -95,14 +97,14 @@ import org.stringtemplate.v4.*;
    @Override public ST visitWhile(pdrawParser.WhileContext ctx) {
       ST whileTemplate = templates.getInstanceOf("while");
       whileTemplate.add("condition", visit(ctx.expression()));
-      whileTemplate.add("statements", visit(ctx.statement()));
+      whileTemplate.add("compound", visit(ctx.statement()));
       return whileTemplate;
    }
 
    @Override public ST visitUntil(pdrawParser.UntilContext ctx) {
       ST untilTemplate = templates.getInstanceOf("until");
       untilTemplate.add("condition", visit(ctx.expression()));
-      untilTemplate.add("statements", visit(ctx.statement()));
+      untilTemplate.add("compound", visit(ctx.statement()));
       return untilTemplate;
    }
 
@@ -111,14 +113,14 @@ import org.stringtemplate.v4.*;
       forTemplate.add("init", visit(ctx.expression(0)));
       forTemplate.add("condition", visit(ctx.expression(1)));
       forTemplate.add("expression", visit(ctx.expression(2)));
-      forTemplate.add("statements", visit(ctx.statement()));
+      forTemplate.add("compound", visit(ctx.statement()));
       return forTemplate;
    }
 
    @Override public ST visitIf(pdrawParser.IfContext ctx) {
       ST ifTemplate = templates.getInstanceOf("if");
       ifTemplate.add("condition", visit(ctx.expression()));
-      ifTemplate.add("statements", visit(ctx.statement()));
+      ifTemplate.add("compound", visit(ctx.statement()));
       return ifTemplate;
    }
 

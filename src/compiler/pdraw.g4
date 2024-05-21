@@ -74,7 +74,7 @@ expression :
     | expression op='<-' Property expression #ExprSetProperty
 
     // stdin
-    | 'stdin' String #ExprStdin
+    | 'stdin' expression #ExprStdin
 
     // Comparison
     | expression op=('=='|'!='|'<'|'<='|'>'|'>=') expression #ExprComp
