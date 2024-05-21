@@ -3,7 +3,7 @@ grammar pdraw;
 // Define the grammar for the parser
 program: compound EOF;
 
-function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' block;
+function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' statement;
 
 statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
 

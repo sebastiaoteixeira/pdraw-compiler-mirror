@@ -89,27 +89,33 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitWhile(pdrawParser.WhileContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST whileTemplate = templates.getInstanceOf("while");
+      whileTemplate.add("condition", visit(ctx.expression()));
+      whileTemplate.add("statements", visit(ctx.block()));
+      return whileTemplate;
    }
 
    @Override public ST visitUntil(pdrawParser.UntilContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST untilTemplate = templates.getInstanceOf("until");
+      untilTemplate.add("condition", visit(ctx.expression()));
+      untilTemplate.add("statements", visit(ctx.block()));
+      return untilTemplate;
    }
 
    @Override public ST visitFor(pdrawParser.ForContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST forTemplate = templates.getInstanceOf("for");
+      forTemplate.add("init", visit(ctx.expression(0)));
+      forTemplate.add("condition", visit(ctx.expression(1)));
+      forTemplate.add("expression", visit(ctx.expression(2)));
+      forTemplate.add("statements", visit(ctx.block()));
+      return forTemplate;
    }
 
    @Override public ST visitIf(pdrawParser.IfContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST ifTemplate = templates.getInstanceOf("if");
+      ifTemplate.add("condition", visit(ctx.expression()));
+      ifTemplate.add("statements", visit(ctx.block()));
+      return ifTemplate;
    }
 
    @Override public ST visitExecution(pdrawParser.ExecutionContext ctx) {
@@ -138,9 +144,9 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST toBool = templates.getInstanceOf("toBool");
+      toBool.add("op", visit(ctx.expression()));
+      return toBool;
    }
 
    @Override public ST visitExprToInt(pdrawParser.ExprToIntContext ctx) {
