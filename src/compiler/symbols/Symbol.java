@@ -11,6 +11,10 @@ public class Symbol {
         this.type = type;
     }
 
+    public GenericType getGenericType() {
+        return type;
+    }
+
     public Type getType() {
         return type.getType();
     }

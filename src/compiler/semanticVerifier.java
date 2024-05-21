@@ -169,9 +169,12 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprToString(pdrawParser.ExprToStringContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+		if (!isConvertibleToString(exprType)) {
+			ErrorHandler.error(getFileName(ctx), "Conversion to string can only be applied to real, integer, or string values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+		return new StringType();
    }
 
    @Override public GenericType visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
@@ -181,51 +184,103 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprToInt(pdrawParser.ExprToIntContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+		if (!isConvertibleToNumeric(exprType)) {
+			ErrorHandler.error(getFileName(ctx), "Conversion to integer can only be applied to real, integer, or string values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+		return new Integer();
    }
 
    @Override public GenericType visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type leftType = visit(ctx.expression(0)).getType();
+		Type rightType = visit(ctx.expression(1)).getType();
+		if (!isNumericType(leftType) || !isNumericType(rightType)) {
+			ErrorHandler.error(getFileName(ctx), "Operands of '*' or '/' must be numeric.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());}
+		if (ctx.op.getText().equals("//")) {
+			return new Integer();
+		} else if (leftType == Type.REAL || rightType.getType == Type.REAL) {
+			return new Real();
+		}
+		return new Integer();
    }
 
    @Override public GenericType visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+		Type leftType = visit(ctx.expression(0)).getType();
+		Type rightType = visit(ctx.expression(1)).getType();
+		if (!isNumericType(leftType) || !isNumericType(rightType)) {
+			ErrorHandler.error(getFileName(ctx), "Operands of '+' or '-' must be numeric.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine()); 
+		}
+      return (leftType == Type.REAL || rightType == Type.REAL) ? new Integer() : new Real();
    }
 
    @Override public GenericType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type leftType = visit(ctx.expression(0)).getType();
+		Type rightType = visit(ctx.expression(1)).getType();
+
+		if (leftType != Type.PEN) {
+			ErrorHandler.error(getFileName(ctx), "Set property operator can only be applied to pen values.",
+				ctx.start.getLine(), ctx.start.getCharPositionInLine());
+		}
+
+		String property = ctx.Property().getText();
+		switch (property) {
+			case "color":
+				if (rightType != Type.COLOR) {
+					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+			case "pressure":
+				if (!isNumericType(rightType)) {
+					ErrorHandler.error(getFileName(ctx), "Pressure value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+			case "thickness":
+				if (rightType != Type.INTEGER) {
+					ErrorHandler.error(getFileName(ctx), "Thickness value must be a integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;	
+			case "orientation":
+				if (!isNumericType(rightType)) {
+					ErrorHandler.error(getFileName(ctx), "Orientation value must be a real or integer value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+			case "position":
+				if (rightType != Type.POINT) {
+					ErrorHandler.error(getFileName(ctx), "Position value must be a point value.",
+						ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				}
+				break;
+		
+			default:
+				ErrorHandler.error(getFileName(ctx), "Invalid property " + property,
+					ctx.start.getLine(), ctx.start.getCharPositionInLine());
+				break;
+
+		}
+		return new Pen();
    }
 
    @Override public GenericType visitExprInteger(pdrawParser.ExprIntegerContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new Integer();
    }
 
    @Override public GenericType visitExprId(pdrawParser.ExprIdContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return symbolTable.getSymbol(ctx.ID().getText()).getGenericType();
    }
 
    @Override public GenericType visitExprString(pdrawParser.ExprStringContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new StringType();
    }
 
    @Override public GenericType visitExprParent(pdrawParser.ExprParentContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return visit(ctx.expression());
    }
 
    @Override public GenericType visitExprComp(pdrawParser.ExprCompContext ctx) {
@@ -235,15 +290,17 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprPoint(pdrawParser.ExprPointContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new Point();
    }
 
    @Override public GenericType visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type leftType = visit(ctx.expression(0)).getType();
+      Type rightType = visit(ctx.expression(1)).getType();
+      if (leftType != Type.STRING || rightType != Type.STRING) {
+         ErrorHandler.error(getFileName(ctx), "Operands of '++' must be strings.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new StringType();
    }
 
    @Override public GenericType visitExprColor(pdrawParser.ExprColorContext ctx) {
@@ -253,39 +310,58 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprToReal(pdrawParser.ExprToRealContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (!isConvertibleToNumeric(exprType)) {
+         ErrorHandler.error(getFileName(ctx), "Conversion to real can only be applied to real, integer, or string values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new Real();
    }
 
    @Override public GenericType visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type leftType = visit(ctx.expression(0)).getType();
+      Type rightType = visit(ctx.expression(1)).getType();
+      if (leftType != Type.PEN || !isNumericType(rightType)) {
+         ErrorHandler.error(getFileName(ctx), "Operands of pen operator must be pen values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new Pen();
    }
 
    @Override public GenericType visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (!isConvertibleToNumeric(exprType)) {
+         ErrorHandler.error(getFileName(ctx), "Conversion to radian can only be applied to real, integer, or string values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new Real();
    }
 
    @Override public GenericType visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (exprType != Type.PEN) {
+         ErrorHandler.error(getFileName(ctx), "Unary operator can only be applied to pen values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new Pen();
    }
 
    @Override public GenericType visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (!isNumericType(exprType)) {
+         ErrorHandler.error(getFileName(ctx), "Unary operator can only be applied to numeric values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return exprType;
    }
 
    @Override public GenericType visitExprNew(pdrawParser.ExprNewContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (exprType != Type.PENTYPE) {
+         ErrorHandler.error(getFileName(ctx), "New operator can only be applied to pen type values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new Pen();
    }
 
    @Override public GenericType visitExprBoolOp(pdrawParser.ExprBoolOpContext ctx) {
@@ -295,39 +371,38 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprStdin(pdrawParser.ExprStdinContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (exprType != Type.STRING) {
+         ErrorHandler.error(getFileName(ctx), "Stdin operator can only be applied to string values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new StringType();
    }
 
    @Override public GenericType visitExprAssign(pdrawParser.ExprAssignContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return visit(ctx.assign());
    }
 
    @Override public GenericType visitExprReal(pdrawParser.ExprRealContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new Real();
    }
 
    @Override public GenericType visitExprBool(pdrawParser.ExprBoolContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new Boolean();
    }
 
    @Override public GenericType visitPoint(pdrawParser.PointContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType1 = visit(ctx.expression(0)).getType();
+      Type exprType2 = visit(ctx.expression(1)).getType();
+      if (exprType1 != Type.INTEGER || exprType2 != Type.INTEGER) {
+         ErrorHandler.error(getFileName(ctx), "Point values must be integer values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new Point();
    }
 
    @Override public GenericType visitBoolean(pdrawParser.BooleanContext ctx) {
-      GenericType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new Boolean();
    }
 
    // private function to see if expr is INTEGER or REAL
