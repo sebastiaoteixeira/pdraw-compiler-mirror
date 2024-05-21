@@ -94,7 +94,7 @@ expression :
     | String #ExprString
     | Color #ExprColor
     | point #ExprPoint
-    | boolean #ExprBool
+    | Boolean #ExprBool
 
     // Parentized expression
     | '(' expression ')' #ExprParent
@@ -118,7 +118,7 @@ fragment EscapeSequence: '\\' . ;
 Integer: [0-9]+;
 Real: [0-9]+ '.' [0-9]+;
 
-boolean: 'true' | 'false';
+Boolean: 'true' | 'false';
 
 
 // Identifiers

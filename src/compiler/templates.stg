@@ -47,6 +47,7 @@ ExprPenUnary(penName,op) ::= <<
 <penName>.<op>()
 >>
 
+// Template for ExprPenOperator and ExprSetProperty
 ExprPen(name,op,value) ::= <<
 <name>.<op>(<value>)
 >>
@@ -61,9 +62,9 @@ conv_rad(op) ::= <<
 radians(<op>)
 >>
 
-// Template for visitPoint
-visitPoint(op1,op2) ::= <<
-(<op1>,<op2>)
+// Template for point
+point(op1,op2) ::= <<
+Point(<op1>,<op2>)
 >>
 
 // Template for DeclarationContext

@@ -449,10 +449,6 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Point();
    }
 
-   @Override public GenericType visitBoolean(pdrawParser.BooleanContext ctx) {
-      return new BooleanType();
-   }
-
    // private function to see if expr is INTEGER or REAL
 	private boolean isNumericType(Type type) {
 		return type == Type.INTEGER || type == Type.REAL;

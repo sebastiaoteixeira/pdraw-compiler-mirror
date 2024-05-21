@@ -89,7 +89,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
-      ST declaration_element = templates.getInstanceOf("declaration_element");
+      ST declaration_element = templates.getInstanceOf("declarationContext");
       declaration_element.add("identifier", ctx.ID().getText());
       return declaration_element;
    }
@@ -319,11 +319,5 @@ import org.stringtemplate.v4.*;
       point.add("op1", visit(ctx.x).render());
       point.add("op2", visit(ctx.y).render());
       return point;
-   }
-
-   @Override public ST visitBoolean(pdrawParser.BooleanContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
    }
 }
