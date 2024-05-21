@@ -16,8 +16,12 @@ class Canvas:
         return line
 
     def waitUntilClose(self):
-        self.win.getMouse()
-        self.win.close()
+        try:
+            self.win.getMouse()
+        except GraphicsError:
+            pass
+        finally:
+            self.win.close()
 
         
     

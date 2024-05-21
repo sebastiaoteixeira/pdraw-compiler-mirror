@@ -6,10 +6,10 @@ class Point:
         self.x = x
         self.y = y
     
-    def __sum__(self, other) -> Point:
+    def __add__(self, other):
         return Point(self.x + other.x, self.y + other.y)
     
-    def __sub__(self, other) -> Point:
+    def __sub__(self, other):
         return Point(self.x - other.x, self.y - other.y)
     
     def __str__(self) -> str:
@@ -39,7 +39,17 @@ class Pen:
         self.__pressure = penType.get("pressure", 1)
         self.__orientation = penType.get("orientation", 0)
         self.__thickness = penType.get("thickness", 1)
-        self.is_down = True 
+        self.is_down = True
+    
+    def __add__(self, other):
+        if isinstance(other, Point):
+            self.__position += other
+        return self
+    
+    def __sub__(self, other):
+        if isinstance(other, Point):
+            self.__position -= other
+        return self
 
     def __str__(self) -> str:
         return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness}, is_down={self.is_down})"
@@ -51,7 +61,7 @@ class Pen:
         if self.is_down:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
-        self.position = new_position
+        self.__position = new_position
         return self
     
     def backward(self, distance):
@@ -61,15 +71,15 @@ class Pen:
         if self.is_down:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
-        self.position = new_position
+        self.__position = new_position
         return self
 
     def right(self, angle):
-        self.__orientation -= angle
+        self.__orientation += angle
         return self
 
     def left(self, angle):
-        self.__orientation += angle
+        self.__orientation -= angle
         return self
 
     def down(self):
@@ -105,15 +115,23 @@ class Pen:
             self.__pressure = pressure
         return self.__pressure
 
+
+from time import sleep
+
 def main():
     canvas = Canvas("Drawing Canvas", 400, 400)
     
-    penType = {"position":(200, 200), "color":"green", "orientation":45, "thickness":10, "pressure":1}
+    penType = {"position":Point(200, 200), "color":"green", "orientation":45, "thickness":10, "pressure":1}
     pen = Pen(canvas, penType)
 
     print(str(pen))
 
-    pen.down().forward(50).left(90).forward(50).left(90).forward(50).left(90).forward(50)
+    pen.down().forward(50).left(90)
+    sleep(2)
+    pen += Point(50, 50)
+    pen.forward(50).left(90).forward(50).left(90)
+    sleep(3)
+    pen.forward(50)
     
     canvas.waitUntilClose()
 
