@@ -3,8 +3,11 @@ grammar pdraw;
 // Define the grammar for the parser
 program: statement* EOF;
 
-statement: (define | expression | declaration | stdout | pause | execution) ';';
+statement: (define | expression | declaration | stdout | pause | execution | if | for | until | while | block) ';';
 
+coumpound: statement*;
+
+block: '{' coumpound '}';
 
 // Statements and expressions
 define: 'define' (penDefinition | canvasDefinition);
@@ -16,7 +19,13 @@ canvasDefinition: 'canvas' ID String point;
 
 declaration: type=('pen'|'real'|'int'|'string'|'point') ID ('=' expression)?;
 
+while: 'while' '(' expression ')' statement;
 
+until: 'until' '(' expression ')' statement;
+
+for: 'for' '(' declaration ';' expression ';' expression ')' statement; 
+
+if: 'if' '(' expression ')' statement ('else'  statement )?;
 
 execution: ID '<-' 'execute' expression;
 
