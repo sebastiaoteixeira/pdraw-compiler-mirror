@@ -5,7 +5,9 @@ program: compound EOF;
 
 function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' block;
 
-statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function) ';';
+statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
+
+return: 'return' expression;
 
 compound: statement*;
 
