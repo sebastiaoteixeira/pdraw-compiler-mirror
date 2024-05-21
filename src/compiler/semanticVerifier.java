@@ -108,15 +108,16 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 					ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 
-      String id = ctx.ID().getText();
-		if (symbolTable.getSymbol(id) != null) {
-			ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " already exists.",
-				ctx.start.getLine(), ctx.start.getCharPositionInLine());
-		}
-
-		Symbol variable = new Symbol(id, type);
-		symbolTable.addSymbol(variable);
-		
+      for (pdrawParser.Declaration_elementContext element : ctx.declaration_element()) {
+         visit(element);
+         String id = element.identifier;
+         if (symbolTable.getSymbol(id) != null) {
+            ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " already exists.",
+               ctx.start.getLine(), ctx.start.getCharPositionInLine());
+         }
+         Symbol variable = new Symbol(id, type);
+		   symbolTable.addSymbol(variable);
+      }
 		return type;
    }
 
