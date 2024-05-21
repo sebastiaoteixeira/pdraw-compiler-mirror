@@ -73,7 +73,7 @@ declarationContext(var) ::= <<
 
 // Template for Execution
 execution(penId, fileName) ::= <<
-exec("<fileName>", <penId>)
+exec(\"<fileName>\", <penId>)
 >>
 
 //Template for pause
@@ -128,9 +128,12 @@ bool(<op>)
 
 // boolean/loops expressions templates
 // Template for if 
-if(condition, compound) ::= <<
+if(condition, compoundIf, compoundElse) ::= <<
 if <condition>: 
-    <compound>
+    <compoundIf>
+else:
+    <compoundElse>
+    pass
 >>
 
 // Template for forLoop

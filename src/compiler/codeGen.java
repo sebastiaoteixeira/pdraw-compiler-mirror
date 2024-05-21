@@ -120,7 +120,10 @@ import org.stringtemplate.v4.*;
    @Override public ST visitIf(pdrawParser.IfContext ctx) {
       ST ifTemplate = templates.getInstanceOf("if");
       ifTemplate.add("condition", visit(ctx.expression()));
-      ifTemplate.add("compound", visit(ctx.statement()));
+      ifTemplate.add("compoundIf", visit(ctx.statement(0)));
+      if (ctx.statement(1) != null) {
+         ifTemplate.add("compoundElse", visit(ctx.statement(1)));
+      }
       return ifTemplate;
    }
 

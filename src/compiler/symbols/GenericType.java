@@ -1,4 +1,4 @@
-package compiler.symbols;
+package symbols;
 
 public abstract class GenericType {
     private Type type;

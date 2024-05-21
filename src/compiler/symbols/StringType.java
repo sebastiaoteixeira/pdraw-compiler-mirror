@@ -1,4 +1,4 @@
-package compiler.symbols;
+package symbols;
 
 public class StringType extends GenericType{
     public StringType() {

@@ -5,7 +5,7 @@ program: compound EOF;
 
 function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' statement;
 
-statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
+statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
 
 return: 'return' expression;
 
@@ -51,7 +51,7 @@ expression :
     ID '(' expression (',' expression)* ')' #ExprFunctionCall
 
     // pen instance
-    |'new' expression #ExprNew
+    |'new' expression? #ExprNew
 
     // Math
     | op=('+'|'-') expression #ExprUnary

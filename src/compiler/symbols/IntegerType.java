@@ -1,4 +1,4 @@
-package compiler.symbols;
+package symbols;
 
 public class IntegerType extends GenericType{
     public IntegerType() {

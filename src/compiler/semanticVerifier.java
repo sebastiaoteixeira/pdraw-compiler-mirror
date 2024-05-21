@@ -1,4 +1,4 @@
-import compiler.symbols.*;
+import symbols.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
@@ -155,6 +155,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
          ErrorHandler.error(getFileName(ctx), "Loop range must be a boolean value.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
+      return null;
    }
 
    @Override public GenericType visitIf(pdrawParser.IfContext ctx) {
