@@ -36,7 +36,7 @@ class Pen:
         new_position = (new_x, new_y)
 
         if self.is_down:
-            self.__canvas.drawLine(self.__position, new_position, self.__color, self.__thickness * self.__pressure)
+            self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
         self.position = new_position
         return self
@@ -48,7 +48,7 @@ class Pen:
         new_position = (new_x, new_y)
 
         if self.is_down:
-            self.__canvas.drawLine(self.__position, new_position, self.__color, self.__thickness * self.__pressure)
+            self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
         self.position = new_position
         return self
