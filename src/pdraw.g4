@@ -46,7 +46,7 @@ expression :
     | expression op=('+'|'-') expression #ExprAddSub
 
     // Concatenation
-    | String expression #ExprStringConcat
+    | expression expression #ExprStringConcat
 
     // Type conversion
     | 'int' '(' expression ')' #ExprToInt

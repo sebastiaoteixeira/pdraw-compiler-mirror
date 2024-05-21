@@ -1,3 +1,4 @@
+import org.stringtemplate.v4.*;
 
 @SuppressWarnings("CheckReturnValue")
 public class codeGen extends pdrawBaseVisitor<ST> {
@@ -90,10 +91,7 @@ public class codeGen extends pdrawBaseVisitor<ST> {
 
    @Override public ST visitStdout(pdrawParser.StdoutContext ctx) {
       ST stdout = templates.getInstanceOf("stdout");
-<<<<<<< HEAD
       stdout.add("op", visit(ctx.expression()));
-=======
->>>>>>> aa88f42 (stdin)
       return stdout;
    }
 
