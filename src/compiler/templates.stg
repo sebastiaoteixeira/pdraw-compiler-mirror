@@ -155,3 +155,8 @@ until(condition, compound) ::= <<
 while not <condition>:
     <compound>
 >>
+
+// Template for litterals, IDs, ...
+single(<content>) ::= <<
+<content>
+>>

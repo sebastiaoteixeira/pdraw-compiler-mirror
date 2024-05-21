@@ -109,14 +109,15 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		}
 
       for (pdrawParser.Declaration_elementContext element : ctx.declaration_element()) {
-         visit(element);
-         String id = element.identifier;
+         String id = element.ID() != null ? element.ID().getText() : element.assign().ID().getText();
          if (symbolTable.getSymbol(id) != null) {
             ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " already exists.",
                ctx.start.getLine(), ctx.start.getCharPositionInLine());
          }
          Symbol variable = new Symbol(id, type);
 		   symbolTable.addSymbol(variable);
+
+         visit(element);
       }
 		return type;
    }
@@ -294,7 +295,16 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitExprId(pdrawParser.ExprIdContext ctx) {
-      return symbolTable.getSymbol(ctx.ID().getText()).getGenericType();
+      String id = ctx.ID().getText();
+      Symbol s = symbolTable.getSymbol(id);
+      if (s == null) {
+         ErrorHandler.error(getFileName(ctx), id + " was not declared.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+         
+         return null;
+      }
+
+      return s.getGenericType();
    }
 
    @Override public GenericType visitExprString(pdrawParser.ExprStringContext ctx) {
