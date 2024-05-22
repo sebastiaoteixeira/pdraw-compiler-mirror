@@ -41,8 +41,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
 		switch (property) {
 			case "color":
-				if (exprType.getType() != Type.COLOR) {
-					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+				if (exprType.getType() != Type.INTEGER) {
+					ErrorHandler.error(getFileName(ctx), "Color value must be a integer value.",
 						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
@@ -251,8 +251,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		String property = ctx.Property().getText();
 		switch (property) {
 			case "color":
-				if (rightType != Type.COLOR) {
-					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+				if (rightType != Type.INTEGER) {
+					ErrorHandler.error(getFileName(ctx), "Color value must be a integer value.",
 						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;

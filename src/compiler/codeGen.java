@@ -1,9 +1,20 @@
 import org.stringtemplate.v4.*;
+import java.util.HashMap;
 
 @SuppressWarnings("CheckReturnValue")
    public class codeGen extends pdrawBaseVisitor<ST> {
 
    private STGroup templates = new STGroupFile("templates.stg");
+
+   // HashMap with color names and their respective #HEX values
+   private static final HashMap<String, String> colors = new HashMap<String, String>() {{
+      put("white", "#FFFFFF");
+      put("black", "#000000");
+      put("green", "#00FF00");
+      put("red", "#FF0000");
+      put("blue", "#0000FF");
+      put("yellow", "#FFFF00");
+   }};
 
    @Override public ST visitProgram(pdrawParser.ProgramContext ctx) {
       ST mainTemplate = templates.getInstanceOf("main");
@@ -231,7 +242,12 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprColor(pdrawParser.ExprColorContext ctx) {
       ST color = templates.getInstanceOf("single");
-      color.add("content", ctx.Color().getText());
+      String colorName = ctx.Color().getText();
+      if (colorName.charAt(0) == '#') {
+         color.add("content", colorName);
+      } else {
+         color.add("content", colors.get(colorName));
+      }
       return color;
    }
 

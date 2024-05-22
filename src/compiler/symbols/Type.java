@@ -8,6 +8,5 @@ public enum Type {
     REAL,
     POINT,
     BOOLEAN,
-    COLOR,
     FUNCTION  
 }
