@@ -1,10 +1,36 @@
 import symbols.*;
+
+import java.util.function.Function;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
 public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
    private SymbolTable symbolTable = new SymbolTable();
+
+   public GenericType switchFunctionType(String name){
+      GenericType type = null;
+		switch (name) {
+			case "pen":
+				type = new Pen();
+				break;
+			case "real":
+				type = new Real();
+				break;
+			case "int":
+				type = new IntegerType();
+				break;
+			case "string":
+				type = new StringType();
+				break;
+			case "point":
+				type = new Point();
+				break;
+      }
+
+      return type;
+   }
 
    @Override
 	public GenericType visitProgram(pdrawParser.ProgramContext ctx) {
@@ -41,8 +67,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
 		switch (property) {
 			case "color":
-				if (exprType.getType() != Type.COLOR) {
-					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+				if (exprType.getType() != Type.INTEGER) {
+					ErrorHandler.error(getFileName(ctx), "Color value must be a integer value.",
 						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
@@ -86,27 +112,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override public GenericType visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      GenericType type = null;
-		switch (ctx.type.getText()) {
-			case "pen":
-				type = new Pen();
-				break;
-			case "real":
-				type = new Real();
-				break;
-			case "int":
-				type = new IntegerType();
-				break;
-			case "string":
-				type = new StringType();
-				break;
-			case "point":
-				type = new Point();
-				break;
-			default:
-				ErrorHandler.error(getFileName(ctx), "Invalid type " + ctx.type.getText(),
-					ctx.start.getLine(), ctx.start.getCharPositionInLine());
-		}
+      GenericType type = switchFunctionType(ctx.type.getText());
 
       for (pdrawParser.Declaration_elementContext element : ctx.declaration_element()) {
          String id = element.ID() != null ? element.ID().getText() : element.assign().ID().getText();
@@ -251,8 +257,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		String property = ctx.Property().getText();
 		switch (property) {
 			case "color":
-				if (rightType != Type.COLOR) {
-					ErrorHandler.error(getFileName(ctx), "Color value must be a color value.",
+				if (rightType != Type.INTEGER) {
+					ErrorHandler.error(getFileName(ctx), "Color value must be a integer value.",
 						ctx.start.getLine(), ctx.start.getCharPositionInLine());
 				}
 				break;
@@ -449,6 +455,74 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Point();
    }
 
+   @Override public GenericType visitReturn(pdrawParser.ReturnContext ctx) {
+      return null;
+      //Não tá acabada
+   }
+
+   @Override public GenericType visitFunction(pdrawParser.FunctionContext ctx) {
+      String id = ctx.ID().getText();
+      GenericType returnType = switchFunctionType(ctx.type.getText());
+      ParameterList parameterSymbols = (ParameterList) visit(ctx.parameter_list());
+      GenericType type = new FunctionType( returnType,parameterSymbols);
+      Symbol function = new Symbol(id,type);
+      symbolTable.addSymbol(function);
+
+      symbolTable.enterScope();
+      for (Symbol parameterSymbol : parameterSymbols.getParameterSymbols()) {
+         symbolTable.addSymbol(parameterSymbol);
+      }
+
+      visit(ctx.statement());
+      symbolTable.exitScope();
+      return null;
+   }
+
+   @Override public GenericType visitParameter(pdrawParser.ParameterContext ctx) {
+      ctx.id = ctx.ID().getText();
+      GenericType type = switchFunctionType(ctx.type.getText());
+      
+      return type;
+   }
+
+   @Override public GenericType visitParameter_list(pdrawParser.Parameter_listContext ctx){
+      ParameterList res = new ParameterList();
+
+      for (pdrawParser.ParameterContext parameter : ctx.parameter()) {
+         GenericType parType = visit(parameter);
+         res.add(new Symbol(parameter.id, parType));
+      }
+
+      return res;
+   }
+
+   @Override public GenericType visitExprFunctionCall(pdrawParser.ExprFunctionCallContext ctx){
+      String id = ctx.ID().getText();
+      Symbol function = symbolTable.getSymbol(id);
+      if (function == null) {
+         ErrorHandler.error(getFileName(ctx), "Function with id " + id + " does not exist.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      FunctionType functionType = (FunctionType) function.getGenericType();
+      ParameterList parameterTypes = functionType.getParameterList();
+      if (ctx.expression().size() != parameterTypes.getParameterSymbols().size()) {
+         ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong number of arguments.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      for (int i = 0; i < ctx.expression().size(); i++) {
+         GenericType exprType = visit(ctx.expression(i));
+         GenericType parameterType = parameterTypes.getParameterSymbols().get(i).getGenericType();
+         if (exprType.getType() != parameterType.getType()) {
+            ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong argument type.",
+               ctx.start.getLine(), ctx.start.getCharPositionInLine());
+         }
+      }
+
+      return functionType.getReturnType();
+   }
+
    // private function to see if expr is INTEGER or REAL
 	private boolean isNumericType(Type type) {
 		return type == Type.INTEGER || type == Type.REAL;
@@ -467,4 +541,6 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 	private String getFileName(ParserRuleContext ctx) {
 		return ctx.getStart().getInputStream().getSourceName();
 	}
+
+   
 }

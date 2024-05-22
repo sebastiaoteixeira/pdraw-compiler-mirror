@@ -22,9 +22,9 @@ propertyDefinition: Property '=' expression ';';
 
 canvasDefinition: 'canvas' ID String point;
 
-parameter_list: parameter (',' declaration)* ;
+parameter_list: parameter (',' parameter)* ;
 
-parameter: type=('pen'|'real'|'int'|'string'|'point') ID;
+parameter returns [ String id ]: type=('pen'|'real'|'int'|'string'|'point') ID;
 
 declaration_element returns [String identifier] : (ID | assign);
 
@@ -110,7 +110,6 @@ assign returns [String identifier]: ID op='=' expression;
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
-Color: ('white'|'black'|'green'|'red'|'blue'|'yellow');
 
 String: '"' (EscapeSequence | ~['"\\])* '"';
 fragment EscapeSequence: '\\' . ;
@@ -120,6 +119,10 @@ Real: [0-9]+ '.' [0-9]+;
 
 Boolean: 'true' | 'false';
 
+Color: ('white'|'black'|'green'|'red'|'blue'|'yellow')
+| '#' HEX HEX HEX HEX HEX HEX; 
+
+fragment HEX: [0-9a-fA-F];
 
 // Identifiers
 ID: [a-zA-Z_][a-zA-Z_0-9]*;

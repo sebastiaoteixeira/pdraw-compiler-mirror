@@ -1,5 +1,5 @@
 // Main template
-program(compound) ::= <<
+main(compound) ::= <<
 def main():
     <compound>
 
@@ -21,7 +21,7 @@ canvas = Canvas("<title>", <width>, <height>)
 // Template for PenType definition
 pentype(pentypeName, properties) ::= <<
 <pentypeName> = {
-    <properties; separator="\n">
+    <properties; separator=",">
 }
 >>
 
@@ -163,7 +163,39 @@ single(content) ::= <<
 <content>
 >>
 
+// Template for Color
+// #RRGGBB
+color(content) ::= <<
+ColorToInt("<content>")
+>>
+
 // Template for parentisis
 parent(op) ::= <<
 (<op>)
+>>
+
+// Template for functions
+function(ID, paramenter_list, statement) ::= <<
+def <ID>(<parameter_list>):
+    <statement>
+>>
+
+// Template for return
+return(expression) ::= <<
+return <expression>
+>>
+
+//Template for paramenter_list
+paramenter_list(declaration) ::= <<
+    <declaration; separator=",">
+>>
+
+//Template for parameter
+parameter(ID) ::= <<
+<ID>
+>>
+
+//Template for functioncall
+functioncall(ID, expression) ::= <<
+<ID>(<expression>)
 >>

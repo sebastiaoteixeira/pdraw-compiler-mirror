@@ -2,6 +2,8 @@ package symbols;
 
 import java.util.List;
 
+import symbols.ParameterList;
+
 public class Symbol {
     private String identifier;
     private GenericType type;
@@ -19,15 +21,15 @@ public class Symbol {
         return type.getType();
     }
 
-    public Type getReturnType() {
+    public GenericType getReturnType() {
         if (type.getType() == Type.FUNCTION)
-            return ((Function) type).getReturnType();
+            return ((FunctionType) type).getReturnType();
         return null;
     }
 
-    public List<Type> getParameterTypes() {
+    public ParameterList getParameterTypes() {
         if (type.getType() == Type.FUNCTION)
-            return ((Function) type).getParameterTypes();
+            return ((FunctionType) type).getParameterList();
         return null;
     }
 
