@@ -1,5 +1,8 @@
 // Main template
 main(compound) ::= <<
+from math import radians, pi
+from time import sleep
+
 def main():
     <compound>
 

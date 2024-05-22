@@ -527,6 +527,10 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return functionType.getReturnType();
    }
 
+   @Override public GenericType visitExprPI(pdrawParser.ExprPIContext ctx) {
+      return new Real();
+   }
+
 
    // private function to see if expr is INTEGER or REAL
 	private boolean isNumericType(Type type) {

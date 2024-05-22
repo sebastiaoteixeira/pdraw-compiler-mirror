@@ -380,4 +380,10 @@ import java.util.HashMap;
       point.add("op2", visit(ctx.y).render());
       return point;
    }
+
+   @Override public ST visitExprPI(pdrawParser.ExprPIContext ctx) {
+      ST pi = templates.getInstanceOf("single");
+      pi.add("content", "pi");
+      return pi;
+   }
 }
