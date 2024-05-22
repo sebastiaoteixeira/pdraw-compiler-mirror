@@ -48,7 +48,7 @@ import java.util.HashMap;
       return parameterList;
    }
 
-   @Override public ST visitFunctionCall(pdrawParser.ExprFunctionCallContext ctx) {
+   @Override public ST visitExprFunctionCall(pdrawParser.ExprFunctionCallContext ctx) {
       ST functionCall = templates.getInstanceOf("functionCall");
       functionCall.add("ID", ctx.ID().getText());
       for (pdrawParser.ExpressionContext expression : ctx.expression()) {
