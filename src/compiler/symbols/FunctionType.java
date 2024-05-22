@@ -2,12 +2,12 @@ package symbols;
 
 public class FunctionType extends GenericType {
     private GenericType returnType;
-    private ParameterList parameterTypes;
+    private ParameterList parameterList;
 
-    public FunctionType(GenericType returnType, ParameterList parameterTypes) {
+    public FunctionType(GenericType returnType, ParameterList parameterList) {
         setType(Type.FUNCTION);
         setReturnType(returnType);
-        setParameterTypes(parameterTypes);
+        setParameterList(parameterList);
     }
 
     public GenericType getReturnType() {
@@ -18,11 +18,11 @@ public class FunctionType extends GenericType {
         this.returnType = returnType;
     }
 
-    public ParameterList getParameterTypes() {
-        return parameterTypes;
+    public ParameterList getParameterList() {
+        return parameterList;
     }
 
-    private void setParameterTypes(ParameterList parameterTypes) {
-        this.parameterTypes = parameterTypes;
+    private void setParameterList(ParameterList parameterList) {
+        this.parameterList = parameterList;
     }
 }

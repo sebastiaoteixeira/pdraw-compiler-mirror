@@ -505,7 +505,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       }
 
       FunctionType functionType = (FunctionType) function.getGenericType();
-      ParameterList parameterTypes = functionType.getParameterTypes();
+      ParameterList parameterTypes = functionType.getParameterList();
       if (ctx.expression().size() != parameterTypes.getParameterSymbols().size()) {
          ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong number of arguments.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
