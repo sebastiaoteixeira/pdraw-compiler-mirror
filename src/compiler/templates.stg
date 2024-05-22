@@ -1,5 +1,5 @@
 // Main template
-program(compound) ::= <<
+main(compound) ::= <<
 def main():
     <compound>
 
@@ -21,7 +21,7 @@ canvas = Canvas("<title>", <width>, <height>)
 // Template for PenType definition
 pentype(pentypeName, properties) ::= <<
 <pentypeName> = {
-    <properties; separator="\n">
+    <properties; separator=",">
 }
 >>
 

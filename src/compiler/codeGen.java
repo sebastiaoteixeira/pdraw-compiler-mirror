@@ -16,7 +16,8 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitStatement(pdrawParser.StatementContext ctx) {
-      return visitChildren(ctx);
+      ST statement = visit(ctx.getChild(0));
+      return statement;
    }
 
    @Override public ST visitCompound(pdrawParser.CompoundContext ctx) {
@@ -85,7 +86,7 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
       ST declaration_element = templates.getInstanceOf("declarationContext");
-      declaration_element.add("identifier", ctx.ID().getText());
+      declaration_element.add("var", ctx.ID() != null ? ctx.ID().getText() : ctx.assign().ID().getText());
       return declaration_element;
    }
 
@@ -255,7 +256,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-      ST unary = templates.getInstanceOf("pen_unary_operations");
+      ST unary = templates.getInstanceOf("ExprPenUnary");
       unary.add("penName", visit(ctx.expression()).render());
       unary.add("op", ctx.op.getText());
       return unary;
