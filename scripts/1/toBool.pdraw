@@ -1,4 +1,4 @@
-b = bool(0) % False
+boolean b = bool(0) % False
 
 b = bool(1) % True
 b = bool(8.8) % True
