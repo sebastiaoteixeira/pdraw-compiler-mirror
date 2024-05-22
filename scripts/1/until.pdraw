@@ -1,4 +1,4 @@
-m = int(stdin "Number: ");
+int m = int(stdin "Number: ");
 
 until (m == 0) {
     m -> stdout;

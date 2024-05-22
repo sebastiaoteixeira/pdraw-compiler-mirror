@@ -85,9 +85,6 @@ expression :
     // Assign
     | assign #ExprAssign
 
-    // Identifier
-    | ID #ExprId
-
     // Litterals
     | Integer #ExprInteger
     | Real #ExprReal
@@ -95,6 +92,10 @@ expression :
     | Color #ExprColor
     | point #ExprPoint
     | Boolean #ExprBool
+    | PI #ExprPi
+
+    // Identifier
+    | ID #ExprId
 
     // Parentized expression
     | '(' expression ')' #ExprParent
@@ -120,7 +121,9 @@ Real: [0-9]+ '.' [0-9]+;
 Boolean: 'true' | 'false';
 
 Color: ('white'|'black'|'green'|'red'|'blue'|'yellow')
-| '#' HEX HEX HEX HEX HEX HEX; 
+| '#' HEX HEX HEX HEX HEX HEX;
+
+PI: 'PI';
 
 fragment HEX: [0-9a-fA-F];
 

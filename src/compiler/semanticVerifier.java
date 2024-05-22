@@ -504,17 +504,21 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
 
+      //se estiver a dar problemas revejam esta parte
+
       FunctionType functionType = (FunctionType) function.getGenericType();
-      ParameterList parameterTypes = functionType.getParameterList();
-      if (ctx.expression().size() != parameterTypes.getParameterSymbols().size()) {
+      ParameterList parameterLists = functionType.getParameterList();
+      if (ctx.expression().size() != parameterLists.getParameterSymbols().size()) {
          ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong number of arguments.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
 
+      // e esta
+
       for (int i = 0; i < ctx.expression().size(); i++) {
          GenericType exprType = visit(ctx.expression(i));
-         GenericType parameterType = parameterTypes.getParameterSymbols().get(i).getGenericType();
-         if (exprType.getType() != parameterType.getType()) {
+         GenericType parameterList = parameterLists.getParameterSymbols().get(i).getGenericType();
+         if (exprType.getType() != parameterList.getType()) {
             ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong argument type.",
                ctx.start.getLine(), ctx.start.getCharPositionInLine());
          }
@@ -522,6 +526,11 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
       return functionType.getReturnType();
    }
+
+   @Override public GenericType visitExprPI(pdrawParser.ExprPIContext ctx) {
+      return new Real();
+   }
+
 
    // private function to see if expr is INTEGER or REAL
 	private boolean isNumericType(Type type) {

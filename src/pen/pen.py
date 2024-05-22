@@ -62,8 +62,7 @@ class Pen:
         return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness})"
 
     def forward(self, distance):
-        rad_orientation = math.radians(self.__orientation)
-        new_position = self.__position + Point(distance * math.cos(rad_orientation), distance * math.sin(rad_orientation))
+        new_position = self.__position + Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
         
         if self.__pressure != -1:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
@@ -72,8 +71,8 @@ class Pen:
         return self
     
     def backward(self, distance):
-        rad_orientation = math.radians(self.__orientation)
-        new_position = self.__position - Point(distance * math.cos(rad_orientation), distance * math.sin(rad_orientation))
+        
+        new_position = self.__position - Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
 
         if self.__pressure != -1:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
