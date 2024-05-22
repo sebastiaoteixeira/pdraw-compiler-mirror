@@ -176,3 +176,29 @@ color_rgb(r,g,b)
 parent(op) ::= <<
 (<op>)
 >>
+
+// Template for functions
+function(ID, paramenter_list, statement) ::= <<
+def <ID>(<parameter_list>):
+    <statement>
+>>
+
+// Template for return
+return(expression) ::= <<
+return <expression>
+>>
+
+//Template for paramenter_list
+paramenter_list(declaration) ::= <<
+    <declaration; separator=",">
+>>
+
+//Template for parameter
+parameter(ID) ::= <<
+<ID>
+>>
+
+//Template for functioncall
+functioncall(ID, expression) ::= <<
+<ID>(<expression>)
+>>

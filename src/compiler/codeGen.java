@@ -26,6 +26,41 @@ import java.util.HashMap;
       return mainTemplate;
    }
 
+   @Override public ST visitFunction(pdrawParser.FunctionContext ctx) {
+      ST functionTemplate = templates.getInstanceOf("function");
+      functionTemplate.add("name", ctx.ID().getText());
+      functionTemplate.add("parameter_list", visit(ctx.parameter_list()).render());
+      functionTemplate.add("statement", visit(ctx.statement()).render());
+      return functionTemplate;
+   }
+
+   @Override public ST visitReturn(pdrawParser.ReturnContext ctx) {
+      ST returnTemplate = templates.getInstanceOf("return");
+      returnTemplate.add("expression", visit(ctx.expression()).render());
+      return returnTemplate;
+   }
+
+   @Override public ST visitParameter_list(pdrawParser.Parameter_listContext ctx) {
+      ST parameterList = templates.getInstanceOf("parameter_list");
+      for (pdrawParser.ParameterContext declaration : ctx.declaration()) {
+         parameterList.add("delaration", visit(declaration).render());
+      }
+      return parameterList;
+   }
+
+   @Override public ST visitFunctionCall(pdrawParser.FunctionCallContext ctx) {
+      ST functionCall = templates.getInstanceOf("functionCall");
+      functionCall.add("ID", ctx.ID().getText());
+      functionCall.add("expression", visit(ctx.expression()).render());
+      return functionCall;
+   }
+
+   @Override public ST visitParameter(pdrawParser.ParameterContext ctx) {
+      ST parameter = templates.getInstanceOf("ID");
+      parameter.add("ID", ctx.ID().getText());
+      return parameter;
+   }
+
    @Override public ST visitStatement(pdrawParser.StatementContext ctx) {
       ST statement = visit(ctx.getChild(0));
       return statement;
