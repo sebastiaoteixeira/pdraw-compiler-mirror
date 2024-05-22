@@ -159,7 +159,7 @@ while not <condition>:
 >>
 
 // Template for litterals, IDs, ...
-single(<content>) ::= <<
+single(content) ::= <<
 <content>
 >>
 
