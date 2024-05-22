@@ -74,7 +74,7 @@ declarationContext(var) ::= <<
 
 // Template for Execution
 execution(penId, fileName) ::= <<
-exec(\"<fileName>\", <penId>)
+exec(<fileName>, <penId>)
 >>
 
 // Template for pause (time in microseconds)
