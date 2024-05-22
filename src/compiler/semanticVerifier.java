@@ -527,7 +527,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return functionType.getReturnType();
    }
 
-   @Override public GenericType visitExprPI(pdrawParser.ExprPIContext ctx) {
+   @Override public GenericType visitExprPi(pdrawParser.ExprPiContext ctx) {
       return new Real();
    }
 

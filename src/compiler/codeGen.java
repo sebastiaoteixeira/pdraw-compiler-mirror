@@ -381,7 +381,7 @@ import java.util.HashMap;
       return point;
    }
 
-   @Override public ST visitExprPI(pdrawParser.ExprPIContext ctx) {
+   @Override public ST visitExprPi(pdrawParser.ExprPiContext ctx) {
       ST pi = templates.getInstanceOf("single");
       pi.add("content", "pi");
       return pi;
