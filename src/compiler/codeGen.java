@@ -317,8 +317,8 @@ import java.util.HashMap;
 
    @Override public ST visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
       ST unary = templates.getInstanceOf("unary_operations");
-      unary.add("operator", visit(ctx.expression()).render());
-      unary.add("op", ctx.op.getText());
+      unary.add("op", visit(ctx.expression()).render());
+      unary.add("operator", ctx.op.getText());
       return unary;
    }
 
