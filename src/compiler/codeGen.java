@@ -1,9 +1,20 @@
 import org.stringtemplate.v4.*;
+import java.util.HashMap;
 
 @SuppressWarnings("CheckReturnValue")
    public class codeGen extends pdrawBaseVisitor<ST> {
 
    private STGroup templates = new STGroupFile("templates.stg");
+
+   // HashMap with color names and their respective #HEX values
+   private static final HashMap<String, String> colors = new HashMap<String, String>() {{
+      put("white", "#FFFFFF");
+      put("black", "#000000");
+      put("green", "#00FF00");
+      put("red", "#FF0000");
+      put("blue", "#0000FF");
+      put("yellow", "#FFFF00");
+   }};
 
    @Override public ST visitProgram(pdrawParser.ProgramContext ctx) {
       ST mainTemplate = templates.getInstanceOf("main");
@@ -15,8 +26,44 @@ import org.stringtemplate.v4.*;
       return mainTemplate;
    }
 
+   @Override public ST visitFunction(pdrawParser.FunctionContext ctx) {
+      ST functionTemplate = templates.getInstanceOf("function");
+      functionTemplate.add("name", ctx.ID().getText());
+      functionTemplate.add("parameter_list", visit(ctx.parameter_list()).render());
+      functionTemplate.add("statement", visit(ctx.statement()).render());
+      return functionTemplate;
+   }
+
+   @Override public ST visitReturn(pdrawParser.ReturnContext ctx) {
+      ST returnTemplate = templates.getInstanceOf("return");
+      returnTemplate.add("expression", visit(ctx.expression()).render());
+      return returnTemplate;
+   }
+
+   @Override public ST visitParameter_list(pdrawParser.Parameter_listContext ctx) {
+      ST parameterList = templates.getInstanceOf("parameter_list");
+      for (pdrawParser.ParameterContext declaration : ctx.declaration()) {
+         parameterList.add("delaration", visit(declaration).render());
+      }
+      return parameterList;
+   }
+
+   @Override public ST visitFunctionCall(pdrawParser.FunctionCallContext ctx) {
+      ST functionCall = templates.getInstanceOf("functionCall");
+      functionCall.add("ID", ctx.ID().getText());
+      functionCall.add("expression", visit(ctx.expression()).render());
+      return functionCall;
+   }
+
+   @Override public ST visitParameter(pdrawParser.ParameterContext ctx) {
+      ST parameter = templates.getInstanceOf("ID");
+      parameter.add("ID", ctx.ID().getText());
+      return parameter;
+   }
+
    @Override public ST visitStatement(pdrawParser.StatementContext ctx) {
-      return visitChildren(ctx);
+      ST statement = visit(ctx.getChild(0));
+      return statement;
    }
 
    @Override public ST visitCompound(pdrawParser.CompoundContext ctx) {
@@ -85,7 +132,7 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
       ST declaration_element = templates.getInstanceOf("declarationContext");
-      declaration_element.add("identifier", ctx.ID().getText());
+      declaration_element.add("var", ctx.ID() != null ? ctx.ID().getText() : ctx.assign().ID().getText());
       return declaration_element;
    }
 
@@ -230,7 +277,12 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprColor(pdrawParser.ExprColorContext ctx) {
       ST color = templates.getInstanceOf("single");
-      color.add("content", ctx.Color().getText());
+      String colorName = ctx.Color().getText();
+      if (colorName.charAt(0) == '#') {
+         color.add("content", colorName);
+      } else {
+         color.add("content", colors.get(colorName));
+      }
       return color;
    }
 
@@ -255,7 +307,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
-      ST unary = templates.getInstanceOf("pen_unary_operations");
+      ST unary = templates.getInstanceOf("ExprPenUnary");
       unary.add("penName", visit(ctx.expression()).render());
       unary.add("op", ctx.op.getText());
       return unary;
