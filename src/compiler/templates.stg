@@ -39,7 +39,7 @@ property(key, value) ::= <<
 // Unary operations templates
 // Template for unary_operations
 unary_operations(operator, op) ::= <<
-<operator> <op>
+<operator><op>
 >>
 
 // Template for ExprPenUnary
