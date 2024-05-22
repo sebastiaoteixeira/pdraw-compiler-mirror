@@ -480,7 +480,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
    @Override public GenericType visitParameter(pdrawParser.ParameterContext ctx) {
       ctx.id = ctx.ID().getText();
-      GenericType type = visit(ctx.type);
+      GenericType type = switchFunctionType(ctx.type.getText());
       
       return type;
    }
@@ -489,8 +489,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       ParameterList res = new ParameterList();
 
       for (pdrawParser.ParameterContext parameter : ctx.parameter()) {
-         GenericType par = visit(parameter);
-         res.add(new Symbol(ctx.parameter.id, par));
+         GenericType parType = visit(parameter);
+         res.add(new Symbol(parameter.id, parType));
       }
 
       return res;
