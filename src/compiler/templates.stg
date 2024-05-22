@@ -2,8 +2,11 @@
 main(compound) ::= <<
 from math import radians, pi
 from time import sleep
+from canvas import Canvas
+from pen import Pen, Point
 
 def main():
+    defaultCanvas = Canvas("", 500, 500)
     <compound>
 
 if __name__ == "__main__":
@@ -30,8 +33,7 @@ pentype(pentypeName, properties) ::= <<
 
 // Template for pen creation
 penCreation(penType) ::= <<
-canvas = Canvas("", 500, 500)
-<name> = Pen(canvas, <pentype>)
+<name> = Pen(defaultCanvas, <pentype>)
 >>
 
 // A single property
