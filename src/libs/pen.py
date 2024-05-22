@@ -127,6 +127,9 @@ def ColorToInt(colorHex):
     b = int(colorHex[5:7], 16)
     return r<<24 | g<<16 | b<<8
 
+def exec(filename: str, pen: Pen):
+    # TODO: call the interpreter.py
+    pass
 
 def main():
     canvas = Canvas("Drawing Canvas", 400, 400)
