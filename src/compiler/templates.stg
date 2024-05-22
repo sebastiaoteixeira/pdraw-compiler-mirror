@@ -39,7 +39,7 @@ property(key, value) ::= <<
 // Unary operations templates
 // Template for unary_operations
 unary_operations(operator, op) ::= <<
-<operator><op>
+<operator> <op>
 >>
 
 // Template for ExprPenUnary
@@ -74,7 +74,7 @@ declarationContext(var) ::= <<
 
 // Template for Execution
 execution(penId, fileName) ::= <<
-exec(<fileName>, <penId>)
+exec(\"<fileName>\", <penId>)
 >>
 
 // Template for pause (time in microseconds)
