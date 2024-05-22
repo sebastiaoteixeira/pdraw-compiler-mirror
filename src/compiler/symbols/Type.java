@@ -9,5 +9,6 @@ public enum Type {
     POINT,
     BOOLEAN,
     COLOR,
-    FUNCTION  
+    FUNCTION,
+    TUPLE  
 }

@@ -21,13 +21,13 @@ public class Symbol {
 
     public Type getReturnType() {
         if (type.getType() == Type.FUNCTION)
-            return ((Function) type).getReturnType();
+            return ((FunctionType) type).getReturnType();
         return null;
     }
 
     public List<Type> getParameterTypes() {
         if (type.getType() == Type.FUNCTION)
-            return ((Function) type).getParameterTypes();
+            return ((FunctionType) type).getParameterTypes();
         return null;
     }
 

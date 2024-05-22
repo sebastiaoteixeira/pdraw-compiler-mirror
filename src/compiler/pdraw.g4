@@ -22,9 +22,9 @@ propertyDefinition: Property '=' expression ';';
 
 canvasDefinition: 'canvas' ID String point;
 
-parameter_list: parameter (',' declaration)* ;
+parameter_list: parameter (',' parameter)* ;
 
-parameter: type=('pen'|'real'|'int'|'string'|'point') ID;
+parameter returns [ String id ]: type=('pen'|'real'|'int'|'string'|'point') ID;
 
 declaration_element returns [String identifier] : (ID | assign);
 
