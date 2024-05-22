@@ -179,9 +179,9 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
       ST setProperty = templates.getInstanceOf("ExprPen");
-      setProperty.add("name", ctx.ID().getText());
-      setProperty.add("op", ctx.op.getText());
-      setProperty.add("value", visit(ctx.expression()).render());
+      setProperty.add("name", visit(ctx.expression(0)).render());
+      setProperty.add("op", ctx.Property().getText());
+      setProperty.add("value", visit(ctx.expression(1)).render());
       return setProperty;
    }
 
@@ -309,7 +309,7 @@ import org.stringtemplate.v4.*;
 
    @Override public ST visitExprBool(pdrawParser.ExprBoolContext ctx) {
       ST bool = templates.getInstanceOf("single");
-      bool.add("content", ctx.Bool().getText());
+      bool.add("content", ctx.Boolean().getText());
       return bool;
    }
 
