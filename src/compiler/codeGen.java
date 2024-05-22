@@ -42,8 +42,8 @@ import java.util.HashMap;
 
    @Override public ST visitParameter_list(pdrawParser.Parameter_listContext ctx) {
       ST parameterList = templates.getInstanceOf("parameter_list");
-      for (pdrawParser.ParameterContext declaration : ctx.declaration()) {
-         parameterList.add("delaration", visit(declaration).render());
+      for (pdrawParser.ParameterContext parameter : ctx.parameter()) {
+         parameterList.add("parameter", visit(parameter).render());
       }
       return parameterList;
    }
@@ -51,7 +51,9 @@ import java.util.HashMap;
    @Override public ST visitFunctionCall(pdrawParser.ExprFunctionCallContext ctx) {
       ST functionCall = templates.getInstanceOf("functionCall");
       functionCall.add("ID", ctx.ID().getText());
-      functionCall.add("expression", visit(ctx.expression()).render());
+      for (pdrawParser.ExpressionContext expression : ctx.expression()) {
+         functionCall.add("expression", visit(expression).render());
+      }
       return functionCall;
    }
 
