@@ -190,8 +190,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 
    @Override public GenericType visitStdout(pdrawParser.StdoutContext ctx) {
       GenericType exprType = visit(ctx.expression());
-		if (exprType.getType() != Type.STRING) {
-			ErrorHandler.error(getFileName(ctx), "Stdout value must be a string value.",
+		if (exprType.getType() != Type.STRING && exprType.getType() != Type.PEN && exprType.getType() != Type.INTEGER && exprType.getType() != Type.REAL) {
+			ErrorHandler.error(getFileName(ctx), "Stdout value must be convertible to string.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());
 		}
 		return null;
@@ -448,8 +448,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    @Override public GenericType visitPoint(pdrawParser.PointContext ctx) {
       Type exprType1 = visit(ctx.expression(0)).getType();
       Type exprType2 = visit(ctx.expression(1)).getType();
-      if (exprType1 != Type.INTEGER || exprType2 != Type.INTEGER) {
-         ErrorHandler.error(getFileName(ctx), "Point values must be integer values.",
+      if (!isNumericType(exprType1) || !isNumericType(exprType2)) {
+         ErrorHandler.error(getFileName(ctx), "Point values must be integer or real values.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
       return new Point();
