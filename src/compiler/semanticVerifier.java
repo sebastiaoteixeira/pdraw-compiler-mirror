@@ -27,6 +27,9 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 			case "point":
 				type = new Point();
 				break;
+         case "bool":
+            type = new BooleanType();
+            break;
       }
 
       return type;
@@ -129,14 +132,9 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
-      if (ctx.ID() != null) {
-         String id = ctx.ID().getText();
-         ctx.identifier = id;
-      }
-      else if (ctx.assign() != null) {
-         String id = ctx.assign().identifier;
-         ctx.identifier = id;
-      }
+      if (ctx.assign() != null)
+         visit(ctx.assign());
+
       return null;
    }
 
@@ -227,7 +225,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 		if (!isNumericType(leftType) || !isNumericType(rightType)) {
 			ErrorHandler.error(getFileName(ctx), "Operands of '*' or '/' must be numeric.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());}
-		if (ctx.op.getText().equals("//")) {
+		if (ctx.op.getText().equals("//") || ctx.op.getText().equals("\\\\")) {
 			return new IntegerType();
 		} else if (leftType == Type.REAL || rightType == Type.REAL) {
 			return new Real();
@@ -310,7 +308,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
          return null;
       }
 
-      return s.getGenericType();
+      return s.getIType();
    }
 
    @Override public IType visitExprString(pdrawParser.ExprStringContext ctx) {
@@ -394,10 +392,12 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprNew(pdrawParser.ExprNewContext ctx) {
-      Type exprType = visit(ctx.expression()).getType();
-      if (exprType != Type.PENTYPE) {
-         ErrorHandler.error(getFileName(ctx), "New operator can only be applied to pen type values.",
-            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      if (ctx.expression() != null) {
+         Type exprType = visit(ctx.expression()).getType();
+         if (exprType != Type.PENTYPE) {
+            ErrorHandler.error(getFileName(ctx), "New operator can only be applied to pen type values.",
+               ctx.start.getLine(), ctx.start.getCharPositionInLine());
+         }
       }
       return new Pen();
    }
@@ -423,7 +423,6 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override public IType visitAssign(pdrawParser.AssignContext ctx) {
       String id = ctx.ID().getText();
-      ctx.identifier = id;
       Symbol symbol = symbolTable.getSymbol(id);
       if (symbol == null) {
          ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " does not exist.",
@@ -506,7 +505,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
       //se estiver a dar problemas revejam esta parte
 
-      FunctionType functionType = (FunctionType) function.getGenericType();
+      FunctionType functionType = (FunctionType) function.getIType();
       ParameterList parameterLists = functionType.getParameterList();
       if (ctx.expression().size() != parameterLists.getParameterSymbols().size()) {
          ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong number of arguments.",
@@ -517,7 +516,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
       for (int i = 0; i < ctx.expression().size(); i++) {
          IType exprType = visit(ctx.expression(i));
-         IType parameterList = parameterLists.getParameterSymbols().get(i).getGenericType();
+         IType parameterList = parameterLists.getParameterSymbols().get(i).getIType();
          if (exprType.getType() != parameterList.getType()) {
             ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong argument type.",
                ctx.start.getLine(), ctx.start.getCharPositionInLine());

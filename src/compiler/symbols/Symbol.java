@@ -10,10 +10,12 @@ public class Symbol {
 
     public Symbol(String identifier, IType type) {
         this.identifier = identifier;
+        if (type == null)
+            throw new IllegalArgumentException("Type of " + identifier + " cannot be null");
         this.type = type;
     }
 
-    public IType getGenericType() {
+    public IType getIType() {
         return type;
     }
 
