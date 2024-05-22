@@ -1,4 +1,10 @@
+from math import radians, pi
+from time import sleep
+from canvas import Canvas
+from pen import Pen, Point
+
 def main():
+    defaultCanvas = Canvas("", 500, 500)
     PenType1 = {
 
         "color": #00FF00 ,
@@ -7,7 +13,7 @@ def main():
         "thickness": 10 ,
         "pressure": -1 
     }
-    p1 = None
+    p1 = Pen(defaultCanvas, PenType1)
     p1.down()
     p1.forward(10)
     p1.left(radians(90))
@@ -17,7 +23,7 @@ def main():
     p1.left(radians(90))
     p1.forward(10)
     p1.left(radians(90))
-    psec = None
+    psec = Pen(defaultCanvas, {})
     exec("p1.ipdraw", psec)
 
 if __name__ == "__main__":

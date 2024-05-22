@@ -142,8 +142,17 @@ import java.util.HashMap;
    }
 
    @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
-      ST declaration_element = templates.getInstanceOf("declarationContext");
-      declaration_element.add("var", ctx.ID() != null ? ctx.ID().getText() : ctx.assign().ID().getText());
+      ST declaration_element;
+      if (ctx.ID() != null) {
+         declaration_element = templates.getInstanceOf("assign");
+
+         declaration_element.add("var", ctx.ID().getText());
+         declaration_element.add("value", "None");
+      }
+      else {
+         declaration_element = visit(ctx.assign());
+      }
+
       return declaration_element;
    }
 
@@ -333,7 +342,11 @@ import java.util.HashMap;
 
    @Override public ST visitExprNew(pdrawParser.ExprNewContext ctx) {
       ST penCreation = templates.getInstanceOf("penCreation");
-      penCreation.add("penType", ctx.expression().getText());
+      if (ctx.expression() != null) {
+         penCreation.add("penType", visit(ctx.expression()).render());
+      } else {
+         penCreation.add("penType", "{}");
+      }
       return penCreation;
    }
 

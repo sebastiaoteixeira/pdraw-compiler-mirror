@@ -33,7 +33,7 @@ pentype(pentypeName, properties) ::= <<
 
 // Template for pen creation
 penCreation(penType) ::= <<
-<name> = Pen(defaultCanvas, <pentype>)
+Pen(defaultCanvas, <penType>)
 >>
 
 // A single property
@@ -70,11 +70,6 @@ radians(<op>)
 // Template for point
 point(op1,op2) ::= <<
 Point(<op1>,<op2>)
->>
-
-// Template for DeclarationContext
-declarationContext(var) ::= <<
-<var> = None
 >>
 
 // Template for Execution
