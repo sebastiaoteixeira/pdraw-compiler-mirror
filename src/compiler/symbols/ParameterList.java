@@ -2,7 +2,7 @@ package symbols;
 
 import java.util.List;
 
-public class ParameterList extends GenericType{
+public class ParameterList extends IType{
     private List<Symbol> parameterSymbols;
 
     public ParameterList() {

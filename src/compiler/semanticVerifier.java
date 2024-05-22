@@ -5,12 +5,12 @@ import java.util.function.Function;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
-public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
+public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    private SymbolTable symbolTable = new SymbolTable();
 
-   public GenericType switchFunctionType(String name){
-      GenericType type = null;
+   public IType switchFunctionType(String name){
+      IType type = null;
 		switch (name) {
 			case "pen":
 				type = new Pen();
@@ -33,37 +33,37 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
    }
 
    @Override
-	public GenericType visitProgram(pdrawParser.ProgramContext ctx) {
+	public IType visitProgram(pdrawParser.ProgramContext ctx) {
 		return visitChildren(ctx);
 	}
 
-   @Override public GenericType visitStatement(pdrawParser.StatementContext ctx) {
+   @Override public IType visitStatement(pdrawParser.StatementContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public GenericType visitCompound(pdrawParser.CompoundContext ctx) {
+   @Override public IType visitCompound(pdrawParser.CompoundContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public GenericType visitBlock(pdrawParser.BlockContext ctx) {
+   @Override public IType visitBlock(pdrawParser.BlockContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public GenericType visitDefine(pdrawParser.DefineContext ctx) {
+   @Override public IType visitDefine(pdrawParser.DefineContext ctx) {
       return visitChildren(ctx);
    }
 
-   @Override public GenericType visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {
+   @Override public IType visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {
       String id = ctx.ID().getText();
-      GenericType type = new PenType();
+      IType type = new PenType();
 		Symbol penType = new Symbol(id, type);
 		symbolTable.addSymbol(penType);
 		return type;
    }
 
-   @Override public GenericType visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {
+   @Override public IType visitPropertyDefinition(pdrawParser.PropertyDefinitionContext ctx) {
       String property = ctx.Property().getText();
-		GenericType exprType = visit(ctx.expression());
+		IType exprType = visit(ctx.expression());
 
 		switch (property) {
 			case "color":
@@ -105,14 +105,14 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return exprType;
 	}
 
-   @Override public GenericType visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
-      GenericType res = null;
+   @Override public IType visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
+      IType res = null;
       return visitChildren(ctx);
       //return res;
    }
 
-   @Override public GenericType visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      GenericType type = switchFunctionType(ctx.type.getText());
+   @Override public IType visitDeclaration(pdrawParser.DeclarationContext ctx) {
+      IType type = switchFunctionType(ctx.type.getText());
 
       for (pdrawParser.Declaration_elementContext element : ctx.declaration_element()) {
          String id = element.ID() != null ? element.ID().getText() : element.assign().ID().getText();
@@ -128,7 +128,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return type;
    }
 
-   @Override public GenericType visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
+   @Override public IType visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
       if (ctx.ID() != null) {
          String id = ctx.ID().getText();
          ctx.identifier = id;
@@ -140,7 +140,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return null;
    }
 
-   @Override public GenericType visitWhile(pdrawParser.WhileContext ctx) {
+   @Override public IType visitWhile(pdrawParser.WhileContext ctx) {
       if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "While condition must be a boolean value.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -148,7 +148,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return null;
    }
 
-   @Override public GenericType visitUntil(pdrawParser.UntilContext ctx) {
+   @Override public IType visitUntil(pdrawParser.UntilContext ctx) {
       if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "Until condition must be a boolean value.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -156,7 +156,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return null;
    }
 
-   @Override public GenericType visitFor(pdrawParser.ForContext ctx) {
+   @Override public IType visitFor(pdrawParser.ForContext ctx) {
       // check if the loop range is an integer
       if (visit(ctx.expression(0)).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "Loop range must be a boolean value.",
@@ -165,7 +165,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return null;
    }
 
-   @Override public GenericType visitIf(pdrawParser.IfContext ctx) {
+   @Override public IType visitIf(pdrawParser.IfContext ctx) {
       if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error(getFileName(ctx), "If condition must be a boolean value.", 
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -173,14 +173,14 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return null;
    }
 
-   @Override public GenericType visitExecution(pdrawParser.ExecutionContext ctx) {
-      GenericType res = null;
+   @Override public IType visitExecution(pdrawParser.ExecutionContext ctx) {
+      IType res = null;
       return visitChildren(ctx);
       //return res;
    }
 
-   @Override public GenericType visitPause(pdrawParser.PauseContext ctx) {
-      GenericType exprType = visit(ctx.expression());
+   @Override public IType visitPause(pdrawParser.PauseContext ctx) {
+      IType exprType = visit(ctx.expression());
 		if (exprType.getType() != Type.INTEGER) {
 			ErrorHandler.error(getFileName(ctx), "Pause time must be an integer value.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -188,8 +188,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return exprType;
    }
 
-   @Override public GenericType visitStdout(pdrawParser.StdoutContext ctx) {
-      GenericType exprType = visit(ctx.expression());
+   @Override public IType visitStdout(pdrawParser.StdoutContext ctx) {
+      IType exprType = visit(ctx.expression());
 		if (exprType.getType() != Type.STRING && exprType.getType() != Type.PEN && exprType.getType() != Type.INTEGER && exprType.getType() != Type.REAL) {
 			ErrorHandler.error(getFileName(ctx), "Stdout value must be convertible to string.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -197,7 +197,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return null;
    }
 
-   @Override public GenericType visitExprToString(pdrawParser.ExprToStringContext ctx) {
+   @Override public IType visitExprToString(pdrawParser.ExprToStringContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
 		if (!isConvertibleToString(exprType)) {
 			ErrorHandler.error(getFileName(ctx), "Conversion to string can only be applied to real, integer, or string values.",
@@ -206,13 +206,13 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return new StringType();
    }
 
-   @Override public GenericType visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
-      GenericType res = null;
+   @Override public IType visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
+      IType res = null;
       return visitChildren(ctx);
       //return res;
    }
 
-   @Override public GenericType visitExprToInt(pdrawParser.ExprToIntContext ctx) {
+   @Override public IType visitExprToInt(pdrawParser.ExprToIntContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
 		if (!isConvertibleToNumeric(exprType)) {
 			ErrorHandler.error(getFileName(ctx), "Conversion to integer can only be applied to real, integer, or string values.",
@@ -221,7 +221,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return new IntegerType();
    }
 
-   @Override public GenericType visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
+   @Override public IType visitExprMultDivMod(pdrawParser.ExprMultDivModContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
 		Type rightType = visit(ctx.expression(1)).getType();
 		if (!isNumericType(leftType) || !isNumericType(rightType)) {
@@ -235,7 +235,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return new IntegerType();
    }
 
-   @Override public GenericType visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
+   @Override public IType visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
 		Type leftType = visit(ctx.expression(0)).getType();
 		Type rightType = visit(ctx.expression(1)).getType();
 		if (!isNumericType(leftType) || !isNumericType(rightType)) {
@@ -245,7 +245,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real();
    }
 
-   @Override public GenericType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
+   @Override public IType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
 		Type rightType = visit(ctx.expression(1)).getType();
 
@@ -296,11 +296,11 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
 		return new Pen();
    }
 
-   @Override public GenericType visitExprInteger(pdrawParser.ExprIntegerContext ctx) {
+   @Override public IType visitExprInteger(pdrawParser.ExprIntegerContext ctx) {
       return new IntegerType();
    }
 
-   @Override public GenericType visitExprId(pdrawParser.ExprIdContext ctx) {
+   @Override public IType visitExprId(pdrawParser.ExprIdContext ctx) {
       String id = ctx.ID().getText();
       Symbol s = symbolTable.getSymbol(id);
       if (s == null) {
@@ -313,25 +313,25 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return s.getGenericType();
    }
 
-   @Override public GenericType visitExprString(pdrawParser.ExprStringContext ctx) {
+   @Override public IType visitExprString(pdrawParser.ExprStringContext ctx) {
       return new StringType();
    }
 
-   @Override public GenericType visitExprParent(pdrawParser.ExprParentContext ctx) {
+   @Override public IType visitExprParent(pdrawParser.ExprParentContext ctx) {
       return visit(ctx.expression());
    }
 
-   @Override public GenericType visitExprComp(pdrawParser.ExprCompContext ctx) {
-      GenericType res = null;
+   @Override public IType visitExprComp(pdrawParser.ExprCompContext ctx) {
+      IType res = null;
       return visitChildren(ctx);
       //return res;
    }
 
-   @Override public GenericType visitExprPoint(pdrawParser.ExprPointContext ctx) {
+   @Override public IType visitExprPoint(pdrawParser.ExprPointContext ctx) {
       return new Point();
    }
 
-   @Override public GenericType visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
+   @Override public IType visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
       Type rightType = visit(ctx.expression(1)).getType();
       if (leftType != Type.STRING || rightType != Type.STRING) {
@@ -341,13 +341,13 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new StringType();
    }
 
-   @Override public GenericType visitExprColor(pdrawParser.ExprColorContext ctx) {
-      GenericType res = null;
+   @Override public IType visitExprColor(pdrawParser.ExprColorContext ctx) {
+      IType res = null;
       return visitChildren(ctx);
       //return res;
    }
 
-   @Override public GenericType visitExprToReal(pdrawParser.ExprToRealContext ctx) {
+   @Override public IType visitExprToReal(pdrawParser.ExprToRealContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (!isConvertibleToNumeric(exprType)) {
          ErrorHandler.error(getFileName(ctx), "Conversion to real can only be applied to real, integer, or string values.",
@@ -356,7 +356,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Real();
    }
 
-   @Override public GenericType visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
+   @Override public IType visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
       Type rightType = visit(ctx.expression(1)).getType();
       if (leftType != Type.PEN || !isNumericType(rightType)) {
@@ -366,7 +366,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Pen();
    }
 
-   @Override public GenericType visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
+   @Override public IType visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (!isConvertibleToNumeric(exprType)) {
          ErrorHandler.error(getFileName(ctx), "Conversion to radian can only be applied to real, integer, or string values.",
@@ -375,7 +375,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Real();
    }
 
-   @Override public GenericType visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
+   @Override public IType visitExprPenUnary(pdrawParser.ExprPenUnaryContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (exprType != Type.PEN) {
          ErrorHandler.error(getFileName(ctx), "Unary operator can only be applied to pen values.",
@@ -384,8 +384,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Pen();
    }
 
-   @Override public GenericType visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
-      GenericType exprType = visit(ctx.expression());
+   @Override public IType visitExprUnary(pdrawParser.ExprUnaryContext ctx) {
+      IType exprType = visit(ctx.expression());
       if (!isNumericType(exprType.getType())) {
          ErrorHandler.error(getFileName(ctx), "Unary operator can only be applied to numeric values.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -393,7 +393,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return exprType;
    }
 
-   @Override public GenericType visitExprNew(pdrawParser.ExprNewContext ctx) {
+   @Override public IType visitExprNew(pdrawParser.ExprNewContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (exprType != Type.PENTYPE) {
          ErrorHandler.error(getFileName(ctx), "New operator can only be applied to pen type values.",
@@ -402,13 +402,13 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Pen();
    }
 
-   @Override public GenericType visitExprBoolOp(pdrawParser.ExprBoolOpContext ctx) {
-      GenericType res = null;
+   @Override public IType visitExprBoolOp(pdrawParser.ExprBoolOpContext ctx) {
+      IType res = null;
       return visitChildren(ctx);
       //return res;
    }
 
-   @Override public GenericType visitExprStdin(pdrawParser.ExprStdinContext ctx) {
+   @Override public IType visitExprStdin(pdrawParser.ExprStdinContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (exprType != Type.STRING) {
          ErrorHandler.error(getFileName(ctx), "Stdin operator can only be applied to string values.",
@@ -417,11 +417,11 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new StringType();
    }
 
-   @Override public GenericType visitExprAssign(pdrawParser.ExprAssignContext ctx) {
+   @Override public IType visitExprAssign(pdrawParser.ExprAssignContext ctx) {
       return visit(ctx.assign());
    }
 
-   @Override public GenericType visitAssign(pdrawParser.AssignContext ctx) {
+   @Override public IType visitAssign(pdrawParser.AssignContext ctx) {
       String id = ctx.ID().getText();
       ctx.identifier = id;
       Symbol symbol = symbolTable.getSymbol(id);
@@ -429,7 +429,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
          ErrorHandler.error(getFileName(ctx), "Variable with id " + id + " does not exist.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
-      GenericType exprType = visit(ctx.expression());
+      IType exprType = visit(ctx.expression());
       if (symbol.getType() != exprType.getType()) {
          ErrorHandler.error(getFileName(ctx), "Type mismatch in assignment.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -437,15 +437,15 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return exprType;
    }
 
-   @Override public GenericType visitExprReal(pdrawParser.ExprRealContext ctx) {
+   @Override public IType visitExprReal(pdrawParser.ExprRealContext ctx) {
       return new Real();
    }
 
-   @Override public GenericType visitExprBool(pdrawParser.ExprBoolContext ctx) {
+   @Override public IType visitExprBool(pdrawParser.ExprBoolContext ctx) {
       return new BooleanType();
    }
 
-   @Override public GenericType visitPoint(pdrawParser.PointContext ctx) {
+   @Override public IType visitPoint(pdrawParser.PointContext ctx) {
       Type exprType1 = visit(ctx.expression(0)).getType();
       Type exprType2 = visit(ctx.expression(1)).getType();
       if (!isNumericType(exprType1) || !isNumericType(exprType2)) {
@@ -455,16 +455,16 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return new Point();
    }
 
-   @Override public GenericType visitReturn(pdrawParser.ReturnContext ctx) {
+   @Override public IType visitReturn(pdrawParser.ReturnContext ctx) {
       return null;
       //Não tá acabada
    }
 
-   @Override public GenericType visitFunction(pdrawParser.FunctionContext ctx) {
+   @Override public IType visitFunction(pdrawParser.FunctionContext ctx) {
       String id = ctx.ID().getText();
-      GenericType returnType = switchFunctionType(ctx.type.getText());
+      IType returnType = switchFunctionType(ctx.type.getText());
       ParameterList parameterSymbols = (ParameterList) visit(ctx.parameter_list());
-      GenericType type = new FunctionType( returnType,parameterSymbols);
+      IType type = new FunctionType( returnType,parameterSymbols);
       Symbol function = new Symbol(id,type);
       symbolTable.addSymbol(function);
 
@@ -478,25 +478,25 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return null;
    }
 
-   @Override public GenericType visitParameter(pdrawParser.ParameterContext ctx) {
+   @Override public IType visitParameter(pdrawParser.ParameterContext ctx) {
       ctx.id = ctx.ID().getText();
-      GenericType type = switchFunctionType(ctx.type.getText());
+      IType type = switchFunctionType(ctx.type.getText());
       
       return type;
    }
 
-   @Override public GenericType visitParameter_list(pdrawParser.Parameter_listContext ctx){
+   @Override public IType visitParameter_list(pdrawParser.Parameter_listContext ctx){
       ParameterList res = new ParameterList();
 
       for (pdrawParser.ParameterContext parameter : ctx.parameter()) {
-         GenericType parType = visit(parameter);
+         IType parType = visit(parameter);
          res.add(new Symbol(parameter.id, parType));
       }
 
       return res;
    }
 
-   @Override public GenericType visitExprFunctionCall(pdrawParser.ExprFunctionCallContext ctx){
+   @Override public IType visitExprFunctionCall(pdrawParser.ExprFunctionCallContext ctx){
       String id = ctx.ID().getText();
       Symbol function = symbolTable.getSymbol(id);
       if (function == null) {
@@ -516,8 +516,8 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       // e esta
 
       for (int i = 0; i < ctx.expression().size(); i++) {
-         GenericType exprType = visit(ctx.expression(i));
-         GenericType parameterList = parameterLists.getParameterSymbols().get(i).getGenericType();
+         IType exprType = visit(ctx.expression(i));
+         IType parameterList = parameterLists.getParameterSymbols().get(i).getGenericType();
          if (exprType.getType() != parameterList.getType()) {
             ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong argument type.",
                ctx.start.getLine(), ctx.start.getCharPositionInLine());
@@ -527,7 +527,7 @@ public class semanticVerifier extends pdrawBaseVisitor<GenericType> {
       return functionType.getReturnType();
    }
 
-   @Override public GenericType visitExprPi(pdrawParser.ExprPiContext ctx) {
+   @Override public IType visitExprPi(pdrawParser.ExprPiContext ctx) {
       return new Real();
    }
 

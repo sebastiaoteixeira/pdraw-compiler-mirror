@@ -6,14 +6,14 @@ import symbols.ParameterList;
 
 public class Symbol {
     private String identifier;
-    private GenericType type;
+    private IType type;
 
-    public Symbol(String identifier, GenericType type) {
+    public Symbol(String identifier, IType type) {
         this.identifier = identifier;
         this.type = type;
     }
 
-    public GenericType getGenericType() {
+    public IType getGenericType() {
         return type;
     }
 
@@ -21,7 +21,7 @@ public class Symbol {
         return type.getType();
     }
 
-    public GenericType getReturnType() {
+    public IType getReturnType() {
         if (type.getType() == Type.FUNCTION)
             return ((FunctionType) type).getReturnType();
         return null;

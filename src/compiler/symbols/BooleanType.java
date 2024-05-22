@@ -1,6 +1,6 @@
 package symbols;
 
-public class BooleanType extends GenericType{
+public class BooleanType extends IType{
     public BooleanType() {
         setType(Type.BOOLEAN);
     }

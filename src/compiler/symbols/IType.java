@@ -1,6 +1,6 @@
 package symbols;
 
-public abstract class GenericType {
+public abstract class IType {
     private Type type;
 
     public Type getType() {
