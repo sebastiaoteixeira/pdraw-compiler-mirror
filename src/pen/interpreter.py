@@ -4,12 +4,11 @@ from penVisitor import penVisitor
 from ..libs.pen import Pen
 from ..libs.canvas import Canvas
 class interpreter(penVisitor):
-
-   
+   def __init__(self, pen):
+      self.pen = pen
 
    def visitProgram(self, ctx:penParser.ProgramContext):
       canvas = Canvas("Drawing Canvas", 400, 400)
-      self.pen = Pen(canvas)
       return self.visitChildren(ctx)
 
    def visitCommand(self, ctx:penParser.CommandContext): 
