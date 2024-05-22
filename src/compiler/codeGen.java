@@ -1,4 +1,8 @@
 import org.stringtemplate.v4.*;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 @SuppressWarnings("CheckReturnValue")
@@ -16,13 +20,18 @@ import java.util.HashMap;
       put("yellow", "#FFFF00");
    }};
 
-   @Override public ST visitProgram(pdrawParser.ProgramContext ctx) {
+   @Override
+   public ST visitProgram(pdrawParser.ProgramContext ctx) {
       ST mainTemplate = templates.getInstanceOf("main");
-
       mainTemplate.add("compound", visit(ctx.compound()).render());
 
-      System.out.println(mainTemplate.render());
-      
+      // Escrever a saída renderizada em um arquivo chamado "output.py"
+      try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.py"))) {
+         writer.write(mainTemplate.render());
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
       return mainTemplate;
    }
 
