@@ -120,6 +120,12 @@ class Pen:
         if pressure is not None:
             self.__pressure = pressure
         return self.__pressure
+    
+def ColorToInt(colorHex):
+    r = int(colorHex[1:3], 16)
+    g = int(colorHex[3:5], 16)
+    b = int(colorHex[5:7], 16)
+    return r<<24 | g<<16 | b<<8
 
 
 def main():
