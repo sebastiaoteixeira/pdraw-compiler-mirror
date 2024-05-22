@@ -1,106 +1,178 @@
-// Main structure of Python code
-main(statements) ::= <<
-from time import split
-from turtle import Turtle
-
-class Pen(Turtle):
-    def __init__(self, name, options):
-        super().__init__()
-        self.name = name
-        setupTurtle(self, options)
-
-    def setupTurtle(self, options):
-        self._thickness = 1
-        self._pressure = 1
-        for key, value in options.items():
-            if key == "color":
-                self.color(value)
-            elif key == "position":
-                self.position(value)
-            elif key == "orientation":
-                self.setheading(value)
-            elif key == "thickness":
-                thickness = value
-            elif key == "pressure":
-                pressure = value
-        
-        if pressure == -1:
-            self.penup()
-        else:
-            self.pendown()
-            self.pensize((thickness-1) * pressure + 1)
-
-
+// Main template
+program(compound) ::= <<
 def main():
-    // Main code logic goes here
-    <statements;separator="\n">
-    turtle.done()
+    <compound>
 
 if __name__ == "__main__":
     main()
 >>
 
-// PenType
+// Template for CompoundContext
+compoundContext(statement) ::= <<
+<statement; separator="\n">
+>>
+
+
+// Template for canvas definition
+canvasDefinition(title, width, height) ::= <<
+canvas = Canvas("<title>", <width>, <height>)
+>>
+
+// Template for PenType definition
 pentype(pentypeName, properties) ::= <<
 <pentypeName> = {
     <properties; separator="\n">
 }
 >>
 
-// A single property
-property(key, value) ::= << "<key>": <value> >>
-
-// Template for each pen instance
-pen(name) ::= <<
-<name> = Pen()
+// Template for pen creation
+penCreation(penType) ::= <<
+canvas = Canvas("", 500, 500)
+<name> = Pen(canvas, <pentype>)
 >>
 
+// A single property
+property(key, value) ::= << 
+"<key>": <value> 
+>>
+
+// Unary operations templates
 // Template for unary_operations
-unary_operations(operator, op) ::= <<<operator> <op>>>
+unary_operations(operator, op) ::= <<
+<operator> <op>
+>>
+
+// Template for ExprPenUnary
+ExprPenUnary(penName,op) ::= <<
+<penName>.<op>()
+>>
+
+// Template for ExprPenOperator and ExprSetProperty
+ExprPen(name,op,value) ::= <<
+<name>.<op>(<value>)
+>>
 
 // Template for binary_operations
-binary_operations(op1, op2, operator) ::= <<<op1> <operator> <op2>>>
+binary_operations(op1, op2, operator) ::= <<
+<op1> <operator> <op2>
+>>
 
 // Template for conv_rad
-conv_rad(op) ::= <<radians(<op>)>>
+conv_rad(op) ::= <<
+radians(<op>)
+>>
 
-// Template for visitPoint
-visitPoint(op1,op2) ::= <<(<op1>,<op2>)>>
+// Template for point
+point(op1,op2) ::= <<
+Point(<op1>,<op2>)
+>>
 
 // Template for DeclarationContext
-declarationContext(var) ::= <<<var> = None>>
-
-// Template for CanvasDefinition
-//
+declarationContext(var) ::= <<
+<var> = None
+>>
 
 // Template for Execution
-// pode estar errado..
-execution(id, fileName) ::= <<exec(open("<fileName>").read())>>
+execution(penId, fileName) ::= <<
+exec(\"<fileName>\", <penId>)
+>>
 
-//TO DO, declarar varias variaveis
-
-//Template for pause
-pause(time) ::= <<sleep(<time>)>>
-
-// Template for ExprStdin
-stdin() ::= <<input()>>
-
-// Template for ExprStdout
-stdout(op) ::= <<print(<op>)>>
-
-//TO DO, criar class points 
-
-// Template fot ExprToString
-toString(op) ::= <<str(<op>)>>
-
-// Template for ExprToInt
-toInt(op) ::= <<int(<op>)>>
-
-// Template for ExprToReal
-toReal(op) ::= <<float(<op>)>>
+// Template for pause (time in microseconds)
+pause(time) ::= <<
+sleep(<time>/1_000_000)
+>>
 
 // Template for ExprStringConcat
-concat(op1,op2) ::= <<str(<op1>) + str(<op2>)>>
+concat(op1,op2) ::= <<
+str(<op1>) + str(<op2>)
+>>
 
 // Template for ExprAssign
-assign(var, value) ::= << <var> = <value> >>
+assign(var, value) ::= <<
+<var> = <value>
+>>
+
+
+// Std(in/out) templates
+// Template for ExprStdin
+stdin(message) ::= <<
+input(<message>)
+>>
+
+// Template for ExprStdout
+stdout(message) ::= <<
+print(<message>)
+>>
+
+
+// To(Type) templates 
+// Template fot ExprToString
+toString(op) ::= <<
+str(<op>)
+>>
+
+// Template for ExprToInt
+toInt(op) ::= <<
+int(<op>)
+>>
+
+// Template for ExprToReal
+toReal(op) ::= <<
+float(<op>)
+>>
+
+// Template for ExprToBool
+toBool(op) ::= <<
+bool(<op>)
+>>
+
+
+// boolean/loops expressions templates
+// Template for bool operations
+bool_operations(op1, op2, operator) ::= <<
+<op1> <operator> <op2>
+>>
+
+// Template for comparisons
+comparison(op1, op2, operator) ::= <<
+<op1> <operator> <op2>
+>>
+
+// Template for if 
+if(condition, compoundIf, compoundElse) ::= <<
+if <condition>: 
+    <compoundIf>
+else:
+    <compoundElse>
+    pass
+>>
+
+// Template for forLoop
+for(init, condition, expression, compound) ::= <<
+<init>
+while <condition>:
+    <compound> 
+    <expression>
+>>
+
+// Template for while
+while(condition, compound) ::= <<
+while <condition>:
+    <compound>
+>>
+
+// Template for until
+until(condition, compound) ::= <<
+while not <condition>:
+    <compound>
+>>
+
+// Template for litterals, IDs, ...
+single(<content>) ::= <<
+<content>
+>>
+
+// Template for parentisis
+parent(op) ::= <<
+(<op>)
+>>

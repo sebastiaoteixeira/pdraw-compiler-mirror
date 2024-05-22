@@ -5,7 +5,7 @@ program: compound EOF;
 
 function: type=('pen'|'real'|'int'|'string'|'point') ID '(' parameter_list ')' statement;
 
-statement: (define | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
+statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
 
 return: 'return' expression;
 
@@ -74,7 +74,7 @@ expression :
     | expression op='<-' Property expression #ExprSetProperty
 
     // stdin
-    | 'stdin' String #ExprStdin
+    | 'stdin' expression #ExprStdin
 
     // Comparison
     | expression op=('=='|'!='|'<'|'<='|'>'|'>=') expression #ExprComp
@@ -94,7 +94,7 @@ expression :
     | String #ExprString
     | Color #ExprColor
     | point #ExprPoint
-    | boolean #ExprBool
+    | Boolean #ExprBool
 
     // Parentized expression
     | '(' expression ')' #ExprParent
@@ -118,7 +118,7 @@ fragment EscapeSequence: '\\' . ;
 Integer: [0-9]+;
 Real: [0-9]+ '.' [0-9]+;
 
-boolean: 'true' | 'false';
+Boolean: 'true' | 'false';
 
 
 // Identifiers
