@@ -2,7 +2,7 @@ from canvas import Canvas
 import math
 
 class Pen:
-    def __init__(self, canvas: Canvas, penType: dict):
+    def __init__(self, canvas: Canvas, penType: dict = {}):
         self.__canvas = canvas
         self.__position = penType.get("position", (0, 0))
         self.__color = penType.get("color", "black")

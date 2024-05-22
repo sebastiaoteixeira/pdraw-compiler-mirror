@@ -10,7 +10,7 @@ def main(argv):
    lexer = penLexer(input_stream)
    stream = CommonTokenStream(lexer)
    parser = penParser(stream)
-   tree = parser.pen()
+   tree = parser.program()
    if parser.getNumberOfSyntaxErrors() == 0:
       visitor0.visit(tree)
 
