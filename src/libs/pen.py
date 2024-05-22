@@ -1,5 +1,6 @@
 from canvas import Canvas
 import math
+from time import sleep
 
 class Point:
     def __init__(self, x, y):
@@ -39,26 +40,31 @@ class Pen:
         self.__pressure = penType.get("pressure", 1)
         self.__orientation = penType.get("orientation", 0)
         self.__thickness = penType.get("thickness", 1)
-        self.is_down = True
     
     def __add__(self, other):
         if isinstance(other, Point):
-            self.__position += other
+            new_position = self.__position + other
+            if self.__pressure != -1:
+                self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
+            self.__position = new_position
         return self
     
     def __sub__(self, other):
         if isinstance(other, Point):
-            self.__position -= other
+            new_position = self.__position - other
+            if self.__pressure != -1:
+                self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
+            self.__position = new_position
         return self
 
     def __str__(self) -> str:
-        return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness}, is_down={self.is_down})"
+        return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness})"
 
     def forward(self, distance):
         rad_orientation = math.radians(self.__orientation)
         new_position = self.__position + Point(distance * math.cos(rad_orientation), distance * math.sin(rad_orientation))
-
-        if self.is_down:
+        
+        if self.__pressure != -1:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
         self.__position = new_position
@@ -68,7 +74,7 @@ class Pen:
         rad_orientation = math.radians(self.__orientation)
         new_position = self.__position - Point(distance * math.cos(rad_orientation), distance * math.sin(rad_orientation))
 
-        if self.is_down:
+        if self.__pressure != -1:
             self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
 
         self.__position = new_position
@@ -83,11 +89,11 @@ class Pen:
         return self
 
     def down(self):
-        self.is_down = True
+        self.__pressure = 1
         return self
 
     def up(self):
-        self.is_down = False
+        self.__pressure = -1
         return self
 
     def color(self, color=None):
@@ -116,12 +122,10 @@ class Pen:
         return self.__pressure
 
 
-from time import sleep
-
 def main():
     canvas = Canvas("Drawing Canvas", 400, 400)
     
-    penType = {"position":Point(200, 200), "color":"green", "orientation":45, "thickness":10, "pressure":1}
+    penType = {"position": Point(200, 200), "color": "green", "orientation": 45, "thickness": 10, "pressure": 1}
     pen = Pen(canvas, penType)
 
     print(str(pen))
@@ -137,3 +141,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
