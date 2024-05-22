@@ -1,8 +1,7 @@
 from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
-from .pen import Pen, Point
-import penMain
+from pen import Pen, Point
 
 class Interpreter(penVisitor):
     def __init__(self, pen):
@@ -75,7 +74,3 @@ class Interpreter(penVisitor):
             return self.visit(ctx.expr())
         return None
 
-    def visitExecuteCommand(self, ctx:penParser.ExecuteCommandContext):
-        file_name = ctx.STRING().getText().strip('"')
-        penMain.exec(file_name, self.pen)
-        return None

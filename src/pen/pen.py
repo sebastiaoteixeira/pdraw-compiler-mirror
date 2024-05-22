@@ -1,7 +1,6 @@
-from .canvas import Canvas
+from canvas import Canvas
 import math
 from time import sleep
-from .penMain import execute
 
 class Point:
     def __init__(self, x, y):
@@ -127,8 +126,6 @@ def ColorToInt(colorHex):
     b = int(colorHex[5:7], 16)
     return r<<24 | g<<16 | b<<8
 
-def exec(filename: str, pen: Pen):
-    execute(filename, pen)
 
 def main():
     canvas = Canvas("Drawing Canvas", 400, 400)
