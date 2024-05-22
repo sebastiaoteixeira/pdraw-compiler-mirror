@@ -127,16 +127,7 @@ bool(<op>)
 >>
 
 
-// boolean/loops expressions templates
-// Template for bool operations
-bool_operations(op1, op2, operator) ::= <<
-<op1> <operator> <op2>
->>
-
-// Template for comparisons
-comparison(op1, op2, operator) ::= <<
-<op1> <operator> <op2>
->>
+// boolean/loops expressions templatess
 
 // Template for if 
 if(condition, compoundIf, compoundElse) ::= <<
@@ -168,7 +159,7 @@ while not <condition>:
 >>
 
 // Template for litterals, IDs, ...
-single(<content>) ::= <<
+single(content) ::= <<
 <content>
 >>
 

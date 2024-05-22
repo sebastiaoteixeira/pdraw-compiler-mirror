@@ -210,7 +210,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprComp(pdrawParser.ExprCompContext ctx) {
-      ST comparison = templates.getInstanceOf("comparison");
+      ST comparison = templates.getInstanceOf("binary_operations");
       comparison.add("op1", visit(ctx.expression(0)).render());
       comparison.add("op2", visit(ctx.expression(1)).render());
       comparison.add("operator", ctx.op.getText());
@@ -218,9 +218,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprPoint(pdrawParser.ExprPointContext ctx) {
-      ST point = templates.getInstanceOf("single");
-      point.add("content", visit(ctx.point()).render());
-      return point;
+      return visit(ctx.point());
    }
 
    @Override public ST visitExprStringConcat(pdrawParser.ExprStringConcatContext ctx) {
@@ -277,7 +275,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitExprBoolOp(pdrawParser.ExprBoolOpContext ctx) {
-      ST bool = templates.getInstanceOf("bool_operations");
+      ST bool = templates.getInstanceOf("binary_operations");
       bool.add("op1", visit(ctx.expression(0)).render());
       bool.add("op2", visit(ctx.expression(1)).render());
       bool.add("operator", ctx.op.getText());
@@ -314,7 +312,7 @@ import org.stringtemplate.v4.*;
    }
 
    @Override public ST visitPoint(pdrawParser.PointContext ctx) {
-      ST point = templates.getInstanceOf("unary_operations");
+      ST point = templates.getInstanceOf("point");
       point.add("op1", visit(ctx.x).render());
       point.add("op2", visit(ctx.y).render());
       return point;
