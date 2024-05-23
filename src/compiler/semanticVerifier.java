@@ -243,11 +243,11 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
 		Type leftType = visit(ctx.expression(0)).getType();
 		Type rightType = visit(ctx.expression(1)).getType();
-		if (!isNumericType(leftType) || !isNumericType(rightType)) {
+		if (!((isNumericType(leftType) && isNumericType(rightType)) || (leftType == Type.PEN && rightType == Type.POINT) || (leftType == Type.POINT && rightType == Type.POINT))) {
 			ErrorHandler.error(getFileName(ctx), "Operands of '+' or '-' must be numeric.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine()); 
 		}
-      return (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real();
+      return (leftType == Type.PEN ? new Pen() : leftType == Type.POINT ? new Point() : (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real());
    }
 
    @Override public IType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
