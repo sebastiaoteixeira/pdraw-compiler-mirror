@@ -540,7 +540,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprSleep(pdrawParser.ExprSleepContext ctx) {
-      IType exprType = visit(ctx.expression(0)).getType();
+      Type exprType = visit(ctx.expression()).getType();
       visit(ctx.pause());
       if (exprType != Type.PEN) {
          ErrorHandler.error(getFileName(ctx), "Sleep time must be a pen.",
