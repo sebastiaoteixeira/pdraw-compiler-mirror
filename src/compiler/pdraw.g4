@@ -3,7 +3,7 @@ grammar pdraw;
 // Define the grammar for the parser
 program: compound EOF;
 
-function: type=Type ID '(' parameter_list ')' statement;
+function: type=tname ID '(' parameter_list ')' statement;
 
 statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
 
@@ -24,11 +24,11 @@ canvasDefinition: 'canvas' ID String point;
 
 parameter_list: parameter (',' parameter)* ;
 
-parameter returns [String id]: type=Type ID;
+parameter returns [String id]: type=tname ID;
 
 declaration_element: (ID | assign);
 
-declaration: type=Type declaration_element (',' declaration_element)*;
+declaration: type=tname declaration_element (',' declaration_element)*;
 
 while: 'while' '(' expression ')' statement;
 
@@ -62,7 +62,7 @@ expression :
     // Concatenation
     | expression expression #ExprStringConcat
 
-    // Type conversion
+    // tname conversion
     | 'int' '(' expression ')' #ExprToInt
     | 'real' '(' expression ')' #ExprToReal
     | 'string' '(' expression ')' #ExprToString
@@ -104,8 +104,7 @@ expression :
 // Assign 
 assign: ID op='=' expression;
 
-// Types
-Type: ('pen'|'real'|'int'|'string'|'point'|'bool');
+// tnames
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
@@ -122,6 +121,14 @@ Color: ('white'|'black'|'green'|'red'|'blue'|'yellow')
 | '#' HEX HEX HEX HEX HEX HEX;
 
 PI: 'PI';
+
+tname: (PEN | REAL | INT | STRING | BOOL | POINT);
+PEN: 'pen';
+REAL: 'real';
+INT: 'int';
+STRING: 'string';
+POINT: 'point';
+BOOL: 'bool';
 
 fragment HEX: [0-9a-fA-F];
 
