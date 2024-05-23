@@ -40,8 +40,6 @@ if: 'if' '(' expression ')' statement ('else'  statement )?;
 
 execution: ID '<-' 'execute' expression;
 
-pause: 'pause' expression;
-
 stdout: expression '->' 'stdout';
 
 
@@ -72,7 +70,7 @@ expression :
     | expression op=('down'|'up') #ExprPenUnary
     | expression op=('forward'|'backward'|'left'|'right') expression #ExprPenOperator
     | expression op='<-' Property expression #ExprSetProperty
-    | expression pause #ExprSleep
+    | expression 'pause' expression #ExprSleep
 
     // stdin
     | 'stdin' expression #ExprStdin
@@ -101,6 +99,8 @@ expression :
     // Parentized expression
     | '(' expression ')' #ExprParent
 ;
+
+pause: 'pause' expression;
 
 // Assign 
 assign: ID op='=' expression;

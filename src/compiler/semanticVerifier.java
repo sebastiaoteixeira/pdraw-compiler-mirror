@@ -546,7 +546,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
          ErrorHandler.error(getFileName(ctx), "Sleep time must be a pen.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
-      return exprType;
+      return new Pen();
    }
 
 
