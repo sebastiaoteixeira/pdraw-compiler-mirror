@@ -172,10 +172,10 @@ import java.util.HashMap;
 
    @Override public ST visitFor(pdrawParser.ForContext ctx) {
       ST forTemplate = templates.getInstanceOf("for");
-      forTemplate.add("init", visit(ctx.expression(0)).render());
-      forTemplate.add("condition", visit(ctx.expression(1)).render());
-      forTemplate.add("expression", visit(ctx.expression(2)).render());
-      forTemplate.add("compound", visit(ctx.statement()).render());
+      forTemplate.add("init", visit(ctx.statement(0)).render());
+      forTemplate.add("condition", visit(ctx.expression(0)).render());
+      forTemplate.add("expression", visit(ctx.expression(1)).render());
+      forTemplate.add("compound", visit(ctx.statement(1)).render());
       return forTemplate;
    }
 
@@ -314,7 +314,7 @@ import java.util.HashMap;
 
    @Override public ST visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
       ST penOperator = templates.getInstanceOf("ExprPen");
-      penOperator.add("name", ctx.expression(0).getText());
+      penOperator.add("name", visit(ctx.expression(0)).render());
       penOperator.add("op", ctx.op.getText());
       penOperator.add("value", visit(ctx.expression(1)).render());
       return penOperator;

@@ -205,9 +205,13 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type exprType = visit(ctx.expression()).getType();
+      if (exprType != Type.BOOLEAN) {
+         ErrorHandler.error(getFileName(ctx), "Conversion to boolean can only be applied to boolean values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      return new BooleanType();
    }
 
    @Override public IType visitExprToInt(pdrawParser.ExprToIntContext ctx) {
@@ -229,7 +233,10 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 			return new IntegerType();
 		} else if (leftType == Type.REAL || rightType == Type.REAL) {
 			return new Real();
+      } else if (ctx.op.getText().equals("/")){
+         return new Real();
 		}
+
 		return new IntegerType();
    }
 
@@ -320,9 +327,13 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprComp(pdrawParser.ExprCompContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type leftType = visit(ctx.expression(0)).getType();
+      Type rightType = visit(ctx.expression(1)).getType();
+      if (!isNumericType(leftType) || !isNumericType(rightType)) {
+         ErrorHandler.error(getFileName(ctx), "Operands of comparison operators must be numeric.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new BooleanType();
    }
 
    @Override public IType visitExprPoint(pdrawParser.ExprPointContext ctx) {
@@ -340,9 +351,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprColor(pdrawParser.ExprColorContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new IntegerType();
    }
 
    @Override public IType visitExprToReal(pdrawParser.ExprToRealContext ctx) {
@@ -403,9 +412,13 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprBoolOp(pdrawParser.ExprBoolOpContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      Type leftType = visit(ctx.expression(0)).getType();
+      Type rightType = visit(ctx.expression(1)).getType();
+      if (leftType != Type.BOOLEAN || rightType != Type.BOOLEAN) {
+         ErrorHandler.error(getFileName(ctx), "Operands of boolean operators must be boolean values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return new BooleanType();
    }
 
    @Override public IType visitExprStdin(pdrawParser.ExprStdinContext ctx) {
