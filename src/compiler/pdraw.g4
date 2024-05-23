@@ -5,7 +5,7 @@ program: compound EOF;
 
 function: type=tname ID '(' parameter_list ')' statement;
 
-statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
+statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | function | return) ';' | block;
 
 return: 'return' expression;
 
@@ -34,7 +34,7 @@ while: 'while' '(' expression ')' statement;
 
 until: 'until' '(' expression ')' statement;
 
-for: 'for' '(' declaration ';' expression ';' expression ')' statement; 
+for: 'for' '(' statement expression ';' expression ')' statement; 
 
 if: 'if' '(' expression ')' statement ('else'  statement )?;
 

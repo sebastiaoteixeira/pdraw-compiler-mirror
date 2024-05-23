@@ -172,10 +172,10 @@ import java.util.HashMap;
 
    @Override public ST visitFor(pdrawParser.ForContext ctx) {
       ST forTemplate = templates.getInstanceOf("for");
-      forTemplate.add("init", visit(ctx.expression(0)).render());
-      forTemplate.add("condition", visit(ctx.expression(1)).render());
-      forTemplate.add("expression", visit(ctx.expression(2)).render());
-      forTemplate.add("compound", visit(ctx.statement()).render());
+      forTemplate.add("init", visit(ctx.statement(0)).render());
+      forTemplate.add("condition", visit(ctx.expression(0)).render());
+      forTemplate.add("expression", visit(ctx.expression(1)).render());
+      forTemplate.add("compound", visit(ctx.statement(1)).render());
       return forTemplate;
    }
 
