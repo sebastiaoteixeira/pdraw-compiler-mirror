@@ -22,6 +22,23 @@ class Canvas:
             pass
         finally:
             self.win.close()
+            
+class CanvasManager:
+    def __init__(self) -> None:
+        self.canvases = []
+        self.canvases.append(Canvas("", 500, 500))
+    
+    def createCanvas(self, title, width, height):
+        canvas = Canvas(title, width, height)
+        self.canvases.append(canvas)
+        return canvas
+
+    def waitUntilClose(self):
+        for canvas in self.canvases:
+            canvas.waitUntilClose()
+            
+    def getCanvas(self):
+        return self.canvases[-1]
 
         
     

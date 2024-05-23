@@ -96,7 +96,7 @@ import java.util.HashMap;
    }
 
    @Override public ST visitDefine(pdrawParser.DefineContext ctx) {
-      return visit(ctx.getChild(0));
+      return visitChildren(ctx);
    }
 
    @Override public ST visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {

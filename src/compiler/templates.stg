@@ -2,12 +2,13 @@
 main(compound) ::= <<
 from math import radians, pi
 from time import sleep
-from canvas import Canvas
+from canvas import Canvas, CanvasManager
 from pen import Pen, Point, ColorToInt
 
 def main():
-    defaultCanvas = Canvas("", 500, 500)
+    canvasManager = CanvasManager()
     <compound>
+    canvasManager.waitUntilClose()
 
 if __name__ == "__main__":
     main()
@@ -21,7 +22,7 @@ compoundContext(statement) ::= <<
 
 // Template for canvas definition
 canvasDefinition(title, width, height) ::= <<
-canvas = Canvas("<title>", <width>, <height>)
+canvasManager.createCanvas("<title>", <width>, <height>)
 >>
 
 // Template for PenType definition
@@ -33,7 +34,7 @@ pentype(pentypeName, properties) ::= <<
 
 // Template for pen creation
 penCreation(penType) ::= <<
-Pen(defaultCanvas, <penType>)
+Pen(canvasManager.getCanvas(), <penType>)
 >>
 
 // A single property
