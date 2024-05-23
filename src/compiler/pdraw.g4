@@ -3,7 +3,7 @@ grammar pdraw;
 // Define the grammar for the parser
 program: compound EOF;
 
-function: type=('pen'|'real'|'int'|'string'|'point'|'bool') ID '(' parameter_list ')' statement;
+function: type=Type ID '(' parameter_list ')' statement;
 
 statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | block | function | return) ';';
 
@@ -24,11 +24,11 @@ canvasDefinition: 'canvas' ID String point;
 
 parameter_list: parameter (',' parameter)* ;
 
-parameter returns [String id]: type=('pen'|'real'|'int'|'string'|'point'|'bool') ID;
+parameter returns [String id]: type=Type ID;
 
 declaration_element: (ID | assign);
 
-declaration: type=('pen'|'real'|'int'|'string'|'point'|'bool') declaration_element (',' declaration_element)*;
+declaration: type=Type declaration_element (',' declaration_element)*;
 
 while: 'while' '(' expression ')' statement;
 
@@ -108,6 +108,7 @@ expression :
 assign: ID op='=' expression;
 
 // Types
+Type: ('pen'|'real'|'int'|'string'|'point'|'bool');
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
