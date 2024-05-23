@@ -164,7 +164,6 @@ single(content) ::= <<
 >>
 
 // Template for Color
-// #RRGGBB
 color(content) ::= <<
 ColorToInt("<content>")
 >>
