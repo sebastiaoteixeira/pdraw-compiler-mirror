@@ -296,7 +296,7 @@ import java.util.HashMap;
    }
 
    @Override public ST visitExprColor(pdrawParser.ExprColorContext ctx) {
-      ST color = templates.getInstanceOf("single");
+      ST color = templates.getInstanceOf("color");
       String colorName = ctx.Color().getText();
       if (colorName.charAt(0) == '#') {
          color.add("content", colorName);
