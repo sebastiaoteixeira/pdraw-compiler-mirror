@@ -32,6 +32,19 @@ class Point:
         else:
             raise IndexError("Index out of range")
 
+    
+def ColorToInt(colorHex):
+    r = int(colorHex[1:3], 16)
+    g = int(colorHex[3:5], 16)
+    b = int(colorHex[5:7], 16)
+    return r<<24 | g<<16 | b<<8
+
+def IntToColor(colorInt):
+    r = (colorInt >> 24) & 0xFF
+    g = (colorInt >> 16) & 0xFF
+    b = (colorInt >> 8) & 0xFF
+    return f"#{r:02x}{g:02x}{b:02x}"
+
 class Pen:
     def __init__(self, canvas: Canvas, penType: dict = {}):
         self.__canvas = canvas
@@ -45,7 +58,7 @@ class Pen:
         if isinstance(other, Point):
             new_position = self.__position + other
             if self.__pressure != -1:
-                self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
+                self.__canvas.drawLine(self.__position, new_position, IntToColor(self.__color), 1 + (self.__thickness - 1) * self.__pressure)
             self.__position = new_position
         return self
     
@@ -53,18 +66,18 @@ class Pen:
         if isinstance(other, Point):
             new_position = self.__position - other
             if self.__pressure != -1:
-                self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
+                self.__canvas.drawLine(self.__position, new_position, IntToColor(self.__color), 1 + (self.__thickness - 1) * self.__pressure)
             self.__position = new_position
         return self
 
     def __str__(self) -> str:
-        return f"Pen(position={self.__position}, color={self.__color}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness})"
+        return f"Pen(position={self.__position}, color={IntToColor(self.__color)}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness})"
 
     def forward(self, distance):
         new_position = self.__position + Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
         
         if self.__pressure != -1:
-            self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
+            self.__canvas.drawLine(self.__position, new_position, IntToColor(self.__color), 1 + (self.__thickness - 1) * self.__pressure)
 
         self.__position = new_position
         return self
@@ -74,7 +87,7 @@ class Pen:
         new_position = self.__position - Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
 
         if self.__pressure != -1:
-            self.__canvas.drawLine(self.__position, new_position, self.__color, 1 + (self.__thickness - 1) * self.__pressure)
+            self.__canvas.drawLine(self.__position, new_position, IntToColor(self.__color), 1 + (self.__thickness - 1) * self.__pressure)
 
         self.__position = new_position
         return self
@@ -119,12 +132,6 @@ class Pen:
         if pressure is not None:
             self.__pressure = pressure
         return self.__pressure
-    
-def ColorToInt(colorHex):
-    r = int(colorHex[1:3], 16)
-    g = int(colorHex[3:5], 16)
-    b = int(colorHex[5:7], 16)
-    return r<<24 | g<<16 | b<<8
 
 
 def main():
