@@ -3,7 +3,7 @@ main(compound) ::= <<
 from math import radians, pi
 from time import sleep
 from canvas import Canvas
-from pen import Pen, Point
+from pen import Pen, Point, ColorToInt
 
 def main():
     defaultCanvas = Canvas("", 500, 500)
