@@ -1,3 +1,14 @@
+define pen PenType1 {
+   color = #FFC0CB;
+   position = (10,10);
+   orientation = 45º;
+   % orientation = 0;
+   thickness = 10;
+   pressure = -1;
+   % pressure = 0;
+   % pressure = 1/3;
+};
+
 pen p1 = new PenType1;
 p1 down; % pen in canvas with pressure 0
 % draw square
@@ -10,13 +21,36 @@ p1 left 90º;
 p1 forward 10;
 p1 left 90º;
 
+define pen PenType2 {
+    color = #FFC0CB;
+    position = (10,10);
+    orientation = 45º;
+    % orientation = 0;
+    thickness = 10;
+    pressure = -1;
+    % pressure = 0;
+    % pressure = 1/3;
+
+};
+
 pen p2 = new PenType2;
 % draw square
 p2 down forward 10 left 90º forward 10 left 90º forward 10 left 90º forward 10 left 90º;
+
+define pen PenType3 {
+    color = #FFC0CB;
+    position = (10,10);
+    orientation = 45º;
+    % orientation = 0;
+    thickness = 10;
+    pressure = -1;
+    % pressure = 0;
+    % pressure = 1/3;
+};
 
 pen p3 = new PenType3;
 p3 <- color green;
 p3 <- pressure 1;
 p3 <- thickness 2;
-p3 <- orientation left;
+p3 <- orientation 90º;
 p3 <- position (0,0);

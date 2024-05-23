@@ -351,9 +351,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprColor(pdrawParser.ExprColorContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      return new IntegerType();
    }
 
    @Override public IType visitExprToReal(pdrawParser.ExprToRealContext ctx) {

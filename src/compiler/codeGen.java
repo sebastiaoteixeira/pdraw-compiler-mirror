@@ -314,7 +314,7 @@ import java.util.HashMap;
 
    @Override public ST visitExprPenOperator(pdrawParser.ExprPenOperatorContext ctx) {
       ST penOperator = templates.getInstanceOf("ExprPen");
-      penOperator.add("name", ctx.expression(0).getText());
+      penOperator.add("name", visit(ctx.expression(0)).render());
       penOperator.add("op", ctx.op.getText());
       penOperator.add("value", visit(ctx.expression(1)).render());
       return penOperator;
