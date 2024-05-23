@@ -329,10 +329,6 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprComp(pdrawParser.ExprCompContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
       Type rightType = visit(ctx.expression(1)).getType();
-      if (!isNumericType(leftType) || !isNumericType(rightType)) {
-         ErrorHandler.error(getFileName(ctx), "Operands of comparison operators must be numeric.",
-            ctx.start.getLine(), ctx.start.getCharPositionInLine());
-      }
       return new BooleanType();
    }
 
@@ -541,6 +537,16 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override public IType visitExprPi(pdrawParser.ExprPiContext ctx) {
       return new Real();
+   }
+
+   @Override public IType visitExprSleep(pdrawParser.ExprSleepContext ctx) {
+      IType exprType = visit(ctx.expression(0)).getType();
+      visit(ctx.pause());
+      if (exprType != Type.PEN) {
+         ErrorHandler.error(getFileName(ctx), "Sleep time must be a pen.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      return exprType;
    }
 
 
