@@ -243,11 +243,11 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprAddSub(pdrawParser.ExprAddSubContext ctx) {
 		Type leftType = visit(ctx.expression(0)).getType();
 		Type rightType = visit(ctx.expression(1)).getType();
-		if (!isNumericType(leftType) || !isNumericType(rightType)) {
+		if (!((isNumericType(leftType) && isNumericType(rightType)) || (leftType == Type.PEN && rightType == Type.POINT) || (leftType == Type.POINT && rightType == Type.POINT))) {
 			ErrorHandler.error(getFileName(ctx), "Operands of '+' or '-' must be numeric.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine()); 
 		}
-      return (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real();
+      return (leftType == Type.PEN ? new Pen() : leftType == Type.POINT ? new Point() : (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real());
    }
 
    @Override public IType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
@@ -538,17 +538,6 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprPi(pdrawParser.ExprPiContext ctx) {
       return new Real();
    }
-
-   @Override public IType visitExprSleep(pdrawParser.ExprSleepContext ctx) {
-      Type exprType = visit(ctx.expression()).getType();
-      visit(ctx.pause());
-      if (exprType != Type.PEN) {
-         ErrorHandler.error(getFileName(ctx), "Sleep time must be a pen.",
-            ctx.start.getLine(), ctx.start.getCharPositionInLine());
-      }
-      return new Pen();
-   }
-
 
    // private function to see if expr is INTEGER or REAL
 	private boolean isNumericType(Type type) {

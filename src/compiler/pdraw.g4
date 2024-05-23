@@ -49,7 +49,7 @@ expression :
     ID '(' expression (',' expression)* ')' #ExprFunctionCall
 
     // pen instance
-    |'new' expression? #ExprNew
+    | 'new' expression? #ExprNew
 
     // Math
     | op=('+'|'-') expression #ExprUnary
@@ -67,9 +67,8 @@ expression :
     | 'bool' '(' expression ')' #ExprToBool
 
     // Pen instructions (the pen itself should be returned to allow operations chain)
-    | expression pause #ExprSleep
     | expression op=('down'|'up') #ExprPenUnary
-    | expression op=('forward'|'backward'|'left'|'right') expression #ExprPenOperator
+    | expression op=('forward'|'backward'|'left'|'right'|'pause') expression #ExprPenOperator
     | expression op='<-' Property expression #ExprSetProperty
 
     // stdin
