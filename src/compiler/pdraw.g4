@@ -70,7 +70,7 @@ expression :
 
     // Pen instructions (the pen itself should be returned to allow operations chain)
     | expression op=('down'|'up') #ExprPenUnary
-    | expression op=('forward'|'left'|'right') expression #ExprPenOperator
+    | expression op=('forward'|'backward'|'left'|'right') expression #ExprPenOperator
     | expression op='<-' Property expression #ExprSetProperty
 
     // stdin
@@ -99,9 +99,6 @@ expression :
 
     // Parentized expression
     | '(' expression ')' #ExprParent
-
-    // Pen backward
-    | expression op=('down'|'up'|'forward'|'left'|'right'|'backward') expression #ExprPenOperator
 ;
 
 // Assign 
