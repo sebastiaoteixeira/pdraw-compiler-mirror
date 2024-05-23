@@ -229,7 +229,10 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 			return new IntegerType();
 		} else if (leftType == Type.REAL || rightType == Type.REAL) {
 			return new Real();
+      } else if (ctx.op.getText().equals("/")){
+         return new Real();
 		}
+
 		return new IntegerType();
    }
 
