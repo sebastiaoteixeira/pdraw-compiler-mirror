@@ -333,8 +333,9 @@ import java.util.HashMap;
 
    @Override public ST visitExprSleep(pdrawParser.ExprSleepContext ctx) {
       ST unary = templates.getInstanceOf("ExprPenUnary");
-      unary.add("penName", visit(ctx.expression()).render());
-      unary.add("op", "." + visit(ctx.pause()).render());
+      unary.add("penName", visit(ctx.expression(0)).render());
+      unary.add("op", ".sleep");
+      unary.add("value", visit(ctx.expression(1)).render());
       return unary;
    }
 
