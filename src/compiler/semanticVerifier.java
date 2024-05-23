@@ -539,17 +539,6 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       return new Real();
    }
 
-   @Override public IType visitExprSleep(pdrawParser.ExprSleepContext ctx) {
-      Type exprType = visit(ctx.expression(0)).getType();
-      Type exprType2 = visit(ctx.expression(1)).getType();
-      if (exprType != Type.PEN || exprType2 != Type.INTEGER) {
-         ErrorHandler.error(getFileName(ctx), "Sleep time must be a pen.",
-            ctx.start.getLine(), ctx.start.getCharPositionInLine());
-      }
-      return new Pen();
-   }
-
-
    // private function to see if expr is INTEGER or REAL
 	private boolean isNumericType(Type type) {
 		return type == Type.INTEGER || type == Type.REAL;
