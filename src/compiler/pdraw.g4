@@ -72,6 +72,7 @@ expression :
     | expression op=('down'|'up') #ExprPenUnary
     | expression op=('forward'|'backward'|'left'|'right') expression #ExprPenOperator
     | expression op='<-' Property expression #ExprSetProperty
+    | expression pause #ExprSleep
 
     // stdin
     | 'stdin' expression #ExprStdin
