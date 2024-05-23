@@ -1,36 +1,7 @@
 from canvas import Canvas
 import math
 from time import sleep
-
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-    
-    def __add__(self, other):
-        return Point(self.x + other.x, self.y + other.y)
-    
-    def __sub__(self, other):
-        return Point(self.x - other.x, self.y - other.y)
-    
-    def __str__(self) -> str:
-        return f"({self.x},{self.y})"
-    
-    def __getitem__(self, index):
-        if index == 0:
-            return self.x
-        elif index == 1:
-            return self.y
-        else:
-            raise IndexError("Index out of range")
-        
-    def __setitem__(self, index, value):
-        if index == 0:
-            self.x = value
-        elif index == 1:
-            self.y = value
-        else:
-            raise IndexError("Index out of range")
+from point import Point
 
     
 def ColorToInt(colorHex):
@@ -74,6 +45,7 @@ class Pen:
         return f"Pen(position={self.__position}, color={IntToColor(self.__color)}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness})"
 
     def forward(self, distance):
+        distance *= 10
         new_position = self.__position + Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
         
         if self.__pressure != -1:
@@ -83,7 +55,7 @@ class Pen:
         return self
     
     def backward(self, distance):
-        
+        distance *= 10
         new_position = self.__position - Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
 
         if self.__pressure != -1:

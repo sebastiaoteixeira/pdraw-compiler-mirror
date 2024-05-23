@@ -21,8 +21,8 @@ compoundContext(statement) ::= <<
 
 
 // Template for canvas definition
-canvasDefinition(title, width, height) ::= <<
-canvasManager.createCanvas("<title>", <width>, <height>)
+canvasDefinition(canvasName, title, measurements) ::= <<
+<canvasName> = canvasManager.createCanvas(<title>, <measurements>)
 >>
 
 // Template for PenType definition
@@ -102,7 +102,7 @@ input(<message>)
 
 // Template for ExprStdout
 stdout(message) ::= <<
-print(<message>)
+print(<message>, end="")
 >>
 
 
