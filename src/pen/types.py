@@ -5,3 +5,4 @@ class Type(Enum):
     Real = 2
     String = 3
     Bool = 4
+    Point = 5

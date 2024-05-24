@@ -1,6 +1,7 @@
 from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
+from types import Type
 
 class semanticVerifier Type(penVisitor):
    def visitProgram(self, ctx:penParser.ProgramContext):
@@ -52,7 +53,7 @@ class semanticVerifier Type(penVisitor):
       return self.visitChildren(ctx)
 
    def visitExprInteger(self, ctx:penParser.ExprIntegerContext):
-      return self.visitChildren(ctx)
+      return Type.Integer
 
    def visitExprId(self, ctx:penParser.ExprIdContext):
       return self.visitChildren(ctx)
@@ -61,7 +62,7 @@ class semanticVerifier Type(penVisitor):
       return self.visitChildren(ctx)
 
    def visitExprString(self, ctx:penParser.ExprStringContext):
-      return self.visitChildren(ctx)
+      return Type.String
 
    def visitExprParent(self, ctx:penParser.ExprParentContext):
       return self.visitChildren(ctx)
@@ -106,10 +107,22 @@ class semanticVerifier Type(penVisitor):
       return self.visitChildren(ctx)
 
    def visitExprBool(self, ctx:penParser.ExprBoolContext):
-      return self.visitChildren(ctx)
+      return Type.Bool
 
    def visitAssign(self, ctx:penParser.AssignContext):
       return self.visitChildren(ctx)
 
    def visitPoint(self, ctx:penParser.PointContext):
-      return self.visitChildren(ctx)
+      exprType1 = visit(ctx.expression(0))
+      exprType2 = visit(ctx.expression(1))
+      # if not (isNumericType(exprType1) and isNumericType(exprType2)):
+      #    # ErrorHandler.error(
+      #    #    getFileName(ctx),
+      #    #    "Point values must be integer or real values.",
+      #    #    ctx.start.line,
+      #    #    ctx.start.column
+      #    # )
+      return Type.Point
+   
+   def isNumericType(type):
+      return type == Type.Integer or type == Type.Real
