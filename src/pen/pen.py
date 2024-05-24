@@ -104,6 +104,10 @@ class Pen:
         if pressure is not None:
             self.__pressure = pressure
         return self.__pressure
+    
+    def pause(self, time):
+        sleep(time/1_000_000)
+        return self
 
 
 def main():

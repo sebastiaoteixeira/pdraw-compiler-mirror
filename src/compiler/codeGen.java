@@ -386,7 +386,12 @@ import java.util.HashMap;
 
    @Override public ST visitExprBool(pdrawParser.ExprBoolContext ctx) {
       ST bool = templates.getInstanceOf("single");
-      bool.add("content", ctx.Boolean().getText());
+      
+      if (ctx.Boolean().getText().equals("true")) {
+         bool.add("content", "True");
+      } else {
+         bool.add("content", "False");
+      }
       return bool;
    }
 
