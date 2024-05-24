@@ -136,7 +136,12 @@ import java.util.HashMap;
    }
 
    @Override public ST visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      return visitChildren(ctx);
+      ST declaration = templates.getInstanceOf("compoundContext");
+
+      for (pdrawParser.Declaration_elementContext declaration_element : ctx.declaration_element()) {
+            declaration.add("statement", visit(declaration_element));
+      }
+      return declaration;
    }
 
    @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
