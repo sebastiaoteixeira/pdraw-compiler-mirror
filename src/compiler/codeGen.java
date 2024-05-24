@@ -136,7 +136,12 @@ import java.util.HashMap;
    }
 
    @Override public ST visitDeclaration(pdrawParser.DeclarationContext ctx) {
-      return visitChildren(ctx);
+      ST declaration = templates.getInstanceOf("compoundContext");
+
+      for (pdrawParser.Declaration_elementContext declaration_element : ctx.declaration_element()) {
+            declaration.add("statement", visit(declaration_element));
+      }
+      return declaration;
    }
 
    @Override public ST visitDeclaration_element(pdrawParser.Declaration_elementContext ctx) {
@@ -381,7 +386,12 @@ import java.util.HashMap;
 
    @Override public ST visitExprBool(pdrawParser.ExprBoolContext ctx) {
       ST bool = templates.getInstanceOf("single");
-      bool.add("content", ctx.Boolean().getText());
+      
+      if (ctx.Boolean().getText().equals("true")) {
+         bool.add("content", "True");
+      } else {
+         bool.add("content", "False");
+      }
       return bool;
    }
 
