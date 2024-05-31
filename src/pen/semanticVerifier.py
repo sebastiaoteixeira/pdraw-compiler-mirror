@@ -4,6 +4,9 @@ from penVisitor import penVisitor
 from types import Type
 
 class SemanticVerifier(penVisitor):
+   def __init__(self):
+      self.variables = {} # {variable_name: type}
+   
    def visitProgram(self, ctx:penParser.ProgramContext):
       return self.visitChildren(ctx)
 

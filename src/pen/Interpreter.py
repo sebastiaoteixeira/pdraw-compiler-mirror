@@ -2,6 +2,7 @@ from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
 from pen import Pen, Point
+from time import sleep
 import math
 
 
@@ -9,7 +10,7 @@ class Interpreter(penVisitor):
    
    def __init__(self, pen):
       self.pen = pen
-      variables={}
+      self.variables={}
    
    def visitProgram(self, ctx:penParser.ProgramContext):
       return self.visitChildren(ctx)
