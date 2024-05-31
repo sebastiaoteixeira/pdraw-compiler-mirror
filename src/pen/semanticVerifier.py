@@ -45,7 +45,9 @@ class SemanticVerifier(penVisitor):
       return self.visit(ctx.expression())
 
    def visitStdout(self, ctx:penParser.StdoutContext):
-      return self.visitChildren(ctx)
+      if (self.visit(ctx.expression()) != Type.String):
+         raise TypeError("Stdout value must be a string.")
+      return None
 
    def visitExprToString(self, ctx:penParser.ExprToStringContext):
       exprType = self.visit(ctx.expression)
@@ -75,7 +77,23 @@ class SemanticVerifier(penVisitor):
       return result
 
    def visitExprSetProperty(self, ctx:penParser.ExprSetPropertyContext):
-      return self.visitChildren(ctx)
+      prop = ctx.Property().getText()
+      if prop == 'color':
+         if (self.visit(ctx.expression()) != Type.Integer):
+            raise TypeError("Color value must be an integer.")
+      elif prop == 'pressure':
+         if self.isNumericType(self.visit(ctx.expression())):
+            raise TypeError("Pressure value must be an integer.")
+      elif prop == 'thickness':
+         if self.isNumericType(self.visit(ctx.expression())):
+            raise TypeError("Thickness value must be an integer.")
+      elif prop == 'orientation':
+         if self.isNumericType(self.visit(ctx.expression())):
+            raise TypeError("Orientation value must be an integer.")
+      elif prop == 'position':
+         if self.visit(ctx.expression()) != Type.Point:
+            raise TypeError("Position value must be a point.")
+      return None
 
    def visitExprAddSub(self, ctx:penParser.ExprAddSubContext):
       exprType1, exprType2 = self.visit(ctx.expression(0)), self.visit(ctx.expression(1))
@@ -129,7 +147,9 @@ class SemanticVerifier(penVisitor):
       return Type.Real
 
    def visitExprPenOperator(self, ctx:penParser.ExprPenOperatorContext):
-      return self.visitChildren(ctx)
+      if not self.isNumericType(self.visit(ctx.expression())):
+         raise TypeError("Pen operator can only be applied to real or integer values.")
+      return None
 
    def visitExprConvToRad(self, ctx:penParser.ExprConvToRadContext):
       exprType = self.visit(ctx.expression())
@@ -138,7 +158,7 @@ class SemanticVerifier(penVisitor):
       return Type.Real
 
    def visitExprPenUnary(self, ctx:penParser.ExprPenUnaryContext):
-      return self.visitChildren(ctx)
+      return None
 
    def visitExprUnary(self, ctx:penParser.ExprUnaryContext):
       exprType = self.visit(ctx.expression())
