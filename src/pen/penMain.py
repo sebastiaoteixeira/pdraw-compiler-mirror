@@ -3,6 +3,7 @@ from antlr4 import *
 from penLexer import penLexer
 from penParser import penParser
 from interpreter import Interpreter
+from semanticVerifier import SemanticVerifier
 from pen import Pen, Point
 from canvas import Canvas
 
@@ -13,6 +14,8 @@ def exec(filename: str, pen: Pen):
     parser = penParser(stream)
     tree = parser.program()
     if parser.getNumberOfSyntaxErrors() == 0:
+        semantic = SemanticVerifier()
+        semantic.visit(tree)
         visitor = Interpreter(pen)
         visitor.visit(tree)
 
