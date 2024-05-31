@@ -3,7 +3,7 @@ from penParser import penParser
 from penVisitor import penVisitor
 from types import Type
 
-class semanticVerifier Type(penVisitor):
+class semanticVerifier(penVisitor):
    def visitProgram(self, ctx:penParser.ProgramContext):
       return self.visitChildren(ctx)
 
