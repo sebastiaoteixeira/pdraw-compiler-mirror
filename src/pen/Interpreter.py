@@ -1,7 +1,8 @@
 from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
-from pen import Pen, Point
+from pen import Pen
+from point import Point
 from time import sleep
 import math
 
