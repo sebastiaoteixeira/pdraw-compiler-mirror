@@ -19,16 +19,25 @@ done
 
 echo $main $auxilary
 
-cd compiler
+mkdir -p $destiny_path
 
-antlr4-clean
+# copy auxilary files to destiny path
+if [ -n "$auxilary" ]; then
+    cp $auxilary $destiny_path
+fi
+
+cd pen
+antlr4-build -python
+cd ../compiler
+
 antlr4-build
 antlr4-run < ../$main
 
-
-mkdir -p ../$destiny_path
 
 mv output.py ../$destiny_path
 
 cp ../pen/*.py ../$destiny_path
 
+antlr4-clean
+cd ../pen
+antlr4-clean -python

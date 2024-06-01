@@ -4,6 +4,7 @@ from math import radians, pi
 from time import sleep
 from canvas import Canvas, CanvasManager
 from pen import Pen, Point, ColorToInt
+from penMain import execute
 
 def main():
     canvasManager = CanvasManager()
@@ -75,7 +76,7 @@ Point(<op1>,<op2>)
 
 // Template for Execution
 execution(penId, fileName) ::= <<
-exec(<fileName>, <penId>)
+execute(<fileName>, <penId>)
 >>
 
 // Template for pause (time in microseconds)

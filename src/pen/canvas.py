@@ -8,12 +8,13 @@ class Canvas:
         self.width = width
         self.height = height
         self.win = None
+        self.scale = 10
 
     def drawLine(self, point1, point2, color, thickness):
         if self.win is None:
             self.win = GraphWin(self.title, self.width, self.height)
         
-        line = Line(Point(*point1), Point(*point2))
+        line = Line(Point(*(point1 * self.scale)), Point(*(point2 * self.scale)))
         line.setFill(color)
         line.setWidth(thickness)
         line.draw(self.win)

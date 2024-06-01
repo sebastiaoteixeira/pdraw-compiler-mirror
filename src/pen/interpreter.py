@@ -1,15 +1,17 @@
 from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
-from pen import Pen, Point
-
+from pen import Pen
+from point import Point
+from time import sleep
+import math
 
 
 class Interpreter(penVisitor):
    
    def __init__(self, pen):
       self.pen = pen
-      variables={}
+      self.variables={}
    
    def visitProgram(self, ctx:penParser.ProgramContext):
       return self.visitChildren(ctx)
@@ -156,9 +158,7 @@ class Interpreter(penVisitor):
       return None
 
    def visitExprPoint(self, ctx:penParser.ExprPointContext):
-      x = self.visit(ctx.expression(0))
-      y = self.visit(ctx.expression(1))
-      return Point(x, y)
+      return self.visit(ctx.point())
 
    def visitExprStringConcat(self, ctx:penParser.ExprStringConcatContext):
       left = self.visit(ctx.expression(0))
@@ -230,5 +230,5 @@ class Interpreter(penVisitor):
       return self.visitChildren(ctx)
 
    def visitPoint(self, ctx:penParser.PointContext):
-      return self.visitChildren(ctx)
+      return Point(self.visit(ctx.expression(0)), self.visit(ctx.expression(1)))
 

@@ -20,7 +20,7 @@ class Pen:
     def __init__(self, canvas: Canvas, penType: dict = {}):
         self.__canvas = canvas
         self.__position = penType.get("position", Point(0, 0))
-        self.__color = penType.get("color", "black")
+        self.__color = penType.get("color", 0)
         self.__pressure = penType.get("pressure", 1)
         self.__orientation = penType.get("orientation", 0)
         self.__thickness = penType.get("thickness", 1)
@@ -45,7 +45,6 @@ class Pen:
         return f"Pen(position={self.__position}, color={IntToColor(self.__color)}, pressure={self.__pressure}, orientation={self.__orientation}, thickness={self.__thickness})"
 
     def forward(self, distance):
-        distance *= 10
         new_position = self.__position + Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
         
         if self.__pressure != -1:
@@ -55,7 +54,6 @@ class Pen:
         return self
     
     def backward(self, distance):
-        distance *= 10
         new_position = self.__position - Point(distance * math.cos(self.__orientation), distance * math.sin(self.__orientation))
 
         if self.__pressure != -1:

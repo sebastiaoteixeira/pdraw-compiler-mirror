@@ -7,7 +7,7 @@ from semanticVerifier import SemanticVerifier
 from pen import Pen, Point
 from canvas import Canvas
 
-def exec(filename: str, pen: Pen):
+def execute(filename: str, pen: Pen):
     input_stream = FileStream(filename, encoding="utf-8")
     lexer = penLexer(input_stream)
     stream = CommonTokenStream(lexer)

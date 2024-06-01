@@ -1,7 +1,7 @@
 from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
-from types import Type
+from vTypes import Type
 
 class SemanticVerifier(penVisitor):
    def __init__(self):
