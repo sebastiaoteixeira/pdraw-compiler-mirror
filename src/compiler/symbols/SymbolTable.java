@@ -5,10 +5,17 @@ import java.util.Map;
 
 class ScopeLevel {
     private int level;
+    private Symbol function;
     public Map<String, Symbol> symbols = new HashMap<String, Symbol>();
 
-    ScopeLevel(int level) {
+    public ScopeLevel(int level) {
         this.level = level;
+        this.function = null;
+    }
+
+    ScopeLevel(int level, Symbol function) {
+        this.level = level;
+        this.function = function;
     }
 
     public void addSymbol(Symbol symbol) {
@@ -22,6 +29,10 @@ class ScopeLevel {
     public int getLevel() {
         return level;
     }
+
+    public Symbol getFunction() {
+        return function;
+    }
 }
 
 public class SymbolTable {
@@ -34,6 +45,11 @@ public class SymbolTable {
 
     public void enterScope() {
         stack.push(new ScopeLevel(currentLevel));
+        currentLevel++;
+    }
+
+    public void enterScope(Symbol function) {
+        stack.push(new ScopeLevel(currentLevel, function));
         currentLevel++;
     }
 
@@ -51,6 +67,16 @@ public class SymbolTable {
             Symbol symbol = stack.get(i).getSymbol(identifier);
             if (symbol != null) {
                 return symbol;
+            }
+        }
+        return null;
+    }
+
+    public Symbol getCurrentFunction() {
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            Symbol function = stack.get(i).getFunction();
+            if (function != null) {
+                return function;
             }
         }
         return null;

@@ -37,23 +37,30 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override
 	public IType visitProgram(pdrawParser.ProgramContext ctx) {
-		return visitChildren(ctx);
+		visitChildren(ctx);
+      return null;
 	}
 
    @Override public IType visitStatement(pdrawParser.StatementContext ctx) {
-      return visitChildren(ctx);
+      visitChildren(ctx);
+      return null;
    }
 
    @Override public IType visitCompound(pdrawParser.CompoundContext ctx) {
-      return visitChildren(ctx);
+      visitChildren(ctx);
+      return null;
    }
 
    @Override public IType visitBlock(pdrawParser.BlockContext ctx) {
-      return visitChildren(ctx);
+      symbolTable.enterScope();
+      visitChildren(ctx);
+      symbolTable.exitScope();
+      return null;
    }
 
    @Override public IType visitDefine(pdrawParser.DefineContext ctx) {
-      return visitChildren(ctx);
+      visitChildren(ctx);
+      return null;
    }
 
    @Override public IType visitPenDefinition(pdrawParser.PenDefinitionContext ctx) {
@@ -172,9 +179,24 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExecution(pdrawParser.ExecutionContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      String id = ctx.ID().getText();
+      Symbol s = symbolTable.getSymbol(id);
+      if (s == null) {
+         ErrorHandler.error(getFileName(ctx), id + " was not declared.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+      if (s.getType() != Type.PEN) {
+         ErrorHandler.error(getFileName(ctx), "Execution must be applied to pen values.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      IType exprType = visit(ctx.expression());
+      if (exprType.getType() != Type.STRING) {
+         ErrorHandler.error(getFileName(ctx), "Execution filename must be a string value.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      return null;
    }
 
    @Override public IType visitPause(pdrawParser.PauseContext ctx) {
@@ -247,7 +269,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 			ErrorHandler.error(getFileName(ctx), "Operands of '+' or '-' must be numeric.",
 				ctx.start.getLine(), ctx.start.getCharPositionInLine()); 
 		}
-      return (leftType == Type.PEN ? new Pen() : leftType == Type.POINT ? new Point() : (leftType == Type.REAL || rightType == Type.REAL) ? new IntegerType() : new Real());
+      return (leftType == Type.PEN ? new Pen() : leftType == Type.POINT ? new Point() : (leftType == Type.REAL || rightType == Type.REAL) ? new Real() : new IntegerType());
    }
 
    @Override public IType visitExprSetProperty(pdrawParser.ExprSetPropertyContext ctx) {
@@ -438,7 +460,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
       IType exprType = visit(ctx.expression());
-      if (symbol.getType() != exprType.getType()) {
+      if (!hasImplicitConvertion(exprType.getType(), symbol.getIType().getType())) {
          ErrorHandler.error(getFileName(ctx), "Type mismatch in assignment.",
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
@@ -464,19 +486,36 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitReturn(pdrawParser.ReturnContext ctx) {
+      Symbol function = symbolTable.getCurrentFunction();
+      if (function == null) {
+         ErrorHandler.error(getFileName(ctx), "Return statement must be inside a function.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      IType returnType = function.getReturnType();
+      IType exprType = visit(ctx.expression());
+      if (!hasImplicitConvertion(exprType.getType(), returnType.getType())) {
+         ErrorHandler.error(getFileName(ctx), "Return type " + exprType.getType() + " does not match function type " + returnType.getType() + ".",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
       return null;
-      //Não tá acabada
    }
 
    @Override public IType visitFunction(pdrawParser.FunctionContext ctx) {
       String id = ctx.ID().getText();
       IType returnType = switchFunctionType(ctx.type.getText());
-      ParameterList parameterSymbols = (ParameterList) visit(ctx.parameter_list());
-      IType type = new FunctionType( returnType,parameterSymbols);
+
+      ParameterList parameterSymbols;
+      if (ctx.parameter_list() != null)
+         parameterSymbols = (ParameterList) visit(ctx.parameter_list());
+      else
+         parameterSymbols = new ParameterList(); // empty parameter list
+
+      IType type = new FunctionType(returnType, parameterSymbols);
       Symbol function = new Symbol(id,type);
       symbolTable.addSymbol(function);
 
-      symbolTable.enterScope();
+      symbolTable.enterScope(function);
       for (Symbol parameterSymbol : parameterSymbols.getParameterSymbols()) {
          symbolTable.addSymbol(parameterSymbol);
       }
@@ -512,8 +551,6 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
 
-      //se estiver a dar problemas revejam esta parte
-
       FunctionType functionType = (FunctionType) function.getIType();
       ParameterList parameterLists = functionType.getParameterList();
       if (ctx.expression().size() != parameterLists.getParameterSymbols().size()) {
@@ -521,12 +558,10 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
             ctx.start.getLine(), ctx.start.getCharPositionInLine());
       }
 
-      // e esta
-
       for (int i = 0; i < ctx.expression().size(); i++) {
          IType exprType = visit(ctx.expression(i));
          IType parameterList = parameterLists.getParameterSymbols().get(i).getIType();
-         if (exprType.getType() != parameterList.getType()) {
+         if (!hasImplicitConvertion(exprType.getType(), parameterList.getType())) {
             ErrorHandler.error(getFileName(ctx), "Function call " + id + " has wrong argument type.",
                ctx.start.getLine(), ctx.start.getCharPositionInLine());
          }
@@ -558,5 +593,8 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 		return ctx.getStart().getInputStream().getSourceName();
 	}
 
+   private boolean hasImplicitConvertion(Type from, Type to) {
+      return from == to || (from == Type.INTEGER && to == Type.REAL);
+   }
    
 }

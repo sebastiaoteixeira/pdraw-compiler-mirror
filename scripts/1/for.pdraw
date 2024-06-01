@@ -4,3 +4,4 @@ for (i = 0; i < 5; i = i+1) {
    m = m * 2;
 };
 m -> stdout;
+"\n" -> stdout;

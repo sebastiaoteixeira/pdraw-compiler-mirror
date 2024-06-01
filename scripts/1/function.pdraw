@@ -1,0 +1,48 @@
+
+
+int sum(int a, int b) {
+    return a + b;
+};
+
+if (sum(1, 2) == 3) {
+    "1 + 2 = 3\n" -> stdout;
+}; else {
+    "1 + 2 != 3\tERROR\n" -> stdout;
+};
+
+if (sum(1, 2) == 4) {
+    "1 + 2 = 4\tERROR\n" -> stdout;
+}; else {
+    "1 + 2 != 4\n" -> stdout;
+};
+
+int i = 8;
+
+% test global variable
+int get_i() {
+    return i;
+};
+
+get_i() -> stdout; % test function with no arguments
+'\n' -> stdout;
+
+real diff(real a, real b) {
+    return a - b;
+};
+
+diff(3.0, 2.0) -> stdout;
+'\n' -> stdout;
+
+diff(4, 2) -> stdout;   % implicit conversion
+'\n' -> stdout;
+
+real mul3(int a, int b, int c) {
+    int mul(int x, int y) {
+        return x * y;
+    };
+
+    return mul(a, mul(b, c));
+};
+
+mul3(2, 3, 4) -> stdout;
+'\n' -> stdout;

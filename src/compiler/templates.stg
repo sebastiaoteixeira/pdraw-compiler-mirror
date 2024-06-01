@@ -176,8 +176,8 @@ parent(op) ::= <<
 >>
 
 // Template for functions
-function(ID, paramenter_list, statement) ::= <<
-def <ID>(<parameter_list>):
+function(name, parameter_list, statement) ::= <<
+def <name>(<parameter_list>):
     <statement>
 >>
 
@@ -187,16 +187,11 @@ return <expression>
 >>
 
 //Template for paramenter_list
-paramenter_list(declaration) ::= <<
-    <declaration; separator=",">
->>
-
-//Template for parameter
-parameter(ID) ::= <<
-<ID>
+parameter_list(parameter) ::= <<
+    <parameter; separator=",">
 >>
 
 //Template for functioncall
-functioncall(ID, expression) ::= <<
-<ID>(<expression>)
+functioncall(name, expression) ::= <<
+<name>(<expression; separator=", ">)
 >>

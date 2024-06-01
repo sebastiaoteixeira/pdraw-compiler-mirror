@@ -41,4 +41,4 @@ p1 forward 10;
 p1 left 90º;
 
 pen psec = new; % default pen values
-psec <- execute "if.ipdraw"; % executes program in runtime (p1.ipdraw is not compiled!)
+psec <- execute "p1.ipdraw"; % executes program in runtime (p1.ipdraw is not compiled!)

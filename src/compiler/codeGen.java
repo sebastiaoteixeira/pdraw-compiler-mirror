@@ -38,7 +38,9 @@ import java.util.HashMap;
    @Override public ST visitFunction(pdrawParser.FunctionContext ctx) {
       ST functionTemplate = templates.getInstanceOf("function");
       functionTemplate.add("name", ctx.ID().getText());
-      functionTemplate.add("parameter_list", visit(ctx.parameter_list()).render());
+      if (ctx.parameter_list() != null) {
+         functionTemplate.add("parameter_list", visit(ctx.parameter_list()).render());
+      }
       functionTemplate.add("statement", visit(ctx.statement()).render());
       return functionTemplate;
    }
@@ -58,8 +60,8 @@ import java.util.HashMap;
    }
 
    @Override public ST visitExprFunctionCall(pdrawParser.ExprFunctionCallContext ctx) {
-      ST functionCall = templates.getInstanceOf("functionCall");
-      functionCall.add("ID", ctx.ID().getText());
+      ST functionCall = templates.getInstanceOf("functioncall");
+      functionCall.add("name", ctx.ID().getText());
       for (pdrawParser.ExpressionContext expression : ctx.expression()) {
          functionCall.add("expression", visit(expression).render());
       }
@@ -67,8 +69,8 @@ import java.util.HashMap;
    }
 
    @Override public ST visitParameter(pdrawParser.ParameterContext ctx) {
-      ST parameter = templates.getInstanceOf("ID");
-      parameter.add("ID", ctx.ID().getText());
+      ST parameter = templates.getInstanceOf("single");
+      parameter.add("content", ctx.ID().getText());
       return parameter;
    }
 

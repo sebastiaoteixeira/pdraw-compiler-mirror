@@ -38,6 +38,3 @@ mv output.py ../$destiny_path
 
 cp ../pen/*.py ../$destiny_path
 
-antlr4-clean
-cd ../pen
-antlr4-clean -python

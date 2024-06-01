@@ -3,7 +3,7 @@ grammar pdraw;
 // Define the grammar for the parser
 program: compound EOF;
 
-function: type=tname ID '(' parameter_list ')' statement;
+function: type=tname ID '(' parameter_list? ')' statement;
 
 statement: (define | declaration | expression | stdout | pause | execution | block | return) ';' | (if | for | until | while | function);
 
@@ -46,7 +46,7 @@ stdout: expression '->' 'stdout';
 // Expressions
 expression : 
     // Function Call
-    ID '(' expression (',' expression)* ')' #ExprFunctionCall
+    ID '(' (expression (',' expression)*)? ')' #ExprFunctionCall
 
     // pen instance
     | 'new' expression? #ExprNew
