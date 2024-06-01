@@ -219,10 +219,7 @@ class Interpreter(penVisitor):
       return input(self.visit(ctx.expression()))
 
    def visitExprAssign(self, ctx:penParser.ExprAssignContext):
-      var_name = ctx.ID().getText()
-      value = self.visit(ctx.expression())
-      self.variables[var_name] = value
-      return value
+      return self.visit(ctx.assign())
 
    def visitExprReal(self, ctx:penParser.ExprRealContext):
       return float(ctx.Real().getText())
@@ -231,7 +228,10 @@ class Interpreter(penVisitor):
       return ctx.Boolean().getText() == 'true'
 
    def visitAssign(self, ctx:penParser.AssignContext):
-      return self.visitChildren(ctx)
+      var_name = ctx.ID().getText()
+      value = self.visit(ctx.expression())
+      self.variables[var_name] = value
+      return value
 
    def visitPoint(self, ctx:penParser.PointContext):
       return Point(self.visit(ctx.expression(0)), self.visit(ctx.expression(1)))

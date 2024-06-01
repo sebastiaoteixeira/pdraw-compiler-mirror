@@ -5,7 +5,7 @@ program: compound EOF;
 
 function: type=tname ID '(' parameter_list ')' statement;
 
-statement: (define | declaration | expression | parameter_list | stdout | pause | execution | if | for | until | while | function | return) ';' | block;
+statement: (define | declaration | expression | stdout | pause | execution | if | for | until | while | function | return) ';' | block;
 
 return: 'return' expression;
 
