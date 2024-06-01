@@ -5,7 +5,7 @@ program: compound EOF;
 
 function: type=tname ID '(' parameter_list ')' statement;
 
-statement: (define | declaration | expression | stdout | pause | execution | if | for | until | while | function | return) ';' | block;
+statement: (define | declaration | expression | stdout | pause | execution | block | return) ';' | (if | for | until | while | function);
 
 return: 'return' expression;
 
@@ -109,7 +109,8 @@ point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
 
-String: '"' (EscapeSequence | ~['"\\])* '"';
+String: '"' (EscapeSequence | ~["\\])* '"'
+    | '\'' (EscapeSequence | ~['\\])* '\'';
 fragment EscapeSequence: '\\' . ;
 
 Integer: [0-9]+;

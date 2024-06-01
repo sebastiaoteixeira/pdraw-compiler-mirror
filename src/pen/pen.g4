@@ -6,7 +6,7 @@ declaration_element: (ID | assign);
 
 declaration: type=Type declaration_element (',' declaration_element)*;
 
-statement: (pause | stdout | expression | for | if | while | until | declaration) ';';
+statement: (pause | stdout | expression | declaration) ';' | (if | for | until | while);
 
 while: 'while' '(' expression ')' statement;
 
@@ -74,7 +74,8 @@ point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
 
-String: '"' (EscapeSequence | ~['"\\])* '"';
+String: '"' (EscapeSequence | ~["\\])* '"'
+    | '\'' (EscapeSequence | ~['\\])* '\'';
 fragment EscapeSequence: '\\' . ;
 
 Integer: [0-9]+;

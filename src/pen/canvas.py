@@ -41,8 +41,11 @@ class CanvasManager:
         return canvas
 
     def waitUntilClose(self):
-        for canvas in self.canvases:
-            canvas.waitUntilClose()
+        try:
+            for canvas in self.canvases:
+                canvas.waitUntilClose()
+        except KeyboardInterrupt:
+            pass
             
     def getCanvas(self):
         return self.canvases[-1]

@@ -1,0 +1,16 @@
++1;
+
+-5;
+
+4+7+(2-4)-7;
+
+if (1 == 0)
+    "if..else don't work" -> stdout;
+else
+    "if..else works" -> stdout;
+
+if (1 == 1)
+    "if works" -> stdout;
+
+if (1 == 0)
+    "if don't work" -> stdout;
