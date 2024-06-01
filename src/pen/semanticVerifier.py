@@ -6,7 +6,22 @@ from types import Type
 class SemanticVerifier(penVisitor):
    def __init__(self):
       self.variables = {} # {variable_name: type}
-   
+      
+   def switchFunctionType(self, type):
+      if type == 'int':
+         return Type.Integer
+      elif type == 'real':
+         return Type.Real
+      elif type == 'string':
+         return Type.String
+      elif type == 'bool':
+         return Type.Bool
+      elif type == 'point':
+         return Type.Point
+      else:
+         return None
+      
+
    def visitProgram(self, ctx:penParser.ProgramContext):
       return self.visitChildren(ctx)
 
@@ -14,7 +29,9 @@ class SemanticVerifier(penVisitor):
       return self.visitChildren(ctx)
 
    def visitDeclaration(self, ctx:penParser.DeclarationContext):
-      return self.visitChildren(ctx)
+      type = self.switchFunctionType(ctx.Type().getText())
+      self.variables[ctx.ID().getText()] = type
+      return type
 
    def visitStatement(self, ctx:penParser.StatementContext):
       return self.visitChildren(ctx)
@@ -108,7 +125,10 @@ class SemanticVerifier(penVisitor):
       return Type.Integer
 
    def visitExprId(self, ctx:penParser.ExprIdContext):
-      return self.visitChildren(ctx)
+      id = ctx.ID().getText()
+      if id not in self.variables:
+         raise NameError("Error: Variable not declared.")
+      return self.variables[id]
 
    def visitExprPi(self, ctx:penParser.ExprPiContext):
       return Type.Real
@@ -180,6 +200,11 @@ class SemanticVerifier(penVisitor):
       return Type.String
 
    def visitExprAssign(self, ctx:penParser.ExprAssignContext):
+      id = ctx.ID().getText()
+      if id not in self.variables:
+         raise NameError("Error: Variable not declared.")
+      if self.variables[id] != self.visit(ctx.expression()):
+         raise TypeError("Error: Incompatible types!")
       return self.visit(ctx.assign())
 
    def visitExprReal(self, ctx:penParser.ExprRealContext):
