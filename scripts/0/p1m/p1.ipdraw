@@ -1,0 +1,8 @@
++1;
+
+-5;
+
+4+7+(2-4)-7;
+
+if (1)  % Should not work because is not a boolean
+    "if..else don't work" -> stdout;

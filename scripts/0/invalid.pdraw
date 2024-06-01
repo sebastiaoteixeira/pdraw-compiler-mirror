@@ -1,0 +1,7 @@
+IfContext.js
+
+if (op) {
+  console.log('op is truthy')
+} else {
+  console.log('op is falsy')
+}

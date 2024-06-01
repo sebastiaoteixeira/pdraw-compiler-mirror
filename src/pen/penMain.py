@@ -6,16 +6,19 @@ from interpreter import Interpreter
 from semanticVerifier import SemanticVerifier
 from pen import Pen, Point
 from canvas import Canvas
+from ErrorHandler import ErrorHandler
 
 def execute(filename: str, pen: Pen):
     input_stream = FileStream(filename, encoding="utf-8")
+    eHandler = ErrorHandler(filename)
     lexer = penLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = penParser(stream)
     tree = parser.program()
     if parser.getNumberOfSyntaxErrors() == 0:
-        semantic = SemanticVerifier()
+        semantic = SemanticVerifier(eHandler)
         semantic.visit(tree)
+        eHandler.execute()
         visitor = Interpreter(pen)
         visitor.visit(tree)
 

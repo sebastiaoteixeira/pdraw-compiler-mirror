@@ -28,10 +28,10 @@ fi
 
 cd pen
 antlr4-build -python
-cd ../compiler
 
+cd ../compiler
 antlr4-build
-antlr4-run < ../$main
+java pdrawMain ../$main
 
 
 mv output.py ../$destiny_path
