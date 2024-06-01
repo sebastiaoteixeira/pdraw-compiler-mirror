@@ -1,0 +1,15 @@
+define pen PenType1 {
+   color = green;
+   position = (50,50);
+   orientation = 0º;
+   % orientation = 0;
+   thickness = 10;
+   pressure = 1;
+   % pressure = 0;
+   % pressure = 1/3;
+};
+
+pen p1 = new PenType1;
+
+p1 forward 100 right 90º forward 70 right 90º forward 100 right 90º forward 70;
+

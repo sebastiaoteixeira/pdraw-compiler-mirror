@@ -116,9 +116,23 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 	}
 
    @Override public IType visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
-      IType res = null;
-      return visitChildren(ctx);
-      //return res;
+      String id = ctx.ID().getText();
+      IType title = visit(ctx.expression(0));
+      IType dimension = visit(ctx.expression(1));
+
+      if (title.getType() != Type.STRING) {
+         ErrorHandler.error(getFileName(ctx), "Canvas title must be a string value.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      if (dimension.getType() != Type.POINT) {
+         ErrorHandler.error(getFileName(ctx), "Canvas dimension must be a point value.",
+            ctx.start.getLine(), ctx.start.getCharPositionInLine());
+      }
+
+      symbolTable.addSymbol(new Symbol(id, new Canvas()));
+
+      return null;
    }
 
    @Override public IType visitDeclaration(pdrawParser.DeclarationContext ctx) {

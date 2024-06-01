@@ -127,12 +127,10 @@ import java.util.HashMap;
    @Override public ST visitCanvasDefinition(pdrawParser.CanvasDefinitionContext ctx) {
       ST canvasTemplate = templates.getInstanceOf("canvasDefinition");
       String id = ctx.ID().getText();
-      String title = ctx.String().getText();
-      String measurements = visitPoint(ctx.point()).render();
 
-      canvasTemplate.add("canvasName",id);
-      canvasTemplate.add("title",title);
-      canvasTemplate.add("measurements",measurements);
+      canvasTemplate.add("canvasName", id);
+      canvasTemplate.add("title", visit(ctx.expression(0)).render());
+      canvasTemplate.add("measurements", visit(ctx.expression(1)).render());
 
       return canvasTemplate;
    }

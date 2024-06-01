@@ -8,7 +8,7 @@ class Canvas:
         self.width = width
         self.height = height
         self.win = None
-        self.scale = 10
+        self.scale = 1
 
     def drawLine(self, point1, point2, color, thickness):
         if self.win is None:

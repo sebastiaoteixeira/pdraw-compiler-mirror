@@ -20,7 +20,7 @@ penDefinition: 'pen' ID '{' propertyDefinition* '}';
 
 propertyDefinition: Property '=' expression ';';
 
-canvasDefinition: 'canvas' ID String point;
+canvasDefinition: 'canvas' ID expression expression;
 
 parameter_list: parameter (',' parameter)* ;
 
