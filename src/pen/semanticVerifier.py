@@ -7,16 +7,16 @@ class SemanticVerifier(penVisitor):
    def __init__(self):
       self.variables = {} # {variable_name: type}
       
-   def switchFunctionType(self, type):
-      if type == 'int':
+   def switchFunctionType(self, vType):
+      if vType == 'int':
          return Type.Integer
-      elif type == 'real':
+      elif vType == 'real':
          return Type.Real
-      elif type == 'string':
+      elif vType == 'string':
          return Type.String
-      elif type == 'bool':
+      elif vType == 'bool':
          return Type.Bool
-      elif type == 'point':
+      elif vType == 'point':
          return Type.Point
       else:
          return None
@@ -29,9 +29,9 @@ class SemanticVerifier(penVisitor):
       return self.visitChildren(ctx)
 
    def visitDeclaration(self, ctx:penParser.DeclarationContext):
-      type = self.switchFunctionType(ctx.Type().getText())
-      self.variables[ctx.ID().getText()] = type
-      return type
+      vType = self.switchFunctionType(ctx.Type().getText())
+      self.variables[ctx.ID().getText()] = vType
+      return vType
 
    def visitStatement(self, ctx:penParser.StatementContext):
       return self.visitChildren(ctx)
@@ -200,11 +200,6 @@ class SemanticVerifier(penVisitor):
       return Type.String
 
    def visitExprAssign(self, ctx:penParser.ExprAssignContext):
-      id = ctx.ID().getText()
-      if id not in self.variables:
-         raise NameError("Error: Variable not declared.")
-      if self.variables[id] != self.visit(ctx.expression()):
-         raise TypeError("Error: Incompatible types!")
       return self.visit(ctx.assign())
 
    def visitExprReal(self, ctx:penParser.ExprRealContext):
@@ -214,7 +209,12 @@ class SemanticVerifier(penVisitor):
       return Type.Bool
 
    def visitAssign(self, ctx:penParser.AssignContext):
-      return self.visitChildren(ctx)
+      id = ctx.ID().getText()
+      if id not in self.variables:
+         raise NameError("Error: Variable not declared.")
+      if self.variables[id] != self.visit(ctx.expression()):
+         raise TypeError("Error: Incompatible types!")
+      return self.variables[id]
 
    def visitPoint(self, ctx:penParser.PointContext):
       exprType1 = self.visit(ctx.expression(0))
@@ -223,11 +223,11 @@ class SemanticVerifier(penVisitor):
            raise TypeError("Error: Point values must be integer or real values.")
       return Type.Point
    
-   def isNumericType(self, type):
-      return type == Type.Integer or type == Type.Real
+   def isNumericType(self, vType):
+      return vType == Type.Integer or vType == Type.Real
    
-   def isStringType(self, type):
-      return type == Type.String
+   def isStringType(self, vType):
+      return vType == Type.String
    
-   def isPointType(self, type):
-      return type == Type.Point
+   def isPointType(self, vType):
+      return vType == Type.Point
