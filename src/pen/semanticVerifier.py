@@ -73,7 +73,7 @@ class SemanticVerifier(penVisitor):
          raise TypeError("Error: The values must be numeric (Integer or Real)")
       result = Type.Integer
       if (exprType1 == Type.Real or exprType2 == Type.Real):
-         result = Type.Integer
+         result = Type.Real
       return result
 
    def visitExprSetProperty(self, ctx:penParser.ExprSetPropertyContext):
@@ -101,7 +101,7 @@ class SemanticVerifier(penVisitor):
          raise TypeError("Error: The values must be numeric (Integer or Real)")
       result = Type.Integer
       if (exprType1 == Type.Real or exprType2 == Type.Real):
-         result = Type.Integer
+         result = Type.Real
       return result
 
    def visitExprInteger(self, ctx:penParser.ExprIntegerContext):
