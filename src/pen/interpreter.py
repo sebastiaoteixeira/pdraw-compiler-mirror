@@ -61,10 +61,14 @@ class Interpreter(penVisitor):
       return None
    
    def visitIf(self, ctx:penParser.IfContext):
-      if self.visit(ctx.expression()):
-         self.visit(ctx.statement(0))
-      elif ctx.ELSE():
-         self.visit(ctx.statement(1))
+      if ctx.ELSE():
+         if self.visit(ctx.expression()):
+            self.visit(ctx.statement(0))
+         elif ctx.statement(1):
+            self.visit(ctx.statement(1))
+      else:
+         if self.visit(ctx.expression()):
+            self.visit(ctx.statement())
       return None
 
    def visitPause(self, ctx:penParser.PauseContext):
