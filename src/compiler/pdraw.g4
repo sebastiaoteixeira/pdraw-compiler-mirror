@@ -77,8 +77,8 @@ expression :
     | expression op=('=='|'!='|'<'|'<='|'>'|'>=') expression #ExprComp
 
     // Boolean expressions
+    | op='not' expression #ExprBoolUnary
     | expression op=('and'|'or') expression #ExprBoolOp
-    | '!' expression #ExprBoolUnary
 
     // Assign
     | assign #ExprAssign

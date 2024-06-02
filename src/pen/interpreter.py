@@ -263,7 +263,7 @@ class Interpreter(penVisitor):
          return left or right
       return None
    
-   def visitExprUnary(self, ctx:penParser.ExprNotContext):
+   def visitExprBoolUnary(self, ctx:penParser.ExprBoolUnaryContext):
       return not self.visit(ctx.expression())
 
    def visitExprStdin(self, ctx:penParser.ExprStdinContext):
