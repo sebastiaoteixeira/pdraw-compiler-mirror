@@ -1,0 +1,8 @@
+int sum(int a, int b) {
+    int a;
+    a = 0.01;
+    c = 5;
+    return a + 0.5 * b * 2 - c;
+}
+
+sum(1, 2) -> stdout
