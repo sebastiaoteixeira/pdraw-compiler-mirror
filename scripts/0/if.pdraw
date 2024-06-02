@@ -1,0 +1,4 @@
+if (1) 
+    "if..else don't work" -> stdout;
+
+% Should not work because is not a boolean

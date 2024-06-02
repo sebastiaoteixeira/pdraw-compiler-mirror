@@ -16,6 +16,9 @@ public class pdrawMain {
          }
          // create a lexer that feeds off of input CharStream:
          pdrawLexer lexer = new pdrawLexer(input);
+         // replace error listener:
+         lexer.removeErrorListeners(); // remove ConsoleErrorListener
+         lexer.addErrorListener(new ErrorHandlingListener());
          // create a buffer of tokens pulled from the lexer:
          CommonTokenStream tokens = new CommonTokenStream(lexer);
          // create a parser that feeds off the tokens buffer:
