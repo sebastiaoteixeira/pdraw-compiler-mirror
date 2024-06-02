@@ -272,7 +272,20 @@ public class codeGen extends pdrawBaseVisitor<ST> {
       ST binary = templates.getInstanceOf("binary_operations");
       binary.add("op1", visit(ctx.expression(0)).render());
       binary.add("op2", visit(ctx.expression(1)).render());
-      binary.add("operator", ctx.op.getText());
+      if (ctx.op.getText().equals("*")) {
+         binary.add("operator", "*");
+      } else if (ctx.op.getText().equals("/")) {
+         binary.add("operator", "/");
+      } else if (ctx.op.getText().equals("\\\\")) {
+         binary.add("operator", "%");
+      } else if (ctx.op.getText().equals("//")) {
+         binary.add("operator", "//");
+         // Sometimes python // returns an integer, sometimes a float
+         // So we need to force the result to be an integer
+         ST toInt = templates.getInstanceOf("toInt");
+         toInt.add("op", binary.render());
+         return toInt;
+      }
       return binary;
    }
 

@@ -16,8 +16,7 @@ real angleStep = 2 * PI / steps;
 int i;
 for (i = 0; i < steps; i = i + 1) {
     p1 forward 1 right angleStep;
-    p1 <- color red + ((lime * (i / steps)) // (256*256)) * 256*256;  % Gradient color
-    pause 10000;
+    p1 <- color (red + (green * (i / steps)));  % Gradient color
 };
 
 %p1 <- stdout;

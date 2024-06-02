@@ -137,7 +137,7 @@ class Interpreter(penVisitor):
       elif ctx.op.text == '/':
          return left / right
       elif ctx.op.text == '//':
-         return left // right
+         return int(left // right)
       elif ctx.op.text == '\\\\':
          return left % right
       return None

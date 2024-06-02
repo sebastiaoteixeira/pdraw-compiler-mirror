@@ -1,7 +1,12 @@
-boolean b = bool(0) % False
+bool b = bool(0); % False
+string(b) "\n" -> stdout;
 
-b = bool(1) % True
-b = bool(8.8) % True
+b = bool(1); % True
+string(b) "\n" -> stdout;
+b = bool(8.8); % True
+string(b) "\n" -> stdout;
 
-b = bool('') % False
-b = bool('pdraw') % True
+b = bool(''); % False
+string(b) "\n" -> stdout;
+b = bool('pdraw'); % True
+string(b) "\n" -> stdout;

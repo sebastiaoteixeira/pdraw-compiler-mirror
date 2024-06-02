@@ -216,7 +216,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override public IType visitStdout(pdrawParser.StdoutContext ctx) {
       IType exprType = visit(ctx.expression());
-		if (exprType.getType() != Type.STRING && exprType.getType() != Type.PEN && exprType.getType() != Type.INTEGER && exprType.getType() != Type.REAL) {
+		if (exprType.getType() != Type.STRING && exprType.getType() != Type.PEN && exprType.getType() != Type.INTEGER && exprType.getType() != Type.REAL && exprType.getType() != Type.BOOLEAN) {
 			ErrorHandler.error("Stdout value must be convertible to string.", ctx, symbolTable.getCurrentFunction());
 		}
 		return null;
@@ -232,7 +232,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override public IType visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
-      if (exprType != Type.BOOLEAN && exprType != Type.INTEGER && exprType != Type.REAL) {
+      if (exprType != Type.BOOLEAN && exprType != Type.INTEGER && exprType != Type.REAL && exprType != Type.STRING) {
          ErrorHandler.error("Conversion to boolean can only be applied to boolean values.", ctx, symbolTable.getCurrentFunction());
       }
 
@@ -561,7 +561,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
   
 	// types that can be converted besides string
 	private boolean isConvertibleToString(Type type) {
-		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING;
+		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING || type == Type.BOOLEAN;
 	}
 
 	// types that can be converted to numeric

@@ -86,7 +86,7 @@ class SemanticVerifier(penVisitor):
 
    def visitStdout(self, ctx:penParser.StdoutContext):
       exprType = self.visit(ctx.expression())
-      if (exprType != Type.String and not self.isNumericType(exprType)):
+      if (exprType != Type.String and not self.isNumericType(exprType) and exprType != Type.Bool):
          self.errorHandler.error("Stdout value must be a string.", ctx.start.line, ctx.start.column)
       return None
 
@@ -98,7 +98,7 @@ class SemanticVerifier(penVisitor):
 
    def visitExprToBool(self, ctx:penParser.ExprToBoolContext):
       exprType = self.visit(ctx.expression())
-      if (exprType != Type.Bool and exprType != Type.Integer and exprType != Type.Real):
+      if (exprType != Type.Bool and exprType != Type.Integer and exprType != Type.Real and exprType != Type.String):
          self.errorHandler.error("Conversion to boolean can only be applied to real, integer, or boolean values.", ctx.start.line, ctx.start.column)
       return Type.Bool
 
