@@ -1,10 +1,12 @@
 import java.io.PrintStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
+import symbols.Symbol;
 
 public class ErrorHandler {
 	private static boolean success = true;
 	private static String file = "";
+	private static Symbol lastScope = null;
 	private static PrintStream out = System.out;
 
 	private static final String RESET = "\033[0m";
@@ -50,11 +52,12 @@ public class ErrorHandler {
 	}
 
 	public static void error(String msg, ParserRuleContext ctx) {
-		error(msg,
+		error(
+			msg,
 			ctx.getStart().getLine(),
 			ctx.getStart().getCharPositionInLine(),
 			extractLineFromContext(ctx),
-			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine() + 1
+			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine()
 			);
 	}
 
@@ -64,7 +67,7 @@ public class ErrorHandler {
 			ctx.getStart().getLine(),
 			ctx.getStart().getCharPositionInLine(),
 			extractLineFromContext(ctx),
-			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine() + 1
+			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine()
 		);
 	}
 
@@ -74,26 +77,113 @@ public class ErrorHandler {
 			ctx.getStart().getLine(),
 			ctx.getStart().getCharPositionInLine(),
 			extractLineFromContext(ctx),
-			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine() + 1
+			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine()
 		);
 	}
 
-	public static void error(String msg, Object offendingSymbol, int line, int column) {
-		// get the length of the offending symbol
-		int length = 1;
-		if (offendingSymbol != null) {
-			length = offendingSymbol.toString().length();
-			System.out.println(offendingSymbol.toString());
+	public static void error(String msg, ParserRuleContext ctx, Symbol scope) {
+		if (scope != null) {
+			printScope(ctx, scope);
 		}
-		// get line from offending symbol
-		String lineStr = "";
-		if (offendingSymbol instanceof ParserRuleContext) {
-			//lineStr = extractLineFromContext((ParserRuleContext) offendingSymbol);
+		error(
+			msg,
+			ctx.getStart().getLine(),
+			ctx.getStart().getCharPositionInLine(),
+			extractLineFromContext(ctx),
+			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine()
+			);
+	}
+
+	public static void warning(String msg, ParserRuleContext ctx, Symbol scope) {
+		if (scope != null) {
+			printScope(ctx, scope);
+		}
+		warning(
+			msg,
+			ctx.getStart().getLine(),
+			ctx.getStart().getCharPositionInLine(),
+			extractLineFromContext(ctx),
+			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine()
+		);
+	}
+
+	public static void info(String msg, ParserRuleContext ctx, Symbol scope) {
+		if (scope != null) {
+			printScope(ctx, scope);
+		}
+		info(
+			msg,
+			ctx.getStart().getLine(),
+			ctx.getStart().getCharPositionInLine(),
+			extractLineFromContext(ctx),
+			ctx.getStop().getCharPositionInLine() - ctx.getStart().getCharPositionInLine()
+		);
+	}
+
+	public static void error(String msg, ParserRuleContext ctx, Symbol scope, Symbol symbolToPrint) {
+		if (scope != null) {
+			printScope(ctx, scope);
 		}
 
-		error(msg,
+		int line = symbolToPrint.getCodeLocation().getStartLine();
+		int column = symbolToPrint.getCodeLocation().getStartColumn();
+		int length = symbolToPrint.getCodeLocation().getEndColumn() - column + 2;
+		
+		error(
+			msg,
 			line,
-			column);
+			column,
+			extractLineFromContext(ctx, line),
+			length
+			);
+	}
+
+	public static void warning(String msg, ParserRuleContext ctx, Symbol scope, Symbol symbolToPrint) {
+		if (scope != null) {
+			printScope(ctx, scope);
+		}
+
+		int line = symbolToPrint.getCodeLocation().getStartLine();
+		int column = symbolToPrint.getCodeLocation().getStartColumn();
+		int length = symbolToPrint.getCodeLocation().getEndColumn() - column + 2;
+
+		warning(
+			msg,
+			line,
+			column,
+			extractLineFromContext(ctx, line),
+			length
+		);
+	}
+
+	public static void info(String msg, ParserRuleContext ctx, Symbol scope, Symbol symbolToPrint) {
+		if (scope != null) {
+			printScope(ctx, scope);
+		}
+
+		int line = symbolToPrint.getCodeLocation().getStartLine();
+		int column = symbolToPrint.getCodeLocation().getStartColumn();
+		int length = symbolToPrint.getCodeLocation().getEndColumn() - column + 2;
+
+		info(
+			msg,
+			line,
+			column,
+			extractLineFromContext(ctx, line),
+			length
+		);
+	}
+
+	public static void printScope(ParserRuleContext ctx, Symbol scope) {
+		String functionName = scope.getIdentifier();
+
+		if (lastScope != null && lastScope.getIdentifier().equals(functionName)) {
+			return;
+		}
+
+		out.println("\033[1m" + file + RESET + " In function ‘\033[1m" + functionName + RESET + "’:");
+
+		lastScope = scope;
 	}
 
 	public static void printMessage(int type, String msg, int line, int column) {
@@ -111,12 +201,18 @@ public class ErrorHandler {
 		// print the line with the error with the line number
 		out.printf("%5d | %s\n", lineN, line);
 		// print the error position with a caret
-		out.printf("%s\n", " ".repeat(column + 8) + colors[type] + "^" + "~".repeat(length) + RESET);
+		out.printf("      | %s\n", " ".repeat(column) + colors[type] + "^" + "~".repeat(length) + RESET);
 	}
 
 	public static String extractLineFromContext(ParserRuleContext ctx) {
         // Get the entire current line from the input stream
 		String result = ctx.getStart().getInputStream().toString().split("\n")[ctx.getStart().getLine() - 1];
+		return result;
+    }
+
+	public static String extractLineFromContext(ParserRuleContext ctx, int line) {
+        // Get the entire current line from the input stream
+		String result = ctx.getStart().getInputStream().toString().split("\n")[line - 1];
 		return result;
     }
 
