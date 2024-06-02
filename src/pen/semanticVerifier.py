@@ -143,8 +143,7 @@ class SemanticVerifier(penVisitor):
    def visitExprComp(self, ctx:penParser.ExprCompContext):
       exprType1, exprType2 = self.visit(ctx.expression(0)), self.visit(ctx.expression(1))
       if not (self.isNumericType(exprType1) and self.isNumericType(exprType2) 
-          or self.isStringType(exprType1) and self.isStringType(exprType2) 
-          or self.isPointType(exprType1) and self.isPointType(exprType2)):
+          or exprType1 == exprType2):
          self.errorHandler.error("Error: Incompatible types!", ctx.start.line, ctx.start.column)
       return Type.Bool
          
@@ -232,3 +231,7 @@ class SemanticVerifier(penVisitor):
    
    def isPointType(self, vType):
       return vType == Type.Point
+   
+   def hasImplicitConversion(self, _from, _to):
+      return _from == _to or (_from == Type.Integer and _to == Type.Real)
+   

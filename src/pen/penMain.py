@@ -7,20 +7,31 @@ from semanticVerifier import SemanticVerifier
 from pen import Pen, Point
 from canvas import Canvas
 from ErrorHandler import ErrorHandler
+from ErrorHandlingListener import ErrorHandlingListener
 
 def execute(filename: str, pen: Pen):
     input_stream = FileStream(filename, encoding="utf-8")
+    
     eHandler = ErrorHandler(filename)
+    errorListener = ErrorHandlingListener(eHandler)
+    
     lexer = penLexer(input_stream)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(errorListener)
+    
     stream = CommonTokenStream(lexer)
+    
     parser = penParser(stream)
+    parser.removeErrorListeners()
+    parser.addErrorListener(errorListener)
     tree = parser.program()
-    if parser.getNumberOfSyntaxErrors() == 0:
-        semantic = SemanticVerifier(eHandler)
-        semantic.visit(tree)
-        eHandler.execute()
-        visitor = Interpreter(pen)
-        visitor.visit(tree)
+    
+    semantic = SemanticVerifier(eHandler)
+    semantic.visit(tree)
+    eHandler.execute()
+    
+    visitor = Interpreter(pen)
+    visitor.visit(tree)
 
 def main(argv):
     canvas = Canvas("Drawing Canvas", 400, 400)
