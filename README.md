@@ -148,6 +148,5 @@ python3 run.py
 
 ## Contribuições
 
-- Use esta secção para expôr as contribuições individuais dos vários elementos do grupo e que
-  justificam as participações individuais globais apresentadas no início.
+- Durante o desenvolvimento do projeto, o aluno Martim Santos teve contibuições na gramática secundária, semanticVerifier, templates.stg e relatório, o aluno Rui Machado contribui no codeGen, gramática principal e templates.stg, o aluno Sebastião Teixeira ..., o aluno Tiago Cruz ..., o aluno Rafael Semedo ... e o aluno Gabriel Silva ...
 
