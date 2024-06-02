@@ -245,13 +245,15 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 		if (!isNumericType(leftType) || !isNumericType(rightType)) {
 			ErrorHandler.error("Operands of '*' or '/' must be numeric.", ctx, symbolTable.getCurrentFunction());
       }
-		if (ctx.op.getText().equals("//") || ctx.op.getText().equals("\\\\")) {
+		if (ctx.op.getText().equals("//")) {
 			return new IntegerType();
-		} else if (leftType == Type.REAL || rightType == Type.REAL) {
-			return new Real();
       } else if (ctx.op.getText().equals("/")){
          return new Real();
 		}
+
+      if (leftType == Type.REAL || rightType == Type.REAL) {
+         return new Real();
+      }
 
 		return new IntegerType();
    }
