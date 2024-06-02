@@ -223,7 +223,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override public IType visitExprToBool(pdrawParser.ExprToBoolContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
-      if (exprType != Type.BOOLEAN) {
+      if (exprType != Type.BOOLEAN && exprType != Type.INTEGER && exprType != Type.REAL) {
          ErrorHandler.error("Conversion to boolean can only be applied to boolean values.", ctx);
       }
 
