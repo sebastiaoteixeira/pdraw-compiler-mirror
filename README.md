@@ -7,7 +7,7 @@
 ## 1. Introdução
 - O trabalho que nos foi atribuido tinha como objetivo o desenvolvimento de uma linguagem que permite desenho de imagens, usando como abstração o desenho livre com canetas.
 
-- A ideia segue a abstração inerente á biblioteca turtle do python. Em conversas dentro do grupo decidimos que a linguagem que ia gerar o código ia ser java, e o código iria ser gerado em python, a bibliteca gráfica utilizada foi a biblioteca graphics.py. Decisão tomada com o auxilio do professor Miguel.
+- A ideia segue a abstração inerente à biblioteca turtle do python. Em conversas dentro do grupo, decidimos que a linguagem responsável por gerar código ia ser java, e o código iria ser gerado em python. A bibliteca gráfica utilizada foi a biblioteca graphics.py, decisão tomada com o auxilio do professor Miguel.
 
 - As ferramentas utilizadas por nós para concretizar os objetivos foram o ANTLR4 lecionado nas aulas, StringTemplates para geração de código e o conhecimento em java e python. Como ambiente de desenvolvimento utilizámos o Visual Studio Code e usámos o Git para controlo de versões.
 
@@ -63,7 +63,9 @@
 ## 4. IPDraw, visão geral da linguagem
 - IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
 
-- ...
+### 4.1 Variáveis disponíveis
+- '' | '' |
+
 
 ## 5. Arquitetura do Sistema
 - A arquitetura do sistema é composta por diversos componentes que incluem a definição da gramática, a geração do código, e a execução do código gerado.
