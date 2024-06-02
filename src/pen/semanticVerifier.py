@@ -115,6 +115,10 @@ class SemanticVerifier(penVisitor):
       result = Type.Integer
       if (exprType1 == Type.Real or exprType2 == Type.Real):
          result = Type.Real
+      if ctx.op.text == '//':
+         result = Type.Integer
+      if ctx.op.text == '/':
+         result = Type.Real
       return result
 
    def visitSetProperty(self, ctx:penParser.SetPropertyContext):
