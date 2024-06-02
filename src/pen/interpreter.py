@@ -1,17 +1,24 @@
 from antlr4 import *
 from penParser import penParser
 from penVisitor import penVisitor
-from pen import Pen
+from pen import Pen, ColorToInt
 from point import Point
 from time import sleep
 import math
 
 
 class Interpreter(penVisitor):
-   
    def __init__(self, pen):
       self.pen = pen
       self.variables={}
+      self.colors = {
+         'white': '#FFFFFF',
+         'black': '#000000',
+         'green': '#00FF00',
+         'red': '#FF0000',
+         'blue': '#0000FF',
+         'yellow': '#FFFF00'
+      }
    
    def visitProgram(self, ctx:penParser.ProgramContext):
       return self.visitChildren(ctx)
@@ -20,8 +27,8 @@ class Interpreter(penVisitor):
       return self.visitChildren(ctx)
 
    def visitDeclaration(self, ctx:penParser.DeclarationContext):
-      type_= ctx.type.text
-      for element in ctx.declaration_element:
+      type_ = ctx.type_.getText()
+      for element in ctx.declaration_element():
          if element.ID():
             var_name= element.ID().getText()
             if type_ == 'int':
@@ -42,6 +49,12 @@ class Interpreter(penVisitor):
 
    def visitStatement(self, ctx:penParser.StatementContext):
       return self.visitChildren(ctx)
+   
+   def visitCompound(self, ctx:penParser.CompoundContext):
+      return self.visitChildren(ctx)
+   
+   def visitBlock(self, ctx:penParser.BlockContext):
+      return self.visitChildren(ctx)
 
    def visitWhile(self, ctx:penParser.WhileContext):
       while self.visit(ctx.expression()):
@@ -54,9 +67,9 @@ class Interpreter(penVisitor):
       return None
 
    def visitFor(self, ctx:penParser.ForContext):
-      self.visit(ctx.declaration())
+      self.visit(ctx.statement(0))
       while self.visit(ctx.expression(0)):
-         self.visit(ctx.statement())
+         self.visit(ctx.statement(1))
          self.visit(ctx.expression(1))
       return None
    
@@ -98,7 +111,7 @@ class Interpreter(penVisitor):
          return left % right
       return None
    
-   def visitExprSetProperty(self, ctx:penParser.ExprSetPropertyContext):
+   def visitSetProperty(self, ctx:penParser.SetPropertyContext):
       property = ctx.Property().getText()
       value = self.visit(ctx.expression())
       if property == 'color':
@@ -167,12 +180,16 @@ class Interpreter(penVisitor):
       return left + right
 
    def visitExprColor(self, ctx:penParser.ExprColorContext):
-      return ctx.color.getText()
+      color = ctx.Color().getText()
+      if color[0] != '#':
+         color = self.colors[color]
+      return ColorToInt(color)
+      
 
    def visitExprToReal(self, ctx:penParser.ExprToRealContext):
       return float(self.visit(ctx.expression()))
 
-   def visitExprPenOperator(self, ctx:penParser.ExprPenOperatorContext):
+   def visitPenOperator(self, ctx:penParser.PenOperatorContext):
       distance = self.visit(ctx.expression())
       direction = ctx.op.text
       if direction == 'forward':
@@ -189,7 +206,7 @@ class Interpreter(penVisitor):
       degrees = self.visit(ctx.expression())
       return math.radians(degrees)
 
-   def visitExprPenUnary(self, ctx:penParser.ExprPenUnaryContext):
+   def visitPenUnary(self, ctx:penParser.PenUnaryContext):
       if ctx.op.text == 'down':
          self.pen.down()
       elif ctx.op.text == 'up':

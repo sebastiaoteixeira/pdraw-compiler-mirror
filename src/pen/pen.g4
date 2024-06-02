@@ -1,24 +1,35 @@
 grammar pen;
 
-program: statement* EOF;
+program: compound EOF;
 
-declaration_element: (ID | assign);
+statement: (pause | stdout | expression | declaration | block | penOperation) ';' | (if | for | until | while);
 
-declaration: type=Type declaration_element (',' declaration_element)*;
+compound: statement*;
 
-statement: (pause | stdout | expression | declaration) ';' | (if | for | until | while);
+block: '{' compound '}';
+
+declaration_element: (assign | ID);
+
+declaration: type=tname declaration_element (',' declaration_element)*;
 
 while: 'while' '(' expression ')' statement;
 
 until: 'until' '(' expression ')' statement;
 
-for: 'for' '(' declaration ';' expression ';' expression ')' statement; 
+for: 'for' '(' statement expression ';' expression ')' statement; 
 
 if: 'if' '(' expression ')' statement ('else'  statement )?;
 
 pause: 'pause' expression;
 
 stdout: expression '->' 'stdout';
+
+// Pen operations (in this case they are not expressions)
+penOperation:
+    op=('down'|'up') #PenUnary
+    | op=('forward'|'left'|'right'|'backward') expression #PenOperator
+    | Property expression #SetProperty
+    ;
 
 expression:
     op=('+'|'-') expression #ExprUnary
@@ -32,10 +43,6 @@ expression:
     | 'real' '(' expression ')' #ExprToReal
     | 'string' '(' expression ')' #ExprToString
     | 'bool' '(' expression ')' #ExprToBool
-
-    | op=('down'|'up') #ExprPenUnary
-    | op=('forward'|'left'|'right'|'backward') expression #ExprPenOperator
-    | Property expression #ExprSetProperty
 
     | 'stdin' expression #ExprStdin
 
@@ -69,7 +76,7 @@ expression:
 assign: ID op='=' expression;
 
 // Types
-Type: ('pen'|'real'|'int'|'string'|'point'|'bool');
+tname: ('pen'|'real'|'int'|'string'|'point'|'bool');
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');
