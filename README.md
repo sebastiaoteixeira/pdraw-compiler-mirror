@@ -93,7 +93,7 @@ python3 run.py
 ## 5. IPDraw, visão geral da linguagem
 - IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
 
-### 4.1 Variáveis disponíveis
+### 5.1 Variáveis disponíveis
 - '' | '' |
 
 
