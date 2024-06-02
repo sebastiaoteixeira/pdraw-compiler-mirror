@@ -13,7 +13,6 @@ compound: statement*;
 
 block: '{' compound '}';
 
-// Statements and expressions
 define: 'define' (penDefinition | canvasDefinition);
 
 penDefinition: 'pen' ID '{' propertyDefinition* '}';
@@ -104,7 +103,6 @@ pause: 'pause' expression;
 // Assign 
 assign: ID op='=' expression;
 
-// tnames
 point: '(' x=expression ',' y=expression ')';
 
 Property: ('color'|'pressure'|'thickness'|'orientation'|'position');

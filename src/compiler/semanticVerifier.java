@@ -155,6 +155,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error("While condition must be a boolean value.", ctx, symbolTable.getCurrentFunction());
       }
+      visit(ctx.statement());
       return null;
    }
 
@@ -162,14 +163,18 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error("Until condition must be a boolean value.", ctx, symbolTable.getCurrentFunction());
       }
+      visit(ctx.statement());
       return null;
    }
 
    @Override public IType visitFor(pdrawParser.ForContext ctx) {
       // check if the loop range is an integer
+      visit(ctx.statement(0));
       if (visit(ctx.expression(0)).getType() != Type.BOOLEAN) {
          ErrorHandler.error("Loop range must be a boolean value.", ctx, symbolTable.getCurrentFunction());
       }
+      visit(ctx.expression(1));
+      visit(ctx.statement(1));
       return null;
    }
 
@@ -177,6 +182,9 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       if (visit(ctx.expression()).getType() != Type.BOOLEAN) {
          ErrorHandler.error("If condition must be a boolean value.", ctx, symbolTable.getCurrentFunction());
       }
+      visit(ctx.statement(0));
+      if (ctx.statement(1) != null)
+         visit(ctx.statement(1));
       return null;
    }
 
