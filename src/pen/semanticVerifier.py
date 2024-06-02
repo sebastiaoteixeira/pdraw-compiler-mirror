@@ -60,7 +60,7 @@ class SemanticVerifier(penVisitor):
    def visitPause(self, ctx:penParser.PauseContext):
       if (self.visit(ctx.expression()) != Type.Integer):
          self.errorHandler.error("Pause time must be an integer value.", ctx.start.line, ctx.start.column)
-      return self.visit(ctx.expression())
+      return None
 
    def visitStdout(self, ctx:penParser.StdoutContext):
       if (self.visit(ctx.expression()) != Type.String):
@@ -75,8 +75,8 @@ class SemanticVerifier(penVisitor):
 
    def visitExprToBool(self, ctx:penParser.ExprToBoolContext):
       exprType = self.visit(ctx.expression())
-      if (exprType != Type.Bool):
-         self.errorHandler.error("Conversion to boolean can only be applied to boolean values.", ctx.start.line, ctx.start.column)
+      if (exprType != Type.Bool and exprType != Type.Integer and exprType != Type.Real):
+         self.errorHandler.error("Conversion to boolean can only be applied to real, integer, or boolean values.", ctx.start.line, ctx.start.column)
       return Type.Bool
 
    def visitExprToInt(self, ctx:penParser.ExprToIntContext):
