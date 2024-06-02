@@ -91,11 +91,12 @@ python3 run.py
 
 
 ## 5. IPDraw, visão geral da linguagem
-- IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
+- IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem secundária, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
 
-### 5.1 Variáveis disponíveis
-- '' | '' |
+### 5.1 Documentação
+- Quanto às variáveis e propriedades, assemelha-se muito à gramática da linguagem principal. Daí não repetirmos isso nesta secção.
 
+- Quanto às operações, o mesmo acontece. Para além disso as operações da caneta são executadas sobre a caneta passada pelo ficheiro .pdraw.
 
 ## 6. Arquitetura do Sistema
 - A arquitetura do sistema é composta por diversos componentes que incluem a definição da gramática, a geração do código, e a execução do código gerado.
