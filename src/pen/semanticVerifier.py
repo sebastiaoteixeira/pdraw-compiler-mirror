@@ -92,10 +92,8 @@ class SemanticVerifier(penVisitor):
 
    def visitExprToString(self, ctx:penParser.ExprToStringContext):
       exprType = self.visit(ctx.expression())
-      print(exprType)
       if not (self.isNumericType(exprType) or self.isStringType(exprType) or self.isPointType(exprType) or exprType == Type.Bool):
          self.errorHandler.error("Conversion to string can only be applied to real, integer, bool, point or string values.", ctx.start.line, ctx.start.column)
-      print("next")
       return Type.String
 
    def visitExprToBool(self, ctx:penParser.ExprToBoolContext):
@@ -178,7 +176,6 @@ class SemanticVerifier(penVisitor):
    def visitExprStringConcat(self, ctx:penParser.ExprStringConcatContext):
       exprType1 = self.visit(ctx.expression(0))
       exprType2 = self.visit(ctx.expression(1))
-      print(exprType1, exprType2)
       if not (self.isStringType(exprType1) and self.isStringType(exprType2)):
          self.errorHandler.error("Operands of concatenation must be strings.", ctx.start.line, ctx.start.column)
       return Type.String
@@ -198,9 +195,6 @@ class SemanticVerifier(penVisitor):
       return None
 
    def visitExprConvToRad(self, ctx:penParser.ExprConvToRadContext):
-      exprType = self.visit(ctx.expression())
-      if not (self.isNumericType(exprType) or self.isStringType(exprType)):
-         self.errorHandler.error("Conversion to radian can only be applied to real, integer, or string values.", ctx.start.line, ctx.start.column)     
       return Type.Real
 
    def visitPenUnary(self, ctx:penParser.PenUnaryContext):
