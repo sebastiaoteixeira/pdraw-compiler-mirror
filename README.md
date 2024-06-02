@@ -4,14 +4,14 @@
 ## Indíce
 - ...
 
-## 1.Introdução
+## 1. Introdução
 - O trabalho que nos foi atribuido tinha como objetivo o desenvolvimento de uma linguagem que permite desenho de imagens, usando como abstração o desenho livre com canetas.
 
 - A ideia segue a abstração inerente á biblioteca turtle do python. Em conversas dentro do grupo decidimos que a linguagem que ia gerar o código ia ser java, e o código iria ser gerado em python, a bibliteca gráfica utilizada foi a biblioteca graphics.py. Decisão tomada com o auxilio do professor Miguel.
 
 - As ferramentas utilizadas por nós para concretizar os objetivos foram o ANTLR4 lecionado nas aulas, StringTemplates para geração de código e o conhecimento em java e python. Como ambiente de desenvolvimento utilizámos o Visual Studio Code e usámos o Git para controlo de versões.
 
-## 2.Constituição dos grupos e participação individual global
+## 2. Constituição dos grupos e participação individual global
 
 | NMec | Nome | Participação |
 |:---:|:---|:---:|
@@ -22,7 +22,7 @@
 | 114624 | SEBASTIÃO LEITE RESENDE TEIXEIRA | 0.0% |
 | 108615 | TIAGO FONSECA CRUZ | 0.0% |
 
-## 3.PDraw, visão geral da linguagem
+## 3. PDraw, visão geral da linguagem
 - Linguagem principal do projeto em desenvolvimento, que permite o desenho de imagens usando como abstração o desenho livre através de canetas.
 
 - A caneta tem como propriedades, *color*, *pressure*, *thickness*, *orientation* e *position*.
@@ -31,7 +31,7 @@
 ```pdraw
 
 ```
-## 4.IPDraw, visão geral da linguagem
+## 4. IPDraw, visão geral da linguagem
 - IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
 
 - ...
@@ -80,11 +80,12 @@
 | Funções e Variáveis Locais | Fully Completed | Implementação de funções e suporte para variáveis locais dentro das funções. | [x] Definição de funções;<br/>[x] Variáveis locais em funções. |
 | Tabela de Símbolos | Fully Completed | Implementação de uma tabela de símbolos para resolver contextos de declaração e escopo de variáveis. | [x] Tabela de símbolos;<br/>[x] Resolução de escopo. |
 
+## 7. Exemplos
+- Ficheiros de exemplo e de testes podem ser encontrados nas pastas [examples](examples) e [tests](tests).
+
 
 ## Contribuições
 
 - Use esta secção para expôr as contribuições individuais dos vários elementos do grupo e que
   justificam as participações individuais globais apresentadas no início.
 
-
-Este README fornece um resumo detalhado das funcionalidades implementadas no projeto PDraw e IPDraw, refletindo as características mínimas, desejáveis e avançadas especificadas nas diretrizes do projeto.
