@@ -9,16 +9,21 @@ define pen PenType1 {
    % pressure = 1/3;
 };
 
+int width = 1200, height = 540;
+
+define canvas Canvas1 "Example p2" (width,height);
+
 pen p1 = new PenType1;
+p1 <- position (width/2,height/2);
 p1 down; % pen in canvas with pressure 0
 % draw square
-p1 forward 10; % pen p1 advances 10
+p1 forward 100; % pen p1 advances 10
 p1 left 90º; % pen p1 rotates 90º counterclockwise
-p1 forward 10;
+p1 forward 100;
 p1 left 90º;
-p1 forward 10;
+p1 forward 100;
 p1 left 90º;
-p1 forward 10;
+p1 forward 100;
 p1 left 90º;
 
 define pen PenType2 {

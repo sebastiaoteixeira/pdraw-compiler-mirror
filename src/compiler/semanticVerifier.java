@@ -374,10 +374,6 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
-      Type exprType = visit(ctx.expression()).getType();
-      if (!isConvertibleToNumeric(exprType)) {
-         ErrorHandler.error("Conversion to radian can only be applied to real, integer, or string values.", ctx, symbolTable.getCurrentFunction());
-      }
       return new Real();
    }
 

@@ -53,7 +53,7 @@ expression :
 
     // Math
     | op=('+'|'-') expression #ExprUnary
-    | expression op='º' #ExprConvToRad
+    | (Integer|Real) op='º' #ExprConvToRad
     | expression op=('*'|'/'|'//'|'\\\\') expression #ExprMultDivMod
     | expression op=('+'|'-') expression #ExprAddSub
 
@@ -118,8 +118,19 @@ Real: [0-9]+ '.' [0-9]+;
 
 Boolean: 'true' | 'false';
 
-Color: ('white'|'black'|'green'|'red'|'blue'|'yellow')
-| '#' HEX HEX HEX HEX HEX HEX;
+Color: (
+        'white'|'black'|'gray'|'lightgray'|'darkgray'
+        |'green'|'lime'|'darkgreen'|'lightgreen'
+        |'red'|'darkred'|'orange'|'darkorange'|'brown'
+        |'blue'|'darkblue'|'lightblue'|'skyblue'|'lightskyblue'|'deepskyblue'
+        |'yellow'|'lightyellow'
+        |'cyan'|'darkcyan'
+        |'magenta'|'darkmagenta'|'lightmagenta'
+        |'violet'|'darkviolet'
+        |'lightcyan'|'purple'|'pink'|'deeppink'|'lightpink'
+        |'silver'|'gold'|'goldenrod'|'darkgoldenrod'
+    )
+    | '#' HEX HEX HEX HEX HEX HEX;
 
 PI: 'PI';
 

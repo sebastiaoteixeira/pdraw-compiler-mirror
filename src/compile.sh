@@ -17,7 +17,19 @@ while getopts ":m:a:o:" opt; do
     esac
 done 
 
-echo $main $auxilary
+if [ -z "$main" ]; then
+    echo "Main file not specified"
+    exit 1
+fi
+
+if [ ! -f $main ]; then
+    echo "Main file not found"
+    exit 1
+fi
+
+
+# remove all files in destiny path
+rm -rf $destiny_path/*
 
 mkdir -p $destiny_path
 

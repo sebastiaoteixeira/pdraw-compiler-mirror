@@ -14,10 +14,41 @@ import java.util.HashMap;
    private static final HashMap<String, String> colors = new HashMap<String, String>() {{
       put("white", "#FFFFFF");
       put("black", "#000000");
-      put("green", "#00FF00");
+      put("grey", "#808080");
+      put("darkgrey", "#A9A9A9");
+      put("lightgrey", "#D3D3D3");
+      put("green", "#008000");
+      put("lime", "#00FF00");
       put("red", "#FF0000");
+      put("orange", "#FFA500");
+      put("darkorange", "#FF8C00");
       put("blue", "#0000FF");
       put("yellow", "#FFFF00");
+      put("magenta", "#FF00FF");
+      put("darkmagenta", "#8B008B");
+      put("lightmagenta", "#FF77FF");
+      put("cyan", "#00FFFF");
+      put("darkcyan", "#008B8B");
+      put("lightcyan", "#E0FFFF");
+      put("darkblue", "#00008B");
+      put("darkgreen", "#006400");
+      put("lightgreen", "#90EE90");
+      put("darkred", "#8B0000");
+      put("brown", "#A52A2A");
+      put("purple", "#800080");
+      put("pink", "#FFC0CB");
+      put("deeppink", "#FF1493");
+      put("lightpink", "#FFB6C1");
+      put("silver", "#C0C0C0");
+      put("gold", "#FFD700");
+      put("goldenrod", "#DAA520");
+      put("darkgoldenrod", "#B8860B");
+      put("skyblue", "#87CEEB");
+      put("lightskyblue", "#87CEFA");
+      put("deepskyblue", "#00BFFF");
+      put("violet", "#EE82EE");
+      put("darkviolet", "#9400D3");
+      put("lightyellow", "#FFFFE0");
    }};
 
    @Override
@@ -325,7 +356,12 @@ import java.util.HashMap;
 
    @Override public ST visitExprConvToRad(pdrawParser.ExprConvToRadContext ctx) {
       ST conv_rad = templates.getInstanceOf("conv_rad");
-      conv_rad.add("op", visit(ctx.expression()).render());
+      String litteral;
+      if (ctx.Integer() != null)
+         litteral = ctx.Integer().getText();
+      else
+         litteral = ctx.Real().getText();
+      conv_rad.add("op", litteral);
       return conv_rad;
    }
 
