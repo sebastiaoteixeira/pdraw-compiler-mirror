@@ -1,0 +1,24 @@
+define pen PenType1 {
+    color = green;
+    thickness = 2;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- color green;
+p1 <- position (400, 300);  % Start at the center of the canvas
+p1 down;
+
+int i;
+int steps = 100;
+real angle = PI / 10;
+real length = 5;
+
+for (i = 0; i < steps; i = i + 1) {
+    p1 forward length;
+    p1 right angle;
+    length = length + 2;  % Increase the length to create a spiral effect
+};
+
+p1 -> stdout;

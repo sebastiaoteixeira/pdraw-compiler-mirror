@@ -78,6 +78,7 @@ expression :
 
     // Boolean expressions
     | expression op=('and'|'or') expression #ExprBoolOp
+    | '!' expression #ExprBoolUnary
 
     // Assign
     | assign #ExprAssign

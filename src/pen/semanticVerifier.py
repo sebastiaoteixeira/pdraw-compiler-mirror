@@ -216,6 +216,12 @@ class SemanticVerifier(penVisitor):
       if exprType1 != Type.Bool or exprType2 != Type.Bool:
          self.errorHandler.error("Operands of boolean operators must be boolean values.", ctx.start.line, ctx.start.column)
       return Type.Bool
+   
+   def visitExprBoolUnary(self, ctx:penParser.ExprBoolUnaryContext):
+      exprType = self.visit(ctx.expression())
+      if exprType != Type.Bool:
+         self.errorHandler.error("Unary operator can only be applied to boolean values.", ctx.start.line, ctx.start.column)
+      return Type.Bool
 
    def visitExprStdin(self, ctx:penParser.ExprStdinContext):
       exprType = self.visit(ctx.expression())

@@ -422,6 +422,14 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       return new BooleanType();
    }
 
+   @Override public IType visitExprBoolUnary(pdrawParser.ExprBoolUnaryContext ctx) {
+      Type exprType = visit(ctx.expression()).getType();
+      if (exprType != Type.BOOLEAN) {
+         ErrorHandler.error("Unary operator can only be applied to boolean values.", ctx, symbolTable.getCurrentFunction());
+      }
+      return new BooleanType();
+   }
+
    @Override public IType visitExprStdin(pdrawParser.ExprStdinContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (exprType != Type.STRING) {

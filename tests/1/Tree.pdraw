@@ -1,0 +1,33 @@
+define pen PenType1 {
+    color = brown;
+    thickness = 3;
+};
+
+define canvas mainCanvas "" (800,600);
+
+pen p1 = new PenType1;
+p1 <- color brown;
+p1 <- position (300, 300); 
+p1 down;
+
+int drawBranch(real length, real angle) {
+    if (length < 5) {
+        return 0;
+    };
+    
+    p1 forward length;
+    p1 right angle;
+    
+    drawBranch(length * 0.67, angle);
+    
+    p1 left( 2 * angle);
+    
+    drawBranch(length * 0.67, angle);
+    
+    p1 right angle;
+    p1 backward length;
+};
+
+drawBranch(100, PI / 6);  % Initial length and angle
+
+p1 -> stdout;

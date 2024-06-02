@@ -1,0 +1,34 @@
+define pen PenType1 {
+    color = black;
+    thickness = 1;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- color black;
+p1 <- position (100, 100);  % Start position
+p1 down;
+
+int length;
+int width;
+bool done = false;
+
+while (!done) {
+    length = int(stdin "Enter the length of the rectangle: ");
+    width = int(stdin "Enter the width of the rectangle: ");
+    
+    p1 forward length;
+    p1 right (PI / 2);
+    p1 forward width;
+    p1 right (PI / 2);
+    p1 forward length;
+    p1 right (PI / 2);
+    p1 forward width;
+    p1 right (PI / 2);
+    
+    string response = stdin "Do you want to draw another rectangle (y/N)?: ";
+    done = (response == "N") or (response == "n");
+};
+
+p1 -> stdout;

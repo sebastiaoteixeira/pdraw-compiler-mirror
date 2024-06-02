@@ -51,6 +51,7 @@ expression:
 
     // Boolean expressions
     | expression op=('and'|'or') expression #ExprBoolOp
+    | '!' expression #ExprNot
 
     // Assign
     | assign #ExprAssign

@@ -54,6 +54,11 @@ ExprPenUnary(penName,op) ::= <<
 <penName>.<op>()
 >>
 
+// Template for ExprBoolUnary
+ExprBoolUnary(op) ::= <<
+not <op>
+>>
+
 // Template for ExprPenOperator and ExprSetProperty
 ExprPen(name,op,value) ::= <<
 <name>.<op>(<value>)

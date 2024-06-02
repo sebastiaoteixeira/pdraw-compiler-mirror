@@ -262,6 +262,9 @@ class Interpreter(penVisitor):
       elif ctx.op.text == 'or':
          return left or right
       return None
+   
+   def visitExprUnary(self, ctx:penParser.ExprNotContext):
+      return not self.visit(ctx.expression())
 
    def visitExprStdin(self, ctx:penParser.ExprStdinContext):
       return input(self.visit(ctx.expression()))

@@ -416,6 +416,13 @@ public class codeGen extends pdrawBaseVisitor<ST> {
       return bool;
    }
 
+   //ExprBoolUnary
+   @Override public ST visitExprBoolUnary(pdrawParser.ExprBoolUnaryContext ctx) {
+      ST unary = templates.getInstanceOf("ExprBoolUnary");
+      unary.add("op", visit(ctx.expression()).render());
+      return unary;
+   }
+
    @Override public ST visitExprStdin(pdrawParser.ExprStdinContext ctx) {
       ST stdin = templates.getInstanceOf("stdin");
       stdin.add("message", visit(ctx.expression()).render());
