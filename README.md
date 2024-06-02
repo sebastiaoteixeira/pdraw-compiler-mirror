@@ -22,7 +22,37 @@
 | 114624 | SEBASTIÃO LEITE RESENDE TEIXEIRA | 0.0% |
 | 108615 | TIAGO FONSECA CRUZ | 0.0% |
 
-## 3. PDraw, visão geral da linguagem
+## 3. Instalação e Utilização
+- Para instalar e utilizar o projeto, siga os seguintes passos:
+
+### 3.1 Instalação
+- Para instalar o projeto, é necessário ter o Java e o Python instalados na máquina.
+- Para instalar o ANTLR4, siga as instruções em [https://www.antlr.org/](https://www.antlr.org/).
+- Para instalar as dependências do graphics.py, execute o seguinte comando:
+```bash
+# (for apt-based)
+sudo apt-get install python3-tk
+# install antlr4-python3-runtime
+pip install antlr4-python3-runtime
+```
+
+### 3.2 Utilização
+- Para utilizar o projeto, siga os seguintes passos:
+```bash
+cd src
+bash compile.sh <file.pdraw> [-o <outputdir>] [-a <ipdraw>] [-m <mainoutputfile>]
+# Exemplo
+bash compile.sh ../examples/p1.pdraw -o ../output -a ../examples/p1.ipdraw
+# Run
+cd ../output
+python3 run.py
+
+# By default, the output directory is ./out and the main output file is run.py
+# -a can be used multiple times to include multiple IPDraw files
+# -h for help
+```
+
+## 4. PDraw, visão geral da linguagem
 - Linguagem principal do projeto em desenvolvimento, que permite o desenho de imagens usando como abstração o desenho livre através de canetas.
 
 - A caneta tem como propriedades, *color*, *pressure*, *thickness*, *orientation* e *position*.
@@ -60,28 +90,28 @@
 
 
 
-## 4. IPDraw, visão geral da linguagem
+## 5. IPDraw, visão geral da linguagem
 - IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
 
 ### 4.1 Variáveis disponíveis
 - '' | '' |
 
 
-## 5. Arquitetura do Sistema
+## 6. Arquitetura do Sistema
 - A arquitetura do sistema é composta por diversos componentes que incluem a definição da gramática, a geração do código, e a execução do código gerado.
 
-### 5.1 Definição da Gramática
+### 6.1 Definição da Gramática
 - Utilizámos o ANTLR4 para definir a gramática das linguagens PDraw e IPDraw. A gramática está definida nos arquivos pdraw.g4 e pen.g4.
 - A gramática da linguagem PDraw está definida no arquivo pdraw.g4. A gramática da linguagem IPDraw está definida no arquivo pen.g4.
 
-### 5.2 Geração de Código
-- A geração de código é feita utilizando StringTemplates em Java. O código gerado é Python, utilizando a biblioteca graphics.py para desenhar as imagens.
+### 6.2 Geração de Código
+- A geração de código é feita utilizando StringTemplates em Java. O código gerado é Python, utilizando a biblioteca graphics.py para desenhar as imagens, ao qual são agrupados ficheiros auxiliares.
 
-### 5.3 Execução do Código
+### 6.3 Execução do Código
 - A execução do código é feita através de um interpretador.
 - O interpretador foi implementado em Python e está definido nos arquivos interpreter.py e penMain.py. Este interpretador é responsável por executar os comandos das linguagens PDraw e IPDraw.
 
-## 6. Requisitos e Características Implementadas
+## 7. Requisitos e Características Implementadas
 
 #### Mínimos:
 | Requisito | Status | Descrição | Funcionalidades | 
@@ -111,7 +141,7 @@
 | Funções e Variáveis Locais | Fully Completed | Implementação de funções e suporte para variáveis locais dentro das funções. | [x] Definição de funções;<br/>[x] Variáveis locais em funções. |
 | Tabela de Símbolos | Fully Completed | Implementação de uma tabela de símbolos para resolver contextos de declaração e escopo de variáveis. | [x] Tabela de símbolos;<br/>[x] Resolução de escopo. |
 
-## 7. Exemplos
+## 8. Exemplos
 - Ficheiros de exemplo e de testes podem ser encontrados nas pastas [examples](examples) e [tests](tests).
 
 

@@ -5,9 +5,23 @@ import org.antlr.v4.runtime.tree.*;
 public class pdrawMain {
    public static void main(String[] args) {
       try {
+         String inputFile = null;
+         String outputFile = null;
+
+         for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-o")) {
+               if (i + 1 < args.length) {
+                  outputFile = args[i + 1];
+                  i++;
+               }
+            } else {
+               inputFile = args[i];
+            }
+         }
+
          // create a CharStream that reads from standard input:
          CharStream input;
-         if (args.length > 0) {
+         if (inputFile != null) {
             input = CharStreams.fromFileName(args[0]);
             ErrorHandler.setFile(args[0]);
          } else {
@@ -40,7 +54,9 @@ public class pdrawMain {
             // always execute the error handler
             ErrorHandler.execute();
          }
-         codeGen visitor1 = new codeGen();
+         if (outputFile == null)
+            outputFile = "run.py";
+         codeGen visitor1 = new codeGen(outputFile);
          visitor1.visit(tree);
       }
       catch(IOException e) {

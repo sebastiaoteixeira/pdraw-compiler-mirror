@@ -6,9 +6,15 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @SuppressWarnings("CheckReturnValue")
-   public class codeGen extends pdrawBaseVisitor<ST> {
+public class codeGen extends pdrawBaseVisitor<ST> {
 
    private STGroup templates = new STGroupFile("templates.stg");
+
+   private String outputFile;
+
+   public codeGen(String _outputFile) {
+      this.outputFile = _outputFile;
+   }
 
    // HashMap with color names and their respective #HEX values
    private static final HashMap<String, String> colors = new HashMap<String, String>() {{
@@ -57,7 +63,7 @@ import java.util.HashMap;
       mainTemplate.add("compound", visit(ctx.compound()).render());
 
       // Escrever a saída renderizada em um arquivo chamado "output.py"
-      try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.py"))) {
+      try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
          writer.write(mainTemplate.render());
       } catch (IOException e) {
          e.printStackTrace();

@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
@@ -224,6 +226,35 @@ public class ErrorHandler {
 		}
 		
 		if (!success) {
+			System.exit(1);
+		}
+	}
+
+	public static void setOut(PrintStream out) {
+		ErrorHandler.out = out;
+	}
+
+	public static void setOut(String filename) {
+		// Create the file if it doesn't exist
+		File oFile = new File(filename);
+		System.out.println(oFile.getParentFile());
+		if (oFile.getParentFile().mkdirs()) {
+			System.out.println("Directory created");
+		} else {
+			System.out.println("Directory already exists");
+		}
+
+		try {
+			oFile.createNewFile();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		try {
+			ErrorHandler.out = new PrintStream(new FileOutputStream(filename));
+		} catch (Exception e) {
+			e.printStackTrace();
 			System.exit(1);
 		}
 	}
