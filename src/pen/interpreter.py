@@ -203,7 +203,10 @@ class Interpreter(penVisitor):
       return None
 
    def visitExprConvToRad(self, ctx:penParser.ExprConvToRadContext):
-      degrees = self.visit(ctx.expression())
+      if ctx.Integer():
+         degrees = int(ctx.Integer().getText())
+      elif ctx.Real():
+         degrees = float(ctx.Real().getText())
       return math.radians(degrees)
 
    def visitPenUnary(self, ctx:penParser.PenUnaryContext):

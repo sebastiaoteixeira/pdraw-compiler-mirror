@@ -33,7 +33,7 @@ penOperation:
 
 expression:
     op=('+'|'-') expression #ExprUnary
-    | expression op='º' #ExprConvToRad
+    | (Integer|Real) op='º' #ExprConvToRad
     | expression op=('*'|'/'|'//'|'\\\\') expression #ExprMultDivMod
     | expression op=('+'|'-') expression #ExprAddSub
 

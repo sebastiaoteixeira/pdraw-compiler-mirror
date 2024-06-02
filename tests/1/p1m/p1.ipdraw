@@ -1,0 +1,88 @@
++1;
+
+-5;
+
+4+7+(2-4)-7;
+
+if (1 == 0)
+    "if..else don't work" -> stdout;
+else
+    "if..else works" -> stdout;
+
+if (1 == 1)
+    "if works" -> stdout;
+
+if (1 == 0)
+    "if don't work" -> stdout;
+    
+thickness 3;
+up;
+forward 100;
+right PI/2;
+forward 100;
+down;
+
+
+% set color blue
+color blue;
+for (int i = 0; i < 10; i = i + 1) {
+    forward 50;
+    left 36º;
+};
+
+int p = 7;
+right PI/4;
+
+color #ff941f;
+
+while (p > 0) {
+    forward 50;
+    left 36º;
+    p = p // 2;
+    p -> stdout;
+};
+
+color red;
+
+until (p > 7) {
+    forward 70;
+    left 18º;
+    p = p * 2 + 1;
+    p -> stdout;
+};
+
+orientation 90º;
+
+if (p == 15) {
+    'p is 15' -> stdout;
+    forward 100;
+};else {
+    'p is not 15' -> stdout;
+};
+
+string input;
+input = stdin "Enter a number: ";
+"Your number is: " input -> stdout;
+
+real number;
+real sum = 0, avg;
+int count = 0;
+
+while (input != "") {
+    number = real(input);
+    sum = sum + number;
+    count = count + 1;
+    forward number;
+    left 90º;
+    input = stdin "Enter a number [nothing to exit]: ";
+};
+
+if (count > 0) {
+    avg = sum / count;
+    "Average: " string(avg) -> stdout;
+    "Count: " string(count) -> stdout;
+};else {
+    "Count: " string(count) -> stdout;
+    "No numbers entered" -> stdout;
+};
+

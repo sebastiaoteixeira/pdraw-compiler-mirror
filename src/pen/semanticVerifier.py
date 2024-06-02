@@ -54,11 +54,13 @@ class SemanticVerifier(penVisitor):
    def visitWhile(self, ctx:penParser.WhileContext):
       if (self.visit(ctx.expression()) != Type.Bool):
          self.errorHandler.error("While condition must be a boolean value.", ctx.start.line, ctx.start.column)
+      self.visit(ctx.statement())
       return None
 
    def visitUntil(self, ctx:penParser.UntilContext):
       if (self.visit(ctx.expression()) != Type.Bool):
-         self.errorHandler.error("Until condition must be a boolean value.", ctx.start.line, ctx.start.column)      
+         self.errorHandler.error("Until condition must be a boolean value.", ctx.start.line, ctx.start.column)
+      self.visit(ctx.statement())
       return None
 
    def visitFor(self, ctx:penParser.ForContext):
@@ -72,6 +74,9 @@ class SemanticVerifier(penVisitor):
    def visitIf(self, ctx:penParser.IfContext):
       if (self.visit(ctx.expression()) != Type.Bool):
          self.errorHandler.error("If condition must be a boolean value.", ctx.start.line, ctx.start.column)
+      self.visit(ctx.statement(0))
+      if ctx.statement(1):
+         self.visit(ctx.statement(1))
       return None
 
    def visitPause(self, ctx:penParser.PauseContext):
@@ -80,14 +85,15 @@ class SemanticVerifier(penVisitor):
       return None
 
    def visitStdout(self, ctx:penParser.StdoutContext):
-      if (self.visit(ctx.expression()) != Type.String):
+      exprType = self.visit(ctx.expression())
+      if (exprType != Type.String and not self.isNumericType(exprType)):
          self.errorHandler.error("Stdout value must be a string.", ctx.start.line, ctx.start.column)
       return None
 
    def visitExprToString(self, ctx:penParser.ExprToStringContext):
-      exprType = self.visit(ctx.expression)
-      if (self.isNumericType(exprType) or self.isStringType(exprType)):
-         self.errorHandler.error("Conversion to string can only be applied to real, integer, or string values.", ctx.start.line, ctx.start.column)
+      exprType = self.visit(ctx.expression())
+      if not (self.isNumericType(exprType) or self.isStringType(exprType) or self.isPointType(exprType) or exprType == Type.Bool):
+         self.errorHandler.error("Conversion to string can only be applied to real, integer, bool, point or string values.", ctx.start.line, ctx.start.column)
       return Type.String
 
    def visitExprToBool(self, ctx:penParser.ExprToBoolContext):
@@ -161,7 +167,7 @@ class SemanticVerifier(penVisitor):
       exprType1, exprType2 = self.visit(ctx.expression(0)), self.visit(ctx.expression(1))
       if not (self.isNumericType(exprType1) and self.isNumericType(exprType2) 
           or exprType1 == exprType2):
-         self.errorHandler.error("Incompatible types!", ctx.start.line, ctx.start.column)
+         self.errorHandler.error("Type mismatch in comparison. Cannot compare " + str(exprType1) + " with " + str(exprType2) + ".", ctx.start.line, ctx.start.column)
       return Type.Bool
          
    def visitExprPoint(self, ctx:penParser.ExprPointContext):
@@ -170,7 +176,7 @@ class SemanticVerifier(penVisitor):
    def visitExprStringConcat(self, ctx:penParser.ExprStringConcatContext):
       exprType1 = self.visit(ctx.expression(0))
       exprType2 = self.visit(ctx.expression(1))
-      if not (self.isStringType(exprType1) or self.isStringType(exprType2)):
+      if not (self.isStringType(exprType1) and self.isStringType(exprType2)):
          self.errorHandler.error("Operands of concatenation must be strings.", ctx.start.line, ctx.start.column)
       return Type.String
 
@@ -189,9 +195,6 @@ class SemanticVerifier(penVisitor):
       return None
 
    def visitExprConvToRad(self, ctx:penParser.ExprConvToRadContext):
-      exprType = self.visit(ctx.expression())
-      if not (self.isNumericType(exprType) or self.isStringType(exprType)):
-         self.errorHandler.error("Conversion to radian can only be applied to real, integer, or string values.", ctx.start.line, ctx.start.column)     
       return Type.Real
 
    def visitPenUnary(self, ctx:penParser.PenUnaryContext):
@@ -232,7 +235,7 @@ class SemanticVerifier(penVisitor):
          self.errorHandler.warning("Variable `" + id + "` not declared.", ctx.start.line, ctx.start.column)
          self.variables[id] = exprType
          
-      if self.variables[id] != exprType:
+      if not self.hasImplicitConversion(exprType, self.variables[id]):
          self.errorHandler.error("Type mismatch in assignment. Cannot assign " + str(exprType) + " to " + str(self.variables[id]) + ".", ctx.start.line, ctx.start.column)
       return self.variables[id]
 
