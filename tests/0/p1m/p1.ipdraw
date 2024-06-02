@@ -2,6 +2,11 @@
 
 -5;
 
+real b1 = 19 // 2;
+real b2 = b1 \\ 6;
+int b3 = b1 / -b2;
+b3 -> stdout;
+
 4+7+(2-4)-7;
 int a;
 a = 5;
@@ -10,3 +15,15 @@ a = 0.2;
 
 if (1)  % Should not work because is not a boolean
     "if..else don't work" -> stdout;
+
+while (5) {
+    "while don't work" -> stdout;
+}
+
+until (-3) {
+    "until don't work" -> stdout;
+}
+
+for (int i = 0; i < 5; i = i + 1) {
+    "for don't work" -> stdout;
+}

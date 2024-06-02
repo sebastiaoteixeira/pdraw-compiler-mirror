@@ -4,6 +4,11 @@
 
 4+7+(2-4)-7;
 
+int b1 = 19 // 2;
+int b2 = b1 \\ 6;
+real b3 = b1 / -b2;
+b3 -> stdout;
+
 if (1 == 0)
     "if..else don't work" -> stdout;
 else
