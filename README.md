@@ -27,10 +27,39 @@
 
 - A caneta tem como propriedades, *color*, *pressure*, *thickness*, *orientation* e *position*.
 
--Para inicializarmos uma caneta temos que:
-```pdraw
+### Para inicializarmos uma caneta temos que:
 
-```
+| Operador | Exemplo | O que faz? |
+|:---:|:---|:---|
+| + | a + b | Faz a soma entre a e b |
+| - | a - b | Faz a subtração entre a e b |
+| + | +a | Expressão unária |
+| - | -b | Expressão unária |
+| * | a * b | Faz a multiplicação entre a e b |
+| / | a / b | Faz a divisão entre a e b |
+| \\ | a \\ b | Faz o resto da divisão entre a e b |
+| // | a // b | Faz a divisão inteira entre a e b |
+| º | a º | Converte a para radianos |
+| down | pen down | A caneta está em baixo |
+| up | pen up | A caneta está em cima |
+| forward | pen forward 50 | A caneta anda 50 para a frente |
+| backward | pen backward 50 | A caneta anda 50 para trás |
+| left | pen left 50 | A caneta anda 50 para a esquerda |
+| right | pen right 50 | A caneta anda 50 para a direita |
+| pause | pen pause 50 | A caneta pára durante 50 sec idk??? |
+
+
+
+| Propriedade | O que é? |
+|:---|:---|
+| color | Define a cor da caneta |
+| pressure | Define a pressão da caneta se for negativa a caneta está levantada |
+| thickness | Define a espessura do traço |
+| orientation | Define a orientação da caneta |
+| position | Define a posição da caneta no canvas |
+
+
+
 ## 4. IPDraw, visão geral da linguagem
 - IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
 
