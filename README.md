@@ -15,12 +15,12 @@
 
 | NMec | Nome | Participação |
 |:---:|:---|:---:|
-| 113786 | GABRIEL MARTINS SILVA | 0.0% |
-| 114614 | MARTIM JOSÉ SOUTO MARQUES DOS SANTOS | 0.0% |
-| 115665 | RAFAEL JORGE CRAVEIRO MIRANDA SEMEDO | 0.0% |
-| 113765 | RUI DE FARIA MACHADO | 0.0% |
-| 114624 | SEBASTIÃO LEITE RESENDE TEIXEIRA | 0.0% |
-| 108615 | TIAGO FONSECA CRUZ | 0.0% |
+| 113786 | GABRIEL MARTINS SILVA | 16% |
+| 114614 | MARTIM JOSÉ SOUTO MARQUES DOS SANTOS | 16% |
+| 115665 | RAFAEL JORGE CRAVEIRO MIRANDA SEMEDO | 16% |
+| 113765 | RUI DE FARIA MACHADO | 16% |
+| 114624 | SEBASTIÃO LEITE RESENDE TEIXEIRA | 20% |
+| 108615 | TIAGO FONSECA CRUZ | 16% |
 
 ## 3. Instalação e Utilização
 - Para instalar e utilizar o projeto, siga os seguintes passos:
@@ -148,5 +148,5 @@ python3 run.py
 
 ## Contribuições
 
-- Durante o desenvolvimento do projeto, o aluno **Martim Santos** teve contibuições na gramática secundária, na análise semântica da linguagem principal, templates e relatório, o aluno **Rui Machado** contribui no codeGen, na gramática principal e templates, o aluno **Sebastião Teixeira** contribuiu na gramática principal, na implementação da symbolTable, assim como classes acessórias, na análise semântica das linguagens principal e secundária, no handling de erros e geração de logs, em ambas as linguagens, e na revisão/depuração de problemas no codeGen (linguagem principal) e no interpretador (linguagem secundária), o aluno **Tiago Cruz** ..., o aluno **Rafael Semedo** ... e o aluno **Gabriel Silva** ...
+- Durante o desenvolvimento do projeto, o aluno **Martim Santos** teve contibuições na gramática secundária, na análise semântica da linguagem principal, templates e relatório, o aluno **Rui Machado** contribui no codeGen, na gramática principal, templates e classes IType, o aluno **Sebastião Teixeira** contribuiu na gramática principal, na implementação da symbolTable, assim como classes acessórias, na análise semântica das linguagens principal e secundária, no handling de erros e geração de logs, em ambas as linguagens, e na revisão/depuração de problemas no codeGen (linguagem principal) e no interpretador (linguagem secundária), o aluno **Tiago Cruz** ..., o aluno **Rafael Semedo** ... e o aluno **Gabriel Silva** ...
 
