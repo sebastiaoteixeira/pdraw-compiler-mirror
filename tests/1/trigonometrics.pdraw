@@ -1,0 +1,73 @@
+% Define a function to calculate the factorial of a number
+int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }; else {
+        return n * factorial(n - 1);
+    };
+};
+
+% Define a function to calculate the power of a number
+real power(real base, int exp) {
+    real result = 1.0;
+    for (int i = 0; i < exp; i = i + 1) {
+        result = result * base;
+    };
+    return result;
+};
+
+% Define the sine function using Taylor series expansion
+real sin(real x) {
+    x = x \\ (2 * PI); % Normalize the angle to be within the range of -2 * PI to 2 * PI
+    real term1 = x; % x
+    real term2 = -power(x, 3) / factorial(3); % - x^3 / 3!
+    real term3 = power(x, 5) / factorial(5); % + x^5 / 5!
+    real term4 = -power(x, 7) / factorial(7); % - x^7 / 7!
+    real term5 = power(x, 9) / factorial(9); % + x^9 / 9!
+    real term6 = -power(x, 11) / factorial(11); % - x^11 / 11!
+    real term7 = power(x, 13) / factorial(13); % + x^13 / 13!
+    real term8 = -power(x, 15) / factorial(15); % - x^15 / 15!
+    real term9 = power(x, 17) / factorial(17); % + x^17 / 17!
+    real term10 = -power(x, 19) / factorial(19); % - x^19 / 19!
+
+
+    return term1 + term2 + term3 + term4 + term5 + term6 + term7 + term8 + term9 + term10;
+};
+
+real cos(real x) {
+    return sin(x + PI / 2); % cos(x) = sin(x + PI / 2)
+};
+
+% Define the pen for plotting the sine function
+define pen PenType1 {
+    color = blue;
+    position = (0, 400); % Start position at the middle of the canvas vertically
+    thickness = 2;
+    pressure = 1;
+};
+
+% Define canvas size
+real width = 1600;
+real height = 800;
+
+define canvas Canvas1 "Sine Wave" (width, height);
+
+pen p1 = new PenType1;
+
+% Move the pen to draw the sine wave
+p1 down;
+
+real step = 0.01; % Step size for x
+real scale = 50; % Scaling factor for the y-axis to make the sine wave visible
+
+real y = 0;
+real last_y = 0;
+for (real x = - 6 * PI; x <= 6 * PI; x = x + step) {
+    y = cos(x);
+
+    p1 = p1 + (step * scale, (y - last_y) * scale); % Scale the x and y values for better visualization
+
+    last_y = y;
+};
+
+p1 up;

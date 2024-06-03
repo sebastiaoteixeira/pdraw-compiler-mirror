@@ -175,6 +175,7 @@ class SemanticVerifier(penVisitor):
       return Type.Bool
          
    def visitExprPoint(self, ctx:penParser.ExprPointContext):
+      self.visit(ctx.point())
       return Type.Point
 
    def visitExprStringConcat(self, ctx:penParser.ExprStringConcatContext):

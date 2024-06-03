@@ -350,6 +350,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    }
 
    @Override public IType visitExprPoint(pdrawParser.ExprPointContext ctx) {
+      visit(ctx.point());
       return new Point();
    }
 
