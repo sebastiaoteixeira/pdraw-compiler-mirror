@@ -2,28 +2,32 @@
 -----
 
 ## Indíce
-- [1. Introdução](#1-introdução)
-- [2. Constituição dos grupos e participação individual global](#2-constituição-dos-grupos-e-participação-individual-global)
-- [3. Instalação e Utilização](#3-instalação-e-utilização)
-  - [3.1 Instalação](#31-instalação)
-  - [3.2 Utilização](#32-utilização)
-- [4. PDraw, visão geral da linguagem](#4-pdraw-visão-geral-da-linguagem)
-- [5. IPDraw, visão geral da linguagem](#5-ipdraw-visão-geral-da-linguagem)
-  - [5.1 Documentação](#51-documentação)
-- [6. Arquitetura do Sistema](#6-arquitetura-do-sistema)
-  - [6.1 Definição da Gramática](#61-definição-da-gramática)
-  - [6.2 Geração de Código](#62-geração-de-código)
-  - [6.3 Execução do Código](#63-execução-do-código)
-  - [6.4 Verificação Semântica](#64-verificação-semântica)
-  - [6.5 Tabela de Símbolos](#65-tabela-de-símbolos)
-  - [6.6 Classes IType](#66-classes-itype)
-  - [6.7 Handling de Erros](#67-handling-de-erros)
-- [7. Requisitos e Características Implementadas](#7-requisitos-e-características-implementadas)
-  - [Mínimos](#mínimos)
-  - [Desejáveis](#desejáveis)
-  - [Avançadas](#avançadas)
-- [8. Exemplos](#8-exemplos)
-- [9. Contribuições](#contribuições)
+- [Tema **PDraw**, grupo **pdraw-t12**](#tema-pdraw-grupo-pdraw-t12)
+  - [Indíce](#indíce)
+  - [1. Introdução](#1-introdução)
+  - [2. Constituição dos grupos e participação individual global](#2-constituição-dos-grupos-e-participação-individual-global)
+  - [3. Instalação e Utilização](#3-instalação-e-utilização)
+    - [3.1 Instalação](#31-instalação)
+    - [3.2 Utilização](#32-utilização)
+  - [4. PDraw, visão geral da linguagem](#4-pdraw-visão-geral-da-linguagem)
+    - [Operações](#operações)
+    - [Propriedades da Caneta](#propriedades-da-caneta)
+  - [5. IPDraw, visão geral da linguagem](#5-ipdraw-visão-geral-da-linguagem)
+    - [5.1 Documentação](#51-documentação)
+  - [6. Arquitetura do Sistema](#6-arquitetura-do-sistema)
+    - [6.1 Definição da Gramática](#61-definição-da-gramática)
+    - [6.2 Geração de Código](#62-geração-de-código)
+    - [6.3 Execução do Código](#63-execução-do-código)
+    - [6.4 Verificação Semântica](#64-verificação-semântica)
+    - [6.5 Tabela de Símbolos](#65-tabela-de-símbolos)
+    - [6.6 Classes IType](#66-classes-itype)
+    - [6.7 Handling de Erros](#67-handling-de-erros)
+  - [7. Requisitos e Características Implementadas](#7-requisitos-e-características-implementadas)
+      - [Mínimos:](#mínimos)
+      - [Desejáveis:](#desejáveis)
+      - [Avançadas:](#avançadas)
+  - [8. Exemplos](#8-exemplos)
+  - [Contribuições](#contribuições)
 
 ## 1. Introdução
 - O trabalho que nos foi atribuido tinha como objetivo o desenvolvimento de uma linguagem que permite desenho de imagens, usando como abstração o desenho livre com canetas.
@@ -229,6 +233,62 @@ p1 -> stdout;
 ```
 
 ![Print Exemplo](img/Tree.png "AnImage")
+
+- Exemplo [Bounce.pdraw](tests/1/Bounce.pdraw) + [square.ipdraw](tests/1/square.ipdraw):
+```python
+define pen PenType1 {
+    color = red;
+    thickness = 3;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- color red;
+
+int x = 400;
+int y = 300;
+int vx = 5;
+int vy = 3;
+int radius = 20;
+int canvasWidth = 800;
+int canvasHeight = 600;
+int steps = 1000;
+
+int i;
+for (i = 0; i < steps; i = i + 1) {
+    p1 <- position (x, y);
+    p1 down;
+    p1 <- execute "square.ipdraw";
+    p1 up;
+    
+    x = x + vx;
+    y = y + vy;
+    
+    if (x + radius > canvasWidth or x - radius < 0) {
+        vx = -vx;
+    };
+    if (y + radius > canvasHeight or y - radius < 0) {
+        vy = -vy;
+    };
+    
+    pause 10000;
+};
+
+p1 -> stdout;
+```
+```
+int radius = 20;
+forward radius;
+right (PI / 2);
+forward radius;
+right (PI / 2);
+forward radius;
+right (PI / 2);
+forward radius;
+right (PI / 2);
+```
+![Print Exemplo](img/Bounce.png "AnImage")
 
 ## Contribuições
 

@@ -21,14 +21,7 @@ int i;
 for (i = 0; i < steps; i = i + 1) {
     p1 <- position (x, y);
     p1 down;
-    p1 forward radius;
-    p1 right (PI / 2);
-    p1 forward radius;
-    p1 right (PI / 2);
-    p1 forward radius;
-    p1 right (PI / 2);
-    p1 forward radius;
-    p1 right (PI / 2);
+    p1 <- execute "square.ipdraw";
     p1 up;
     
     x = x + vx;

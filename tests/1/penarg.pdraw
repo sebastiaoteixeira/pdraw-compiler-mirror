@@ -1,0 +1,33 @@
+define pen PenType1 {
+    color = blue;
+    thickness = 2;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- position (400, 300);  % Start at the center of the canvas
+
+pen drawSquare(pen p, real size, int colorint) {
+    int i;
+    p <- color colorint;
+    for (i = 0; i < 4; i = i + 1) {
+        p down;
+        p forward size;
+        p right PI / 2;
+        p up;
+    };
+    return p;
+};
+
+pen p2 = drawSquare(p1, 100, blue);  % Draw a square of size 100
+
+p1 <- position (200, 200);  % Move to a new position
+
+pen p3 = drawSquare(p1, 50, green);  % Draw another square of size 50
+
+p1 -> stdout;
+"\n" -> stdout;
+p2 -> stdout;
+"\n" -> stdout;
+p3 -> stdout;
