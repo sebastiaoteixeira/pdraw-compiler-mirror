@@ -117,7 +117,7 @@ class Interpreter(penVisitor):
       return None
 
    def visitStdout(self, ctx:penParser.StdoutContext):
-      print(self.visit(ctx.expression()))
+      print(self.visit(ctx.expression()), end='')
       return None 
 
    def visitExprToString(self, ctx:penParser.ExprToStringContext):

@@ -52,27 +52,3 @@ class Point:
     
     def __ne__(self, other):
         return not self.__eq__(other)
-    
-    def __lt__(self, other):
-        if isinstance(other, Point):
-            return self.x < other.x and self.y < other.y
-        else:
-            raise TypeError("Unsupported operand type(s) for <: 'Point' and '{}'".format(type(other).__name__))
-    
-    def __gt__(self, other):
-        if isinstance(other, Point):
-            return self.x > other.x and self.y > other.y
-        else:
-            raise TypeError("Unsupported operand type(s) for >: 'Point' and '{}'".format(type(other).__name__))
-    
-    def __le__(self, other):
-        if isinstance(other, Point):
-            return self.x <= other.x and self.y <= other.y
-        else:
-            raise TypeError("Unsupported operand type(s) for <=: 'Point' and '{}'".format(type(other).__name__))
-    
-    def __ge__(self, other):
-        if isinstance(other, Point):
-            return self.x >= other.x and self.y >= other.y
-        else:
-            raise TypeError("Unsupported operand type(s) for >=: 'Point' and '{}'".format(type(other).__name__))

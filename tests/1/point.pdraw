@@ -1,3 +1,5 @@
 point p = (4, 7) - (1, 5);
 
 p -> stdout;
+
+(3, 2) == p -> stdout;

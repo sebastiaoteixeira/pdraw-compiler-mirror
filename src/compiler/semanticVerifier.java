@@ -346,8 +346,11 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprComp(pdrawParser.ExprCompContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
       Type rightType = visit(ctx.expression(1)).getType();
-      if (!isNumericType(leftType) || !isNumericType(rightType) && (leftType != Type.STRING || rightType != Type.STRING) && (leftType != Type.BOOLEAN || rightType != Type.BOOLEAN) && (leftType != Type.POINT || rightType != Type.POINT)) {
+      if ((!isNumericType(leftType) || !isNumericType(rightType)) && (leftType != Type.STRING || rightType != Type.STRING) && (leftType != Type.BOOLEAN || rightType != Type.BOOLEAN) && (leftType != Type.POINT || rightType != Type.POINT)) {
          ErrorHandler.error("Operands of type `" + leftType + "` and `" + rightType + "` are not compatible with comparison operators.", ctx, symbolTable.getCurrentFunction());
+      }
+      if (leftType == Type.POINT && !(ctx.op.getText().equals("==") || ctx.op.getText().equals("!="))) {
+         ErrorHandler.error("Operands of type `point` are not compatible with the operator `" + ctx.op.getText() + "`.", ctx, symbolTable.getCurrentFunction());
       }
       return new BooleanType();
    }

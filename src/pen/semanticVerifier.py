@@ -177,6 +177,8 @@ class SemanticVerifier(penVisitor):
       if not (self.isNumericType(exprType1) and self.isNumericType(exprType2) 
           or exprType1 == exprType2):
          self.errorHandler.error("Type mismatch in comparison. Cannot compare " + str(exprType1) + " with " + str(exprType2) + ".", ctx.start.line, ctx.start.column)
+      if exprType1 == Type.Point and ctx.op.text != '==' and ctx.op.text != '!=':
+         self.errorHandler.error("Point values can only be compared for equality.", ctx.start.line, ctx.start.column)
       return Type.Bool
          
    def visitExprPoint(self, ctx:penParser.ExprPointContext):
