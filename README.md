@@ -74,28 +74,30 @@ python3 run.py
 
 - A caneta tem como propriedades, *color*, *pressure*, *thickness*, *orientation* e *position*.
 
-### Para inicializarmos uma caneta temos que:
+### Operações
 
-| Operador | Exemplo | O que faz? |
+| Operador | Exemplo | Descrição |
 |:---:|:---|:---|
-| + | a + b | Faz a soma entre a e b |
-| - | a - b | Faz a subtração entre a e b |
-| + | +a | Expressão unária |
-| - | -b | Expressão unária |
-| * | a * b | Faz a multiplicação entre a e b |
-| / | a / b | Faz a divisão entre a e b |
-| \\ | a \\ b | Faz o resto da divisão entre a e b |
-| // | a // b | Faz a divisão inteira entre a e b |
-| º | a º | Converte a para radianos |
-| down | pen down | A caneta está em baixo |
-| up | pen up | A caneta está em cima |
-| forward | pen forward 50 | A caneta anda 50 para a frente |
-| backward | pen backward 50 | A caneta anda 50 para trás |
-| left | pen left 50 | A caneta anda 50 para a esquerda |
-| right | pen right 50 | A caneta anda 50 para a direita |
-| pause | pen pause 50 | A caneta pára durante 50 sec idk??? |
+| + | _a_ + _b_ | Retorna a soma entre _a_ e _b_ |
+| - | _a_ - _b_ | Retorna a diferênça entre _a_ e _b_ |
+| + | +_a_ | Retorna a |
+| - | -_b_ | Retorna o simétrico de a |
+| * | _a_ * _b_ | Retorna o produto entre _a_ e _b_ |
+| / | _a_ / _b_ | Retorna a divisão entre _a_ e _b_ |
+| \\\\ | _a_ \\\\ _b_ | Retorna o resto da divisão entre _a_ e _b_ |
+| // | _a_ // _b_ | Retorna a divisão inteira entre _a_ e _b_ |
+| º | _X_ º | Converte o literal _X_ de graus para radianos |
+| down | _pen_ down | _pen_ está a desenhar* |
+| up | _pen_ up | _pen_ está levantada* |
+| forward | _pen_ forward u | _pen_ avança u pixéis para a frente* |
+| backward | _pen_ backward u | _pen_ recua u pixéis para trás* |
+| left | _pen_ left u | _pen_ roda u radianos para a esquerda* |
+| right | _pen_ right u | _pen_ roda u radianos para a direita* |
+| pause | _pen_ pause u | interrompe a execução durante u microsegundos* (pode ser usada sem _pen_) |
 
+\* As operações são executadas sobre a caneta retornam a própria caneta.
 
+### Propriedades da Caneta
 
 | Propriedade | O que é? |
 |:---|:---|
@@ -108,12 +110,14 @@ python3 run.py
 
 
 ## 5. IPDraw, visão geral da linguagem
-- IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem secundária, existe apenas uma caneta implícita, facilitando o desenho através de comandos diretos e simples.
+- IPDraw é uma versão simplificada e interpretada da linguagem PDraw. Nesta linguagem secundária, existe apenas uma caneta implícita, passada pelo programa compilado, facilitando o desenho através de comandos diretos e simples.
 
 ### 5.1 Documentação
 - Quanto às variáveis e propriedades, assemelha-se muito à gramática da linguagem principal. Daí não repetirmos isso nesta secção.
 
-- Quanto às operações, o mesmo acontece. Para além disso as operações da caneta são executadas sobre a caneta passada pelo ficheiro .pdraw.
+- Quanto às operações, o mesmo acontece. Para além disso as operações da caneta são executadas sobre a caneta passada pelo ficheiro .pdraw. Sendo assim, estás operações não retornam nada, não sendo possível efetuar operações em cadeia.
+
+- Não foram definidas funções na gramática secundária.
 
 ## 6. Arquitetura do Sistema
 - A arquitetura do sistema é composta por diversos componentes que incluem a definição da gramática, a geração do código, e a execução do código gerado.
@@ -129,6 +133,25 @@ python3 run.py
 - A execução do código é feita através de um interpretador.
 - O interpretador foi implementado em Python e está definido nos arquivos interpreter.py e penMain.py. Este interpretador é responsável por executar os comandos das linguagens PDraw e IPDraw.
 
+### 6.4 Verificação Semântica
+- A verificação semântica é feita durante a análise semântica das linguagens PDraw e IPDraw, prévia à geração de código e interpretação, respetivamente.
+
+### 6.5 Tabela de Símbolos
+- A tabela de símbolos é utilizada para resolver contextos de declaração e escopo de variáveis. A tabela de símbolos foi implementada em Java e está definida no arquivo [SymbolTable.java](src/compiler/symbols/SymbolTable.java)
+- De forma simplista, a tabela de símbolos é uma estrutura que armazena scopes que, por sua vez, contêm um conjunto de símbolos.
+- Cada símbolo, por sua vez, contém um tipo e um valor.
+
+### 6.6 Classes IType
+- As classes IType são utilizadas para representar os tipos de dados da linguagem PDraw. As classes IType foram implementadas em Java e estão definidas no arquivo [IType.java](src/compiler/types/IType.java).
+- Ele tem como objetivo criar uma abstração para os tipos de dados da linguagem, permitindo a manipulação de variáveis de forma genérica. Elas permitem a existência de tipos compostos.
+- Na base da representação dos tipos de dados, temos um Enum que define os tipos primitivos da linguagem.
+
+### 6.7 Handling de Erros
+- É de destacar a implementação de um sistema de logs bastante completo para a deteção de erros e warnings durante a compilação e execução do código. Este sistema de logs foi implementado em Java e está definido no arquivo [ErrorHandler.java](src/compiler/ErrorHandler.java).
+- Ele fornece não só a deteção de erros e da sua localização, mas também a sua descrição e representação da linha onde ocorreu o erro.
+- Os erros são classificados em 3 tipos: INFO, WARNING e ERROR.
+- Os erros sintáticos são acumulados com os erros semânticos através da implementação de um [ErrorHandlingListener](src/compiler/ErrorHandlingListener.java).
+
 ## 7. Requisitos e Características Implementadas
 
 #### Mínimos:
@@ -141,7 +164,7 @@ python3 run.py
 | Leitura do Standard Input | Fully Completed | Permite a leitura de valores a partir do standard input. | [x] Leitura stdin. |
 | Conversão de Tipos | Fully Completed | Suporte para conversão de variáveis entre tipos, desde que a conversão seja possível. | [x] Conversão para Integer;<br/>[x] Conversão para Real;<br/>[x] Conversão para String;<br/>[x] Conversão para Boolean. |
 | Movimentação e Rotação de Canetas | Fully Completed | Instruções para mover e rotacionar as canetas no canvas. | [x] Movimentar para frente e para trás;<br/>[x] Rotacionar para esquerda e direita. |
-| Mudança de Atributos de Canetas | Fully Completed | Permite mudar atributos das canetas como cor, espessura, pressão e orientação. | [x] Mudança de cor;<br/>[x] Mudança de espessura;<br/>[x] Mudança de pressão;<br/>[x] Mudança de orientação. |
+| Mudança de Atributos de Canetas | Fully Completed | Permite mudar atributos das canetas como cor, espessura, pressão e orientação. | [x] Mudança de cor;<br/>[x] Mudança de espessura;<br/>[x] Mudança de pressão;<br/>[x] Mudança de orientação;<br/>[x] Mudança de posição. |
 | Instrução de Pausa | Fully Completed | Implementação da instrução de pausa para interromper a execução por um tempo especificado. | [x] Instrução de pausa. |
 | Verificação Semântica | Fully Completed | Verificação da consistência de tipos de dados e detecção de colisões entre tipos diferentes. | [x] Verificação de tipos de dados;<br/>[x] Detecção de colisões de tipos. |
 
@@ -160,16 +183,50 @@ python3 run.py
 | Tabela de Símbolos | Fully Completed | Implementação de uma tabela de símbolos para resolver contextos de declaração e escopo de variáveis. | [x] Tabela de símbolos;<br/>[x] Resolução de escopo. |
 
 ## 8. Exemplos
-- Ficheiros de exemplo (fornecidos pelo professor) e de testes podem ser encontrados nas pastas [examples](examples) e [tests](tests/1).
+- Ficheiros de exemplo (fornecidos pelo professor) e de testes podem ser encontrados nas pastas [examples](examples) e [tests/1](tests/1).
+
+- Em [tests/0](tests/0) estão exemplos de programas com erros de sintaxe e/ou semântica.
 
 - Exemplo [Tree.pdraw](tests/1/Tree.pdraw):
 ```python
-# Meter aqui o código
+define pen PenType1 {
+    color = brown;
+    thickness = 3;
+};
+
+define canvas mainCanvas "" (800,600);
+
+pen p1 = new PenType1;
+p1 <- color brown;
+p1 <- position (300, 300); 
+p1 down;
+
+int drawBranch(real length, real angle) {
+    if (length < 5) {
+        return 0;
+    };
+    
+    p1 forward length;
+    p1 right angle;
+    
+    drawBranch(length * 0.67, angle);
+    
+    p1 left( 2 * angle);
+    
+    drawBranch(length * 0.67, angle);
+    
+    p1 right angle;
+    p1 backward length;
+};
+
+drawBranch(100, PI / 6);  % Initial length and angle
+
+p1 -> stdout;
 ```
 
-![Print Exemplo](img/Tree.jpg "AnImage")
+![Print Exemplo](img/Tree.png "AnImage")
 
 ## Contribuições
 
-- Durante o desenvolvimento do projeto, o aluno **Martim Santos** teve contibuições na gramática secundária, na análise semântica da linguagem principal, nos templates e no relatório, o aluno **Rui Machado** contribuiu no codeGen, na gramática principal, nos templates, na criação de classes IType e no relatório, o aluno **Sebastião Teixeira** contribuiu na gramática principal, na implementação da symbolTable, assim como classes acessórias, na análise semântica das linguagens principal e secundária, no handling de erros e geração de logs, em ambas as linguagens, na criação de ficheiros de exemplo, e na revisão/depuração de problemas, o aluno **Tiago Cruz** teve contribuição na gramática secundária, na análise semântica da linguagem principal, no interpretador da linguagem secundária e no relatório, o aluno **Rafael Semedo** contribuiu com o codeGen, na principal, e na análise semântica da linguagem secundária e o aluno **Gabriel Silva** teve contribuições na análise semântica da linguagem principal, no codeGen, nos templates, na criação de ficheiros de exemplo e na revisão/depuração de problemas.
+- Durante o desenvolvimento do projeto, o aluno **Martim Santos** teve contibuições na gramática secundária, na análise semântica da linguagem principal, nos templates, no script compile.sh e no relatório, o aluno **Rui Machado** contribuiu no codeGen, na gramática principal, nos templates, na criação de classes IType e no relatório, o aluno **Sebastião Teixeira** contribuiu na gramática principal, na symbolTable, assim como classes acessórias, na análise semântica das linguagens principal e secundária, no handling de erros e geração de logs, em ambas as linguagens, na criação de ficheiros de exemplo, no script compile.sh, e na revisão/depuração de problemas, o aluno **Tiago Cruz** teve contribuições na gramática secundária, na análise semântica da linguagem principal, no interpretador da linguagem secundária e no relatório, o aluno **Rafael Semedo** contribuiu com o codeGen, na principal, e na análise semântica da linguagem secundária e o aluno **Gabriel Silva** teve contribuições na análise semântica da linguagem principal, no codeGen, nos templates, na criação de ficheiros de exemplo e na revisão/depuração de problemas.
 
