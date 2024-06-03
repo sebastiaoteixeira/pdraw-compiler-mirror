@@ -2,7 +2,24 @@
 -----
 
 ## Indíce
-- ...
+- [1. Introdução](#1-introdução)
+- [2. Constituição dos grupos e participação individual global](#2-constituição-dos-grupos-e-participação-individual-global)
+- [3. Instalação e Utilização](#3-instalação-e-utilização)
+  - [3.1 Instalação](#31-instalação)
+  - [3.2 Utilização](#32-utilização)
+- [4. PDraw, visão geral da linguagem](#4-pdraw-visão-geral-da-linguagem)
+- [5. IPDraw, visão geral da linguagem](#5-ipdraw-visão-geral-da-linguagem)
+  - [5.1 Documentação](#51-documentação)
+- [6. Arquitetura do Sistema](#6-arquitetura-do-sistema)
+  - [6.1 Definição da Gramática](#61-definição-da-gramática)
+  - [6.2 Geração de Código](#62-geração-de-código)
+  - [6.3 Execução do Código](#63-execução-do-código)
+- [7. Requisitos e Características Implementadas](#7-requisitos-e-características-implementadas)
+  - [Mínimos](#mínimos)
+  - [Desejáveis](#desejáveis)
+  - [Avançadas](#avançadas)
+- [8. Exemplos](#8-exemplos)
+- [9. Contribuições](#contribuições)
 
 ## 1. Introdução
 - O trabalho que nos foi atribuido tinha como objetivo o desenvolvimento de uma linguagem que permite desenho de imagens, usando como abstração o desenho livre com canetas.
