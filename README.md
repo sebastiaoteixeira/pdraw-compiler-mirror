@@ -157,6 +157,7 @@ python3 run.py
 ### 6.7 Handling de Erros
 - É de destacar a implementação de um sistema de logs bastante completo para a deteção de erros e warnings durante a compilação e execução do código. Este sistema de logs foi implementado em Java e está definido no arquivo [ErrorHandler.java](src/compiler/ErrorHandler.java).
 - Ele fornece não só a deteção de erros e da sua localização, mas também a sua descrição e representação da linha onde ocorreu o erro.
+- Caso um erro semântico seja detetado dentro de uma função, é indicada a função onde ocorreu o erro.
 - Os erros são classificados em 3 tipos: INFO, WARNING e ERROR.
 - Os erros sintáticos são acumulados com os erros semânticos através da implementação de um [ErrorHandlingListener](src/compiler/ErrorHandlingListener.java).
 

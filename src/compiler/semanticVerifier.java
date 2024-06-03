@@ -216,7 +216,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 
    @Override public IType visitStdout(pdrawParser.StdoutContext ctx) {
       IType exprType = visit(ctx.expression());
-		if (exprType.getType() != Type.STRING && exprType.getType() != Type.PEN && exprType.getType() != Type.INTEGER && exprType.getType() != Type.REAL && exprType.getType() != Type.BOOLEAN) {
+		if (exprType.getType() != Type.STRING && exprType.getType() != Type.PEN && exprType.getType() != Type.INTEGER && exprType.getType() != Type.REAL && exprType.getType() != Type.BOOLEAN && exprType.getType() != Type.POINT) {
 			ErrorHandler.error("Stdout value must be convertible to string.", ctx, symbolTable.getCurrentFunction());
 		}
 		return null;
@@ -270,7 +270,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
 		Type leftType = visit(ctx.expression(0)).getType();
 		Type rightType = visit(ctx.expression(1)).getType();
 		if (!((isNumericType(leftType) && isNumericType(rightType)) || (leftType == Type.PEN && rightType == Type.POINT) || (leftType == Type.POINT && rightType == Type.POINT))) {
-			ErrorHandler.error("Operands of '+' or '-' must be numeric.", ctx, symbolTable.getCurrentFunction());
+			ErrorHandler.error("Operands of '+' or '-' must be numeric, two points or a pen with a point.", ctx, symbolTable.getCurrentFunction());
 		}
       return (leftType == Type.PEN ? new Pen() : leftType == Type.POINT ? new Point() : (leftType == Type.REAL || rightType == Type.REAL) ? new Real() : new IntegerType());
    }
@@ -346,6 +346,9 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprComp(pdrawParser.ExprCompContext ctx) {
       Type leftType = visit(ctx.expression(0)).getType();
       Type rightType = visit(ctx.expression(1)).getType();
+      if (!isNumericType(leftType) || !isNumericType(rightType) && (leftType != Type.STRING || rightType != Type.STRING) && (leftType != Type.BOOLEAN || rightType != Type.BOOLEAN) && (leftType != Type.POINT || rightType != Type.POINT)) {
+         ErrorHandler.error("Operands of type `" + leftType + "` and `" + rightType + "` are not compatible with comparison operators.", ctx, symbolTable.getCurrentFunction());
+      }
       return new BooleanType();
    }
 
@@ -418,7 +421,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       Type leftType = visit(ctx.expression(0)).getType();
       Type rightType = visit(ctx.expression(1)).getType();
       if (leftType != Type.BOOLEAN || rightType != Type.BOOLEAN) {
-         ErrorHandler.error("Operands of boolean operators must be boolean values.", ctx, symbolTable.getCurrentFunction());
+         ErrorHandler.error("Operands of logical operations must be boolean values.", ctx, symbolTable.getCurrentFunction());
       }
       return new BooleanType();
    }
@@ -426,7 +429,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
    @Override public IType visitExprBoolUnary(pdrawParser.ExprBoolUnaryContext ctx) {
       Type exprType = visit(ctx.expression()).getType();
       if (exprType != Type.BOOLEAN) {
-         ErrorHandler.error("Unary operator can only be applied to boolean values.", ctx, symbolTable.getCurrentFunction());
+         ErrorHandler.error("Not operator can only be applied to boolean values.", ctx, symbolTable.getCurrentFunction());
       }
       return new BooleanType();
    }
@@ -545,14 +548,14 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
       FunctionType functionType = (FunctionType) function.getIType();
       ParameterList parameterLists = functionType.getParameterList();
       if (ctx.expression().size() != parameterLists.getParameterSymbols().size()) {
-         ErrorHandler.error("Function call " + id + " has wrong number of arguments.", ctx, symbolTable.getCurrentFunction());
+         ErrorHandler.error("Function call `" + id + "` has wrong number of arguments.", ctx, symbolTable.getCurrentFunction());
       }
 
       for (int i = 0; i < ctx.expression().size(); i++) {
          IType exprType = visit(ctx.expression(i));
          IType parameterList = parameterLists.getParameterSymbols().get(i).getIType();
          if (!hasImplicitConvertion(exprType.getType(), parameterList.getType())) {
-            ErrorHandler.error("Function call " + id + " has wrong argument type.", ctx, symbolTable.getCurrentFunction());
+            ErrorHandler.error("Function call `" + id + "` has wrong argument type.", ctx, symbolTable.getCurrentFunction());
          }
       }
 
@@ -570,7 +573,7 @@ public class semanticVerifier extends pdrawBaseVisitor<IType> {
   
 	// types that can be converted besides string
 	private boolean isConvertibleToString(Type type) {
-		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING || type == Type.BOOLEAN;
+		return type == Type.INTEGER || type == Type.REAL || type == Type.STRING || type == Type.BOOLEAN || type == Type.POINT || type == Type.PEN;
 	}
 
 	// types that can be converted to numeric

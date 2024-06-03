@@ -31,10 +31,12 @@ class SemanticVerifier(penVisitor):
       return None
    
    def visitCompound(self, ctx:penParser.CompoundContext):
-      return self.visitChildren(ctx)
+      self.visitChildren(ctx)
+      return None
    
    def visitBlock(self, ctx:penParser.BlockContext):
-      return self.visitChildren(ctx)
+      self.visitChildren(ctx)
+      return None
 
    def visitDeclaration(self, ctx:penParser.DeclarationContext):
       vType = self.switchFunctionType(ctx.type_.getText())
@@ -49,7 +51,8 @@ class SemanticVerifier(penVisitor):
       return None
 
    def visitStatement(self, ctx:penParser.StatementContext):
-      return self.visitChildren(ctx)
+      self.visitChildren(ctx)
+      return None
 
    def visitWhile(self, ctx:penParser.WhileContext):
       if (self.visit(ctx.expression()) != Type.Bool):
@@ -86,7 +89,7 @@ class SemanticVerifier(penVisitor):
 
    def visitStdout(self, ctx:penParser.StdoutContext):
       exprType = self.visit(ctx.expression())
-      if (exprType != Type.String and not self.isNumericType(exprType) and exprType != Type.Bool):
+      if (exprType != Type.String and not self.isNumericType(exprType) and exprType != Type.Bool and exprType != Type.Point):
          self.errorHandler.error("Stdout value must be a string.", ctx.start.line, ctx.start.column)
       return None
 
@@ -113,11 +116,11 @@ class SemanticVerifier(penVisitor):
       if not (self.isNumericType(exprType1) and self.isNumericType(exprType2)):
          self.errorHandler.error("The values must be numeric (Integer or Real)", ctx.start.line, ctx.start.column)
       result = Type.Integer
-      if (exprType1 == Type.Real or exprType2 == Type.Real):
-         result = Type.Real
       if ctx.op.text == '//':
          result = Type.Integer
-      if ctx.op.text == '/':
+      elif ctx.op.text == '/':
+         result = Type.Real
+      if (exprType1 == Type.Real or exprType2 == Type.Real):
          result = Type.Real
       return result
 
@@ -130,7 +133,7 @@ class SemanticVerifier(penVisitor):
          if not self.isNumericType(self.visit(ctx.expression())):
             self.errorHandler.error("Pressure value must be a number.", ctx.start.line, ctx.start.column)
       elif prop == 'thickness':
-         if not self.isNumericType(self.visit(ctx.expression())):
+         if not self.visit(ctx.expression()) == Type.Integer:
             self.errorHandler.error("Thickness value must be a number.", ctx.start.line, ctx.start.column)
       elif prop == 'orientation':
          if not self.isNumericType(self.visit(ctx.expression())):
@@ -142,11 +145,13 @@ class SemanticVerifier(penVisitor):
 
    def visitExprAddSub(self, ctx:penParser.ExprAddSubContext):
       exprType1, exprType2 = self.visit(ctx.expression(0)), self.visit(ctx.expression(1))
-      if not (self.isNumericType(exprType1) and self.isNumericType(exprType2)):
+      if not (self.isNumericType(exprType1) and self.isNumericType(exprType2) or exprType1 == Type.Point and exprType2 == Type.Point):
          self.errorHandler.error("The values must be numeric (Integer or Real)", ctx.start.line, ctx.start.column)
       result = Type.Integer
       if (exprType1 == Type.Real or exprType2 == Type.Real):
          result = Type.Real
+      if (exprType1 == Type.Point and exprType2 == Type.Point):
+         result = Type.Point
       return result
 
    def visitExprInteger(self, ctx:penParser.ExprIntegerContext):
