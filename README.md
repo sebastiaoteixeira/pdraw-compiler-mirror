@@ -187,7 +187,7 @@ python3 run.py
 | Tabela de Símbolos | Fully Completed | Implementação de uma tabela de símbolos para resolver contextos de declaração e escopo de variáveis. | [x] Tabela de símbolos;<br/>[x] Resolução de escopo. |
 
 ## 8. Exemplos
-- Ficheiros de exemplo (fornecidos pelo professor) e de testes podem ser encontrados nas pastas [examples](examples) e [tests/1](tests/1).
+- Ficheiros de exemplo (fornecidos pelo professor) e de testes podem ser encontrados nas pastas [examples](examples) e [tests/1](tests/1). Entre estes, recomendamos os seguintes exemplos: [Tree.pdraw](tests/1/Tree.pdraw), [bounce.pdraw](tests/1/bounce.pdraw), [circle.pdraw](tests/1/circle.pdraw), [KochSnowFlake.pdraw](tests/1/KochSnowFlake.pdraw), [Mandelbrot.pdraw](tests/1/Mandelbrot.pdraw), [spiral.pdraw](tests/1/spiral.pdraw), [trigonometrics.pdraw](tests/1/trigonometrics.pdraw), etc.
 
 - Em [tests/0](tests/0) estão exemplos de programas com erros de sintaxe e/ou semântica.
 
