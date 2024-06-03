@@ -1,0 +1,38 @@
+define pen PenType1 {
+    color = blue;
+    thickness = 1;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- color blue;
+p1 <- position (200, 300);  % Start position
+p1 down;
+
+int order = 4;
+real length = 300;
+
+int drawKoch(real length, int order) {
+    if (order == 0) {
+        p1 forward length;
+    }; else {
+        length = length / 3.0;
+        drawKoch(length, order - 1);
+        p1 left PI / 3;
+        drawKoch(length, order - 1);
+        p1 right 2 * PI / 3;
+        drawKoch(length, order - 1);
+        p1 left PI / 3;
+        drawKoch(length, order - 1);
+    };
+    return 1;
+};
+
+drawKoch(length, order);
+p1 right 2 * PI / 3;
+drawKoch(length, order);
+p1 right 2 * PI / 3;
+drawKoch(length, order);
+
+p1 -> stdout;

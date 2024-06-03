@@ -1,0 +1,51 @@
+define pen PenType1 {
+    color = black;
+    thickness = 1;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- color black;
+
+int max_iter = 1000;
+int width = 800;
+int height = 600;
+real min_re = -2.0;
+real max_re = 1.0;
+real min_im = -1.2;
+real max_im = min_im + (max_re - min_re) * height / width;
+real re_factor = (max_re - min_re) / (width - 1);
+real im_factor = (max_im - min_im) / (height - 1);
+
+int x, y, n;
+real c_re, c_im, Z_re, Z_im, Z_re2, Z_im2;
+
+for (y = 0; y < height; y = y + 1) {
+    c_im = max_im - y * im_factor;
+    for (x = 0; x < width; x = x + 1) {
+        c_re = min_re + x * re_factor;
+        Z_re = c_re;
+        Z_im = c_im;
+        bool is_inside = true;
+        for (n = 0; n < max_iter; n = n + 1) {
+            Z_re2 = Z_re * Z_re;
+            Z_im2 = Z_im * Z_im;
+            if (Z_re2 + Z_im2 <= 4) {
+                Z_im = 2 * Z_re * Z_im + c_im;
+                Z_re = Z_re2 - Z_im2 + c_re;
+            }; else {
+                is_inside = false;
+                n = max_iter;  % Exit loop without break
+            };
+        };
+        if (is_inside) {
+            p1 <- position (x, y);
+            p1 down;
+            p1 forward 1;
+            p1 up;
+        };
+    };
+};
+
+p1 -> stdout;
