@@ -143,10 +143,16 @@ python3 run.py
 | Tabela de Símbolos | Fully Completed | Implementação de uma tabela de símbolos para resolver contextos de declaração e escopo de variáveis. | [x] Tabela de símbolos;<br/>[x] Resolução de escopo. |
 
 ## 8. Exemplos
-- Ficheiros de exemplo e de testes podem ser encontrados nas pastas [examples](examples) e [tests](tests).
+- Ficheiros de exemplo (fornecidos pelo professor) e de testes podem ser encontrados nas pastas [examples](examples) e [tests](tests/1).
 
+- Exemplo [Tree.pdraw](tests/1/Tree.pdraw):
+```python
+# Meter aqui o código
+```
+
+![Print Exemplo](img/Tree.jpg "AnImage")
 
 ## Contribuições
 
-- Durante o desenvolvimento do projeto, o aluno **Martim Santos** teve contibuições na gramática secundária, na análise semântica da linguagem principal, templates e relatório, o aluno **Rui Machado** contribui no codeGen, na gramática principal, templates e classes IType, o aluno **Sebastião Teixeira** contribuiu na gramática principal, na implementação da symbolTable, assim como classes acessórias, na análise semântica das linguagens principal e secundária, no handling de erros e geração de logs, em ambas as linguagens, e na revisão/depuração de problemas no codeGen (linguagem principal) e no interpretador (linguagem secundária), o aluno **Tiago Cruz** teve contribuição na gramática secundária, na análise semântica da linguagem principal, no interpretador da linguagem secundária e relatório, o aluno **Rafael Semedo** ... e o aluno **Gabriel Silva** ...
+- Durante o desenvolvimento do projeto, o aluno **Martim Santos** teve contibuições na gramática secundária, na análise semântica da linguagem principal, nos templates e no relatório, o aluno **Rui Machado** contribuiu no codeGen, na gramática principal, nos templates, na criação de classes IType e no relatório, o aluno **Sebastião Teixeira** contribuiu na gramática principal, na implementação da symbolTable, assim como classes acessórias, na análise semântica das linguagens principal e secundária, no handling de erros e geração de logs, em ambas as linguagens, na criação de ficheiros de exemplo, e na revisão/depuração de problemas, o aluno **Tiago Cruz** teve contribuição na gramática secundária, na análise semântica da linguagem principal, no interpretador da linguagem secundária e no relatório, o aluno **Rafael Semedo** contribuiu com o codeGen, na principal, e na análise semântica da linguagem secundária e o aluno **Gabriel Silva** teve contribuições na análise semântica da linguagem principal, no codeGen, nos templates, na criação de ficheiros de exemplo e na revisão/depuração de problemas.
 
