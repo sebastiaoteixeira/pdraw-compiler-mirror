@@ -1,0 +1,43 @@
+define pen PenType1 {
+    color = black;
+    thickness = 1;
+};
+
+define canvas mainCanvas "" (800, 600);
+
+pen p1 = new PenType1;
+p1 <- color black;
+
+int rows = 10;
+int cols = 10;
+int cellSize = 50;
+
+int drawGrid(int rows, int cols, int cellSize) {
+    int i, j;
+
+    % Draw rows
+    for (i = 0; i <= rows; i = i + 1) {
+        p1 <- position (50, 50 + i * cellSize);
+        p1 down;
+        p1 forward (cols * cellSize);
+        p1 up;
+    };
+    
+    % Turn the pen to draw columns
+    p1 right (PI / 2);
+    
+    % Draw columns
+    for (j = 0; j <= cols; j = j + 1) {
+        p1 <- position (50 + j * cellSize, 50);
+        p1 down;
+        p1 forward (rows * cellSize);
+        p1 up;
+    };
+    
+    % Turn the pen back to the original direction
+    p1 left (PI / 2);
+};
+
+drawGrid(rows, cols, cellSize);
+
+p1 -> stdout;
