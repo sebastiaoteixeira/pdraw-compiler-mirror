@@ -1,4 +1,6 @@
 # Tema **PDraw**, grupo **pdraw-t12**
+
+### Grade: 18,9/20
 -----
 
 ## Indíce
